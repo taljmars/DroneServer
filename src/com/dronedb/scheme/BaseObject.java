@@ -105,7 +105,7 @@ public abstract class BaseObject implements Serializable
     
 	@Override  
 	public String toString() {  
-		return this.getClass().getCanonicalName() + " [ID=" + objId + "]";  
+		return this.getClass().getCanonicalName() + " [objId=" + objId + "]";  
 	}  
 
 }

@@ -70,49 +70,47 @@ public class Mission extends BaseObject implements Serializable
 	}
 	
 	@Override  
-    public int hashCode() {  
-        int hash = 0;  
-        hash += (this.getObjId() != null ? this.getObjId().hashCode() : 0);
-        hash += (this.getItems() != null ? this.getItems().hashCode() : 0);
-  
-        return hash;  
-    } 
+	public int hashCode() {  
+		int hash = 0;  
+		hash += (this.getObjId() != null ? this.getObjId().hashCode() : 0);
+		hash += (this.getItems() != null ? this.getItems().hashCode() : 0);
+		return hash;  
+	} 
 	
 	@PrePersist
 	public void onCreate() {
-        super.onCreate();
-    }
+		super.onCreate();
+	}
 	
 	@PreUpdate
-    public void onUpdate() {
-    	super.onUpdate();  
-    }
+	public void onUpdate() {
+		super.onUpdate();  
+	}
   
-    @Override  
-    public boolean equals(Object object) {  
-    if (this == object)  
-            return true;  
-        if (object == null)  
-            return false;  
-        if (getClass() != object.getClass())  
-            return false;  
+	@Override  
+	public boolean equals(Object object) {  
+		if (this == object)  
+			return true;  
+		if (object == null)  
+			return false;  
+		if (getClass() != object.getClass())  
+			return false;  
   
-        Mission other = (Mission) object;
+		Mission other = (Mission) object;
+		if (this.getObjId() != other.getObjId() && (this.getObjId() == null || !this.objId.equals(other.objId)))  
+			return false;  
         
-        if (this.getObjId() != other.getObjId() && (this.getObjId() == null || !this.objId.equals(other.objId)))  
-            return false;  
+		if (this.getDefaultAlt() != other.getDefaultAlt())
+			return false;
         
-        if (this.getDefaultAlt() != other.getDefaultAlt())
-        	return false;
+		if (!this.getItems().equals(other.getItems()))
+			return false;
         
-        if (!this.getItems().equals(other.getItems()))
-        	return false;
-        
-        return true;  
-    }  
+		return true;  
+	}  
 	
 	@Override
 	public String toString() {
-		return "Mission [objid=" + objId + ", defaultAlt=" + defaultAlt + ", items=" + items + "]";
+		return getClass().getCanonicalName() + " [objId=" + objId + ", defaultAlt=" + defaultAlt + ", items=" + items + "]";
 	}
 }

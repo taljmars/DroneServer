@@ -13,6 +13,6 @@ public class MissionItem extends BaseObject implements Serializable
 	
 	@Override
 	public String toString() {
-		return "MissionItem [objid=" + objId + "]";
+		return getClass().getCanonicalName() + " [objId=" + objId + "]";
 	}
 }
