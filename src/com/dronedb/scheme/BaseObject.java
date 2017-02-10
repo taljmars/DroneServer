@@ -31,81 +31,81 @@ public abstract class BaseObject implements Serializable
 	@Basic(optional = false)  
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	@XmlElement(required = true)
-    protected Integer objId;
-	
+	protected Integer objId;
+
 	@Getter
 	public Integer getObjId() {
 		return objId;
 	}
 	
-    @Temporal(TemporalType.TIMESTAMP)
-    @XmlElement(required = true)
-    private Date createdAt;
-     
-    @PrePersist  
-    public void onCreate() {  
-        this.createdAt = new Date();  
-    }
+	@Temporal(TemporalType.TIMESTAMP)
+	@XmlElement(required = true)
+	private Date createdAt;
+
+	@PrePersist  
+	public void onCreate() {  
+		this.createdAt = new Date();  
+	}
     
-    @Getter
-    public Date getCreationDate() {  
-        return createdAt;  
-    }
+	@Getter
+	public Date getCreationDate() {  
+		return createdAt;  
+	}
   
-    @Temporal(TemporalType.TIMESTAMP)
-    @XmlElement(required = true)
-    private Date updatedAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@XmlElement(required = true)
+	private Date updatedAt;
     
-    @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = new Date();  
-    }
+	@PreUpdate
+	public void onUpdate() {
+		this.updatedAt = new Date();  
+	}
     
-    @Getter
-    public Date getChangeDate() {  
-        return updatedAt;  
-    } 
+	@Getter
+	public Date getChangeDate() {  
+		return updatedAt;  
+	} 
+
+	@Version
+	@XmlElement(required = true)
+	protected Long version;
     
-    @Version
-    @XmlElement(required = true)
-    protected Long version;
-    
-    @Getter
-    public Long getVersion() {
+	@Getter
+	public Long getVersion() {
 		return version;
 	}
     
-    public <T extends BaseObject> void set(T baseObject) {
-    	this.objId = baseObject.objId;
-    }
+	public <T extends BaseObject> void set(T baseObject) {
+		this.objId = baseObject.objId;
+	}
 	
 	@Override  
-    public int hashCode() {  
-        int hash = 0;  
-        hash += (this.getObjId() != null ? this.getObjId().hashCode() : 0);  
+	public int hashCode() {  
+		int hash = 0;  
+		hash += (this.getObjId() != null ? this.getObjId().hashCode() : 0);  
   
-        return hash;  
-    }  
+		return hash;  
+	}  
   
-    @Override  
-    public boolean equals(Object object) {  
-    if (this == object)  
-            return true;  
-        if (object == null)  
-            return false;  
-        if (getClass() != object.getClass())  
-            return false;  
+	@Override  
+	public boolean equals(Object object) {  
+		if (this == object)  
+			return true;  
+		if (object == null)  
+			return false;  
+		if (getClass() != object.getClass())  
+			return false;  
   
-        BaseObject other = (BaseObject) object;  
-        if (this.getObjId() != other.getObjId() && (this.getObjId() == null || !this.objId.equals(other.objId))) {  
-            return false;  
-        }  
-        return true;  
-    }  
+		BaseObject other = (BaseObject) object;  
+		if (this.getObjId() != other.getObjId() && (this.getObjId() == null || !this.objId.equals(other.objId))) {  
+			return false;  
+		}  
+		return true;  
+	}  
     
-    @Override  
-    public String toString() {  
-        return this.getClass().getName() + " [ID=" + objId + "]";  
-    }  
+	@Override  
+	public String toString() {  
+		return this.getClass().getCanonicalName() + " [ID=" + objId + "]";  
+	}  
 
 }

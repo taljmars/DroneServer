@@ -22,7 +22,7 @@ public class DroneDbTester
 		
 		Mission object = droneDbCrudSvcRemote.readByClass(11, Mission.class);
 		System.out.println(object.toString());
-		object.setDefaultAlt(209);
+		object.setDefaultAlt(29);
 		droneDbCrudSvcRemote.update(object);
 	}
 
