@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -16,9 +18,20 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 
 @Entity
 @Table
+@NamedNativeQueries({
+    @NamedNativeQuery(
+            name    =   "getAllMission",
+            query   =   "SELECT * FROM Mission",
+                        resultClass = Mission.class
+    )
+})
 public class Mission extends BaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+	
+	public Mission() {
+		super();
+	}
 	
 	@Value(value = "20.0")
 	protected double defaultAlt;
@@ -111,6 +124,6 @@ public class Mission extends BaseObject implements Serializable
 	
 	@Override
 	public String toString() {
-		return getClass().getCanonicalName() + " [objId=" + objId + ", defaultAlt=" + defaultAlt + ", items=" + items + "]";
+		return getClass().getSimpleName() + " [objId=" + objId + ", defaultAlt=" + defaultAlt + "]";//, items=" + items + "]";
 	}
 }

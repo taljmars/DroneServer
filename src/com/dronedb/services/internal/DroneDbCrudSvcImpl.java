@@ -1,10 +1,9 @@
 package com.dronedb.services.internal;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dronedb.scheme.BaseObject;
@@ -13,16 +12,14 @@ import com.dronedb.services.DroneDbCrudSvc;
 @Component
 public class DroneDbCrudSvcImpl implements DroneDbCrudSvc {
 	
-	EntityManager entitymanager;
-	EntityManagerFactory emfactory;
+	@Autowired
+	private EntityManager entityManager;
 	
 	public String CheckConnection() {
 		return "Inside Implementation";
 	}
 	
 	public DroneDbCrudSvcImpl() {
-		emfactory = Persistence.createEntityManagerFactory("DroneDB");
-		entitymanager = emfactory.createEntityManager( );
 	}
 	
 	public <T extends BaseObject> T create(final Class<T> clz) {
@@ -36,18 +33,21 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc {
 	}
 	
 	public <T extends BaseObject> void update(T object) {
-		entitymanager.getTransaction().begin();
-		BaseObject mergedObject = entitymanager.find(object.getClass() ,object.getObjId());
-		mergedObject.set(object);
-		entitymanager.persist(mergedObject);
-		entitymanager.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		BaseObject mergedObject = object;
+		if (object.getObjId() != null) {
+			mergedObject = entityManager.find(object.getClass() ,object.getObjId());
+			mergedObject.set(object);
+		}
+		entityManager.persist(mergedObject);
+		entityManager.getTransaction().commit();
 	}
 	
 	public <T extends BaseObject> void delete(T object) {
-		entitymanager.getTransaction().begin();
-		T mergedObject = entitymanager.merge(object);
-		entitymanager.remove(mergedObject);
-		entitymanager.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		T mergedObject = entityManager.merge(object);
+		entityManager.remove(mergedObject);
+		entityManager.getTransaction().commit();
 	}
 	
 	public <T extends BaseObject> T read(final Integer uid) {
@@ -56,13 +56,6 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc {
 	}
 	
 	public <T extends BaseObject> T readByClass(final Integer objId, final Class<T> clz) {
-		return entitymanager.find(clz ,objId);
+		return entityManager.find(clz ,objId);
 	}
-	
-	@Override
-	public void finalize() {
-		entitymanager.close();
-		emfactory.close();
-	}
-
 }

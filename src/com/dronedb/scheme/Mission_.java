@@ -5,7 +5,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2017-02-10T15:36:31.844+0200")
+@Generated(value="Dali", date="2017-02-18T18:20:37.304+0200")
 @StaticMetamodel(Mission.class)
 public class Mission_ extends BaseObject_ {
 	public static volatile SingularAttribute<Mission, Double> defaultAlt;

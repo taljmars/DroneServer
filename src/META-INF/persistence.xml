@@ -5,10 +5,16 @@
 	version="1.0">
 	
 	<persistence-unit name="DroneDB">
+	
+		<mapping-file>META-INF/orm.xml</mapping-file>
 
 		<class>com.dronedb.scheme.BaseObject</class>
 		<class>com.dronedb.scheme.Mission</class>
 		<class>com.dronedb.scheme.MissionItem</class>
+		<class>com.dronedb.scheme.Waypoint</class>
+		<class>com.dronedb.scheme.Takeoff</class>
+		<class>com.dronedb.scheme.ReturnToHome</class>
+		<class>com.dronedb.scheme.Circle</class>
 		
 		<!-- Enter local db manually by running 'sudo -u postgres psql dronedb' -->
 		<properties>

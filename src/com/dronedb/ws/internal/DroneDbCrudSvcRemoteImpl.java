@@ -12,7 +12,7 @@ import com.dronedb.services.DroneDbCrudSvc;
 import com.dronedb.ws.DroneDbCrudSvcRemote;
 
 @Component
-@WebService( endpointInterface = "com.dronedb.ws.DroneDbCrudSvcRemote" )
+@WebService(endpointInterface = "com.dronedb.ws.DroneDbCrudSvcRemote")
 public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 {
 	
