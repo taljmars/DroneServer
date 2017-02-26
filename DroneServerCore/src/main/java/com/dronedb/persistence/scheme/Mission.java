@@ -2,14 +2,10 @@ package com.dronedb.persistence.scheme;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Access;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -20,9 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.hibernate.cache.spi.access.AccessType;
 
 import com.dronedb.persistence.triggers.DeleteTrigger;
 import com.dronedb.persistence.triggers.DeleteTriggers;
