@@ -1,2 +1,8 @@
 # Igone bin directory - talma
 build/
+
+CMpub
+
+*.iml
+
+target
