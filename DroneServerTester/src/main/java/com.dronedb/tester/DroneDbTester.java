@@ -6,10 +6,7 @@ import com.dronedb.persistence.ws.QueryResponseRemote;
 import com.dronedb.persistence.ws.QuerySvcRemote;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 

@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//@Configuration
+@Configuration
 @EnableTransactionManagement
 @ComponentScan({ "com.dronedb.persistence" })
-@ImportResource({ "classpath:jpaConfig.xml" })
+@ImportResource({ "/com/dronedb/jpaConfig.xml" })
 public class PersistenceJPAConfigXml {
 
     public PersistenceJPAConfigXml() {

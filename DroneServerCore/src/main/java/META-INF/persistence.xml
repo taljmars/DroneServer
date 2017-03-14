@@ -9,8 +9,8 @@
 		<!-- Enter local db manually by running 'sudo -u postgres psql dronedb' -->
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/dronedb"/>
-			<property name="javax.persistence.jdbc.user" value="postgres"/>
-			<property name="javax.persistence.jdbc.password" value="postgres"/>
+			<property name="javax.persistence.jdbc.user" value="postgres1_TEMP"/>
+			<property name="javax.persistence.jdbc.password" value="postgres_TEMP"/>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 			<!-- 
 			<property name="eclipselink.logging.level" value="FINE"/>
