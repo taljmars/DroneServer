@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.beans.factory.annotation.Value;
+//import org.hibernate.annotations.ColumnDefault;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
@@ -39,6 +37,11 @@ public class Takeoff extends MissionItem implements Serializable {
 	@Override
 	public String toString() {
 		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
+	}
+
+	@Override
+	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
+		convertDatabaseVisitor.visit(this);
 	}
 }
 

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan({ "com.dronedb.persistence" })
-@ImportResource({ "/com/dronedb/jpaConfig.xml" })
+@ImportResource({"/com/dronedb/jpaConfig.xml"})
 public class PersistenceJPAConfigXml {
 
     public PersistenceJPAConfigXml() {

@@ -1,5 +1,9 @@
 package com.dronedb.server;
 
+import com.dronedb.persistence.services.MissionFacadeSvc;
+import com.dronedb.persistence.services.internal.MissionFacadeSvcImpl;
+import com.dronedb.persistence.ws.MissionFacadeRemote;
+import com.dronedb.persistence.ws.internal.MissionFacadeRemoteImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -22,24 +26,5 @@ import com.dronedb.persistence.ws.internal.QuerySvcRemoteImpl;
 public class AppConfig {
 	
 	public static ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-	
-	@Bean
-	public DroneDbCrudSvcRemote droneDbCrudSvcRemote() {
-		return new DroneDbCrudSvcRemoteImpl();
-	}
-	
-	@Bean
-	public DroneDbCrudSvc droneDbCrudSvc() {
-		return new DroneDbCrudSvcImpl();
-	}
-	
-	@Bean
-	public QuerySvcRemote querySvcRemote() {
-		return new QuerySvcRemoteImpl();
-	}
-	
-	@Bean
-	public QuerySvc querySvc() {
-		return new QuerySvcImpl();
-	}
+
 }

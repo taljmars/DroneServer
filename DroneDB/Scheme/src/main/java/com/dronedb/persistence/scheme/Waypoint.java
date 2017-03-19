@@ -17,22 +17,22 @@ import javax.persistence.Entity;
 //                        resultClass = Waypoint.class
 //    )
 //})
-public class Waypoint extends MissionItem implements Altitudable, Serializable {
+public class Waypoint extends MissionItem implements Delayable, Altitudable, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Column(nullable = true)
-	protected double delay;
+	protected Double delay;
 	
 	@Column(nullable = true)
 	protected double acceptanceRadius;
 	
 	@Column(nullable = true)
 	protected double yawAngle;
-	
+
 	@Column(nullable = true)
 	protected double orbitalRadius;
-	
+
 	@Column(nullable = true)
 	protected boolean orbitCCW;
 
@@ -42,13 +42,17 @@ public class Waypoint extends MissionItem implements Altitudable, Serializable {
 	public Waypoint() {
 		super();
 //		type = MissionItemType.WAYPOINT.toString();
+		this.delay = 0.0;
+		this.altitude = 0.0;
 	}
-	
-	public double getDelay() {
+
+	@Override
+	public Double getDelay() {
 		return delay;
 	}
 
-	public void setDelay(double delay) {
+	@Override
+	public void setDelay(Double delay) {
 		this.delay = delay;
 	}
 
@@ -83,11 +87,6 @@ public class Waypoint extends MissionItem implements Altitudable, Serializable {
 	public void setOrbitCCW(boolean orbitCCW) {
 		this.orbitCCW = orbitCCW;
 	}
-	
-	@Override
-	public String toString() {
-		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
-	}
 
 	@Override
 	public void setAltitude(Double altitude) {
@@ -97,5 +96,55 @@ public class Waypoint extends MissionItem implements Altitudable, Serializable {
 	@Override
 	public Double getAltitude() {
 		return this.altitude;
+	}
+
+	@Override
+	public String toString() {
+		return "Waypoint{" +
+				super.toString() +
+				"delay=" + delay +
+				", acceptanceRadius=" + acceptanceRadius +
+				", yawAngle=" + yawAngle +
+				", orbitalRadius=" + orbitalRadius +
+				", orbitCCW=" + orbitCCW +
+				", altitude=" + altitude +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		Waypoint waypoint = (Waypoint) o;
+
+		if (Double.compare(waypoint.acceptanceRadius, acceptanceRadius) != 0) return false;
+		if (Double.compare(waypoint.yawAngle, yawAngle) != 0) return false;
+		if (Double.compare(waypoint.orbitalRadius, orbitalRadius) != 0) return false;
+		if (orbitCCW != waypoint.orbitCCW) return false;
+		if (delay != null ? !delay.equals(waypoint.delay) : waypoint.delay != null) return false;
+		return altitude != null ? altitude.equals(waypoint.altitude) : waypoint.altitude == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		long temp;
+		result = 31 * result + (delay != null ? delay.hashCode() : 0);
+		temp = Double.doubleToLongBits(acceptanceRadius);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yawAngle);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(orbitalRadius);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (orbitCCW ? 1 : 0);
+		result = 31 * result + (altitude != null ? altitude.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
+		convertDatabaseVisitor.visit(this);
 	}
 }

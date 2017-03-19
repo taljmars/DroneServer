@@ -1,25 +1,21 @@
 package com.dronedb.persistence.scheme;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
-//import org.hibernate.annotations.ColumnDefault;
-
+import java.io.Serializable;
 
 @Entity
 //@Table(name="missionitems")
-public class ReturnToHome extends MissionItem implements Altitudable, Serializable {
-		
+public class Land extends MissionItem implements Altitudable, Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Column(nullable = true)
+	@Column
 	protected Double altitude;
-	
-	public ReturnToHome() {
+
+	public Land() {
 		super();
-//		type = MissionItemType.RTL.toString();
+//		type = MissionItemType.LAND.toString();
 	}
 
 	@Override
@@ -33,8 +29,14 @@ public class ReturnToHome extends MissionItem implements Altitudable, Serializab
 	}
 
 	@Override
+	public String toString() {
+		return "Land{" +
+				"altitude=" + altitude +
+				'}';
+	}
+
+	@Override
 	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
 		convertDatabaseVisitor.visit(this);
 	}
 }
-

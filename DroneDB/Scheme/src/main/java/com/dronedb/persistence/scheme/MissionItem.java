@@ -13,19 +13,13 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 //@DiscriminatorColumn(name="type")
 //@Table(name="missionitems")
 //@Table
-public abstract class MissionItem extends BaseObject implements Serializable
+public abstract class MissionItem extends BaseObject implements CovertDatabaseVisited, Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
-	protected MissionItemType type;
+
 	protected Double lat;
 	protected Double lon;
 	
-	@Getter
-	public MissionItemType getType() {
-		return type;
-	}
-
 	@Getter
 	public Double getLat() {
 		return lat;
@@ -54,7 +48,6 @@ public abstract class MissionItem extends BaseObject implements Serializable
 
 		MissionItem that = (MissionItem) o;
 
-		if (type != that.type) return false;
 		if (!lat.equals(that.lat)) return false;
 		return lon.equals(that.lon);
 	}
@@ -62,7 +55,6 @@ public abstract class MissionItem extends BaseObject implements Serializable
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
-		result = 31 * result + type.hashCode();
 		result = 31 * result + lat.hashCode();
 		result = 31 * result + lon.hashCode();
 		return result;
@@ -71,7 +63,7 @@ public abstract class MissionItem extends BaseObject implements Serializable
 	@Override
 	public String toString() {
 		return "MissionItem{" +
-				"type=" + type +
+				super.toString() +
 				", lat=" + lat +
 				", lon=" + lon +
 				'}';

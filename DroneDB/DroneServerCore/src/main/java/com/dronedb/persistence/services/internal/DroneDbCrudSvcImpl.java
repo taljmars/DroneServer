@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
-//import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ import com.dronedb.server.AppConfig;
 @Component
 public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 {
-	//@PersistenceContext
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	public String CheckConnection() {
@@ -51,10 +51,19 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	public <T extends BaseObject> T update(T object) {
 		T mergedObject = object;
 		if (object.getObjId() != null) {
+			System.out.println("Object should exist in DB, searching for " + object);
 			BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
-			if (existingObject != null)
-				mergedObject.set(object);
+			if (existingObject != null) {
+				System.out.println("Found object " + object + " in the DB");
+				mergedObject = entityManager.merge(mergedObject);
+				handleUpdateTriggers(mergedObject, PHASE.CREATE);
+				return mergedObject;
+			}
 		}
+		else {
+			System.out.println("New object " + object);
+		}
+
 		entityManager.persist(mergedObject);
 		handleUpdateTriggers(mergedObject, PHASE.UPDATE);
 		return mergedObject;
@@ -66,8 +75,12 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			BaseObject mergedObject = object;
 			if (object.getObjId() != null) {
 				BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
-				if (existingObject != null)
-					mergedObject.set(object);
+				if (existingObject != null) {
+					System.out.println("Found object " + object + " in the DB");
+					mergedObject = entityManager.merge(mergedObject);
+					handleUpdateTriggers(mergedObject, PHASE.CREATE);
+					return;
+				}
 			}
 			entityManager.persist(mergedObject);
 			handleUpdateTriggers(mergedObject, PHASE.UPDATE);

@@ -112,13 +112,6 @@ public class Mission extends BaseObject implements Serializable
 		this.setDefaultAlt(missionCast.defaultAlt);
 	}
 	
-	@Override  
-	public int hashCode() {  
-		int hash = 0;  
-		hash += (this.getObjId() != null ? this.getObjId().hashCode() : 0);
-		return hash;  
-	} 
-	
 	@PrePersist
 	public void onCreate() {
 		super.onCreate();
@@ -128,28 +121,38 @@ public class Mission extends BaseObject implements Serializable
 	public void onUpdate() {
 		super.onUpdate();  
 	}
-  
-	@Override  
-	public boolean equals(Object object) {  
-		if (this == object)  
-			return true;  
-		if (object == null)  
-			return false;  
-		if (getClass() != object.getClass())  
-			return false;  
-  
-		Mission other = (Mission) object;
-		if (this.getObjId() != other.getObjId() && (this.getObjId() == null || !this.objId.equals(other.objId)))  
-			return false;  
-        
-		if (this.getDefaultAlt() != other.getDefaultAlt())
-			return false;
-        
-		return true;  
-	}  
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		Mission mission = (Mission) o;
+
+		if (Double.compare(mission.defaultAlt, defaultAlt) != 0) return false;
+		if (!name.equals(mission.name)) return false;
+		return missionItems != null ? missionItems.equals(mission.missionItems) : mission.missionItems == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		long temp;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + (missionItems != null ? missionItems.hashCode() : 0);
+		temp = Double.doubleToLongBits(defaultAlt);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [objId=" + objId + ", missionItems=" + missionItems + ", defaultAlt=" + defaultAlt + "]";
+		return "Mission{" +
+				super.toString() +
+				"name='" + name + '\'' +
+				", missionItems=" + missionItems +
+				", defaultAlt=" + defaultAlt +
+				'}';
 	}
 }

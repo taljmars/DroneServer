@@ -9,7 +9,7 @@ import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Mission;
 
 public class DeleteObjectTriggerImpl implements DeleteObjectTrigger {
-	
+
 	private QuerySvc querySvc;
 	private DroneDbCrudSvc droneDbCrudSvc;
 	
@@ -27,8 +27,8 @@ public class DeleteObjectTriggerImpl implements DeleteObjectTrigger {
 		if (!(object instanceof Mission))
 			return;
 		
-		querySvc = (QuerySvc) applicationContext.getBean("querySvc");
-		droneDbCrudSvc = (DroneDbCrudSvc) applicationContext.getBean("droneDbCrudSvc");
+		querySvc = applicationContext.getBean(QuerySvc.class);
+		droneDbCrudSvc = applicationContext.getBean(DroneDbCrudSvc.class);
 		
 		Mission mission = (Mission) object;
 		

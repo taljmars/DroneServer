@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-//import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import com.dronedb.persistence.scheme.BaseObject;
 @Component
 public class QuerySvcImpl implements QuerySvc {
 	
-	//@PersistenceContext
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
