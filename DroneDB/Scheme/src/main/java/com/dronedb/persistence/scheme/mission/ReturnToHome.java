@@ -1,4 +1,6 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
+
+import com.dronedb.persistence.scheme.BaseObject;
 
 import java.io.Serializable;
 
@@ -20,6 +22,31 @@ public class ReturnToHome extends MissionItem implements Altitudable, Serializab
 	public ReturnToHome() {
 		super();
 //		type = MissionItemType.RTL.toString();
+	}
+
+	public ReturnToHome(ReturnToHome returnToHome) {
+		super(returnToHome);
+		this.altitude = returnToHome.getAltitude();
+	}
+
+	@Override
+	public ReturnToHome clone() {
+		return new ReturnToHome(this);
+	}
+
+	@Override
+	public BaseObject copy() {
+		ReturnToHome returnToHome = this.clone();
+		returnToHome.objId = this.objId;
+		return returnToHome;
+	}
+
+
+	@Override
+	public void set(BaseObject baseObject) {
+		super.set(baseObject);
+		ReturnToHome returnToHome = (ReturnToHome) baseObject;
+		this.altitude = returnToHome.getAltitude();
 	}
 
 	@Override

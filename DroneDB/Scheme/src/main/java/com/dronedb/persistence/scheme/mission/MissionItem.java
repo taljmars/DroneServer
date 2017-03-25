@@ -1,12 +1,15 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import com.dronedb.persistence.scheme.BaseObject;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
-@XmlSeeAlso({Waypoint.class, Circle.class, ReturnToHome.class, Takeoff.class})
+@XmlSeeAlso({Waypoint.class, Circle.class, ReturnToHome.class, Takeoff.class, RegionOfInterest.class, Land.class})
 //@MappedSuperclass
 @Entity
 //@Inheritance(strategy=InheritanceType.JOINED)
@@ -19,6 +22,22 @@ public abstract class MissionItem extends BaseObject implements CovertDatabaseVi
 
 	protected Double lat;
 	protected Double lon;
+
+	public MissionItem() {}
+
+	public MissionItem(MissionItem missionItem) {
+		super(missionItem);
+		this.lat = missionItem.getLat();
+		this.lon = missionItem.getLon();
+	}
+
+	public abstract MissionItem clone();
+
+	public void set(BaseObject baseObject) {
+		MissionItem missionItem = (MissionItem) baseObject;
+		this.lat = missionItem.getLat();
+		this.lon = missionItem.getLon();
+	}
 	
 	@Getter
 	public Double getLat() {

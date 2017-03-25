@@ -12,27 +12,22 @@ import java.util.UUID;
 /**
  * Created by taljmars on 3/23/17.
  */
-public class HandleRedundantMissionItemsTriggerImpl extends UpdateObjectTriggerImpl {
+public class HandleMissionDeletionTriggerImpl extends DeleteObjectTriggerImpl {
 
-    public HandleRedundantMissionItemsTriggerImpl() {
+    public HandleMissionDeletionTriggerImpl() {
         super();
     }
 
     @Override
-    public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) {
-        if ((!(oldInst instanceof Mission)) || (!(newInst instanceof Mission))) {
+    public <T extends BaseObject> void handleDeleteObject(T inst) {
+        if (!(inst instanceof Mission)){
             System.out.println("No a mission, trigger skipped");
             return;
         }
 
-        QuerySvc querySvc = applicationContext.getBean(QuerySvc.class);
         DroneDbCrudSvc droneDbCrudSvc = applicationContext.getBean(DroneDbCrudSvc.class);
 
-        for (UUID missionItemuid : ((Mission) oldInst).getMissionItemsUids()) {
-            if (((Mission) newInst).getMissionItemsUids().contains(missionItemuid))
-                continue;
-
-            // Old Uuid, mission item should be cleared
+        for (UUID missionItemuid : ((Mission) inst).getMissionItemsUids()) {
             MissionItem missionItem = droneDbCrudSvc.readByClass(missionItemuid, MissionItem.class);
             droneDbCrudSvc.delete(missionItem);
         }

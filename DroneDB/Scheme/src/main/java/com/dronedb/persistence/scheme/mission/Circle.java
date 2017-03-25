@@ -1,4 +1,6 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
+
+import com.dronedb.persistence.scheme.BaseObject;
 
 import java.io.Serializable;
 
@@ -22,7 +24,34 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	
 	public Circle() {
 		super();
-//		type = MissionItemType.CIRCLE.toString();
+	}
+
+	public Circle(Circle circle) {
+		super(circle);
+		this.radius = circle.getRadius();
+		this.altitude = circle.getAltitude();
+		this.turns = circle.getTurns();
+	}
+
+	@Override
+	public Circle clone() {
+		return new Circle(this);
+	}
+
+	@Override
+	public BaseObject copy() {
+		Circle circle = this.clone();
+		circle.objId = this.objId;
+		return circle;
+	}
+
+	@Override
+	public void set(BaseObject baseObject) {
+		super.set(baseObject);
+		Circle circle = (Circle) baseObject;
+		this.radius = circle.getRadius();
+		this.altitude = circle.getAltitude();
+		this.turns = circle.getTurns();
 	}
 
 	@Override

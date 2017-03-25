@@ -1,4 +1,6 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
+
+import com.dronedb.persistence.scheme.BaseObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,30 @@ public class Land extends MissionItem implements Altitudable, Serializable {
 	public Land() {
 		super();
 //		type = MissionItemType.LAND.toString();
+	}
+
+	public Land(Land land) {
+		super(land);
+		this.altitude = land.getAltitude();
+	}
+
+	@Override
+	public Land clone() {
+		return new Land(this);
+	}
+
+	@Override
+	public BaseObject copy() {
+		Land land = this.clone();
+		land.objId = this.objId;
+		return land;
+	}
+
+	@Override
+	public void set(BaseObject baseObject) {
+		super.set(baseObject);
+		Land land = (Land) baseObject;
+		this.altitude = land.getAltitude();
 	}
 
 	@Override

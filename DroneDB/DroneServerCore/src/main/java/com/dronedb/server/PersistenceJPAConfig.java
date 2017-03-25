@@ -19,10 +19,11 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//@Configuration
-@EnableTransactionManagement
-@PropertySource({ "classpath:persistence-mysql.properties" })
+@Configuration
+//@EnableTransactionManagement
 @ComponentScan({ "com.dronedb.persistence" })
+@ComponentScan({ "com.dronedb.server" })
+@PropertySource({ "/com/dronedb/persistence-mysql.properties" })
 public class PersistenceJPAConfig {
 
     @Autowired
@@ -58,12 +59,12 @@ public class PersistenceJPAConfig {
         return dataSource;
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
-        return transactionManager;
-    }
+//    @Bean
+//    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
+//        final JpaTransactionManager transactionManager = new JpaTransactionManager();
+//        transactionManager.setEntityManagerFactory(emf);
+//        return transactionManager;
+//    }
 
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {

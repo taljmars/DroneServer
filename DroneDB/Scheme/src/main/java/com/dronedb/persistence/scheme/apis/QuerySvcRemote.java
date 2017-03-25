@@ -1,4 +1,4 @@
-package com.dronedb.persistence.ws;
+package com.dronedb.persistence.scheme.apis;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

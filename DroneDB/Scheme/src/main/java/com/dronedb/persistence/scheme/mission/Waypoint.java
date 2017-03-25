@@ -1,4 +1,6 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
+
+import com.dronedb.persistence.scheme.BaseObject;
 
 import java.io.Serializable;
 
@@ -44,6 +46,38 @@ public class Waypoint extends MissionItem implements Delayable, Altitudable, Ser
 //		type = MissionItemType.WAYPOINT.toString();
 		this.delay = 0.0;
 		this.altitude = 0.0;
+	}
+
+	public Waypoint(Waypoint waypoint) {
+		super(waypoint);
+		this.altitude = waypoint.getAltitude();
+		this.delay = waypoint.getDelay();
+		this.acceptanceRadius = waypoint.getAcceptanceRadius();
+		this.orbitalRadius = waypoint.getOrbitalRadius();
+		this.yawAngle = waypoint.getYawAngle();
+	}
+
+	@Override
+	public Waypoint clone() {
+		return new Waypoint(this);
+	}
+
+	@Override
+	public BaseObject copy() {
+		Waypoint waypoint = this.clone();
+		waypoint.objId = this.objId;
+		return waypoint;
+	}
+
+	@Override
+	public void set(BaseObject baseObject) {
+		super.set(baseObject);
+		Waypoint waypoint = (Waypoint) baseObject;
+		this.altitude = waypoint.getAltitude();
+		this.delay = waypoint.getDelay();
+		this.acceptanceRadius = waypoint.getAcceptanceRadius();
+		this.orbitalRadius = waypoint.getOrbitalRadius();
+		this.yawAngle = waypoint.getYawAngle();
 	}
 
 	@Override

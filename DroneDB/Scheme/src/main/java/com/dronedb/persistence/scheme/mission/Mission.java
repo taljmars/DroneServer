@@ -1,25 +1,18 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import javax.persistence.Access;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.triggers.DeleteTrigger;
 import com.dronedb.triggers.DeleteTriggers;
 
+import com.dronedb.triggers.UpdateTrigger;
+import com.dronedb.triggers.UpdateTriggers;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -42,8 +35,11 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 })
 @Entity
 @Table(name="missions")
+@UpdateTriggers({
+	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTriggerImpl", phase = UpdateTrigger.PHASE.UPDATE)
+})
 @DeleteTriggers({
-	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.DeleteObjectTriggerImpl")
+	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTriggerImpl")
 })
 @Access(javax.persistence.AccessType.FIELD)
 public class Mission extends BaseObject implements Serializable
@@ -52,9 +48,41 @@ public class Mission extends BaseObject implements Serializable
 	
 	public Mission() {
 		super();
-		missionItems = new ArrayList();
+		missionItemsUids = new ArrayList();
 	}
-	
+
+	public Mission(Mission mission) {
+		super(mission);
+		this.name = mission.getName();
+		this.defaultAlt = mission.getDefaultAlt();
+		this.missionItemsUids = new ArrayList<>();
+		for (UUID missionItemUid : mission.getMissionItemsUids()) {
+			this.missionItemsUids.add(missionItemUid);
+		}
+	}
+
+	@Override
+	public void set(BaseObject baseObject) {
+		System.out.println("Setting mission");
+		Mission mission = (Mission) baseObject;
+		this.name = mission.getName();
+		this.defaultAlt = mission.getDefaultAlt();
+		this.missionItemsUids = mission.getMissionItemsUids();
+	}
+
+	@Override
+	@Transient
+	public Mission clone() {
+		return new Mission(this);
+	}
+
+	@Override
+	public BaseObject copy() {
+		Mission mission = this.clone();
+		mission.objId = this.objId;
+		return mission;
+	}
+
 	@Column(nullable = true)
 	protected String name;
 	
@@ -68,29 +96,29 @@ public class Mission extends BaseObject implements Serializable
 		this.name = name;
 	}
 	
-	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
-	@JoinTable(name = "mission_missionitem", joinColumns = @JoinColumn(name = "mission_id", referencedColumnName = "objid"), inverseJoinColumns = @JoinColumn(name = "missionitem_id", referencedColumnName="objid"))
-	private List<MissionItem> missionItems;
+//	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+//	@JoinTable(name = "mission_missionitem", joinColumns = @JoinColumn(name = "mission_id", referencedColumnName = "objid"), inverseJoinColumns = @JoinColumn(name = "missionitem_id", referencedColumnName="objid"))
+	@ElementCollection
+	private List<UUID> missionItemsUids;
 	
 	@Getter
-	public List<MissionItem> getMissionItems() {
-		return missionItems;
+	public List<UUID> getMissionItemsUids() {
+		return missionItemsUids;
 	}
 	
-	@Setter 
-	public void setMissionItems(List<MissionItem> missionItems) {
-		this.missionItems.addAll(missionItems);
+	@Setter
+	public void setMissionItemsUids(List<UUID> missionItemsUids) {
+		this.missionItemsUids.clear();
+		if (missionItemsUids != null)
+			this.missionItemsUids.addAll(missionItemsUids);
 	}
 
-	public void addMissionItem(MissionItem missionItem) {
-		if (this.missionItems == null)
-			this.missionItems = new ArrayList<>();
-
-		this.missionItems.add(missionItem);
+	public void addMissionItemUid(UUID missionItemUid) {
+		this.missionItemsUids.add(missionItemUid);
 	}
 
-	public boolean removeMissionItem(MissionItem missionItem) {
-		return this.missionItems.remove(missionItem);
+	public boolean removeMissionItemUid(UUID missionItemUid) {
+		return this.missionItemsUids.remove(missionItemUid);
 	}
 	
 	@Column(nullable = true)
@@ -106,12 +134,6 @@ public class Mission extends BaseObject implements Serializable
 		defaultAlt = alt;
 	}
 	
-	public <T extends BaseObject> void set(T mission) {
-		super.set(mission);
-		Mission missionCast = (Mission) mission;
-		this.setDefaultAlt(missionCast.defaultAlt);
-	}
-	
 	@PrePersist
 	public void onCreate() {
 		super.onCreate();
@@ -121,6 +143,7 @@ public class Mission extends BaseObject implements Serializable
 	public void onUpdate() {
 		super.onUpdate();  
 	}
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -132,7 +155,7 @@ public class Mission extends BaseObject implements Serializable
 
 		if (Double.compare(mission.defaultAlt, defaultAlt) != 0) return false;
 		if (!name.equals(mission.name)) return false;
-		return missionItems != null ? missionItems.equals(mission.missionItems) : mission.missionItems == null;
+		return missionItemsUids != null ? missionItemsUids.equals(mission.missionItemsUids) : mission.missionItemsUids == null;
 	}
 
 	@Override
@@ -140,7 +163,7 @@ public class Mission extends BaseObject implements Serializable
 		int result = super.hashCode();
 		long temp;
 		result = 31 * result + name.hashCode();
-		result = 31 * result + (missionItems != null ? missionItems.hashCode() : 0);
+		result = 31 * result + (missionItemsUids != null ? missionItemsUids.hashCode() : 0);
 		temp = Double.doubleToLongBits(defaultAlt);
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		return result;
@@ -151,7 +174,7 @@ public class Mission extends BaseObject implements Serializable
 		return "Mission{" +
 				super.toString() +
 				"name='" + name + '\'' +
-				", missionItems=" + missionItems +
+				", missionItemsUids=" + missionItemsUids +
 				", defaultAlt=" + defaultAlt +
 				'}';
 	}

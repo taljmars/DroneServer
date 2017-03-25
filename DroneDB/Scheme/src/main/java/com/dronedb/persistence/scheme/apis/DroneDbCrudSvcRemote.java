@@ -1,4 +1,4 @@
-package com.dronedb.persistence.ws;
+package com.dronedb.persistence.scheme.apis;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -7,6 +7,8 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import com.dronedb.persistence.scheme.BaseObject;
+
+import java.util.UUID;
 
 @WebService
 @SOAPBinding(style = Style.RPC)
@@ -28,8 +30,8 @@ public interface DroneDbCrudSvcRemote
 	<T extends BaseObject> void delete(@WebParam T object);
 	
 	@WebMethod 
-	<T extends BaseObject> T read(@WebParam final String objId);
+	<T extends BaseObject> T read(@WebParam final UUID objId);
 	
 	@WebMethod 
-	<T extends BaseObject> T readByClass(@WebParam final String objId, @WebParam final Class<T> clz);
+	<T extends BaseObject> T readByClass(@WebParam final UUID objId, @WebParam final Class<T> clz);
 }

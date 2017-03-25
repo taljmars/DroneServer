@@ -1,4 +1,4 @@
-package com.dronedb.persistence.ws;
+package com.dronedb.persistence.scheme.apis;
 
 import java.util.ArrayList;
 import java.util.List;

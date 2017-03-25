@@ -2,11 +2,13 @@ package com.dronedb.persistence.services.internal;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +35,10 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	
 	@Transactional
 	public <T extends BaseObject> T create(final Class<T> clz) {
+		System.out.println("Crud CREATE called " + clz);
 		try {
 			T inst = clz.newInstance();
-			handleUpdateTriggers(inst, PHASE.CREATE);			
+			handleUpdateTriggers(null, inst, PHASE.CREATE);
 			return inst;
 		} 
 		catch (InstantiationException e) {
@@ -49,59 +52,65 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 
 	@Transactional
 	public <T extends BaseObject> T update(T object) {
-		T mergedObject = object;
-		if (object.getObjId() != null) {
-			System.out.println("Object should exist in DB, searching for " + object);
-			BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
-			if (existingObject != null) {
-				System.out.println("Found object " + object + " in the DB");
-				mergedObject = entityManager.merge(mergedObject);
-				handleUpdateTriggers(mergedObject, PHASE.CREATE);
-				return mergedObject;
-			}
+		System.out.println("Crud UPDATE called " + object);
+		PHASE phase;
+		T oldVersion = null;
+		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+		if (existingObject == null) {
+			entityManager.persist(object);
+			phase = PHASE.CREATE;
 		}
 		else {
-			System.out.println("New object " + object);
+			oldVersion = (T) existingObject.clone();
+			existingObject.set(object);
+			phase = PHASE.UPDATE;
 		}
 
-		entityManager.persist(mergedObject);
-		handleUpdateTriggers(mergedObject, PHASE.UPDATE);
+		entityManager.flush();
+		existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+		handleUpdateTriggers(oldVersion, existingObject, phase);
+
+		T mergedObject = (T) existingObject;
+		System.out.println("Updated " + mergedObject);
 		return mergedObject;
 	}
 	
 	@Transactional
 	public <T extends BaseObject> void updateSet(Set<T> objects) {
-		for (T object : objects) {
-			BaseObject mergedObject = object;
-			if (object.getObjId() != null) {
-				BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
-				if (existingObject != null) {
-					System.out.println("Found object " + object + " in the DB");
-					mergedObject = entityManager.merge(mergedObject);
-					handleUpdateTriggers(mergedObject, PHASE.CREATE);
-					return;
-				}
-			}
-			entityManager.persist(mergedObject);
-			handleUpdateTriggers(mergedObject, PHASE.UPDATE);
-		}
+//		for (T object : objects) {
+//			BaseObject mergedObject = object;
+//			if (object.getObjId() != null) {
+//				BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
+//				if (existingObject != null) {
+//					System.out.println("Found object " + object + " in the DB");
+//					mergedObject = entityManager.merge(mergedObject);
+//					handleUpdateTriggers(mergedObject, PHASE.CREATE);
+//					return;
+//				}
+//			}
+//			entityManager.persist(mergedObject);
+//			handleUpdateTriggers(mergedObject, PHASE.UPDATE);
+//		}
 	}
 
 	@Transactional
 	public <T extends BaseObject> void delete(T object) {
-		handleDeleteTriggers(object);
-		T mergedObject = entityManager.merge(object);
-		entityManager.remove(mergedObject);
+		System.out.println("Crud DELETE called " + object);
+		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+		handleDeleteTriggers(existingObject);
+		System.out.println("Removing " + existingObject);
+		entityManager.remove(existingObject);
 	}
 	
 	@Transactional
-	public <T extends BaseObject> T read(final String uid) {
+	public <T extends BaseObject> T read(final UUID uid) {
 		//Assert.fail("Not implemeted yet");
 		return null;
 	}
 	
 	@Transactional
-	public <T extends BaseObject> T readByClass(final String objId, final Class<T> clz) {
+	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) {
+		System.out.println("Crud READ called " + objId + ", class " + clz);
 		return entityManager.find(clz ,objId);
 	}
 	
@@ -110,21 +119,21 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	 */
 	
 	@SuppressWarnings("unchecked")
-	private <T extends BaseObject> void handleUpdateTriggers(T inst, PHASE phase) {
+	private <T extends BaseObject> void handleUpdateTriggers(T oldInst, T newInst, PHASE phase) {
 		try {
-			UpdateTriggers updateTriggers = inst.getClass().getAnnotation(UpdateTriggers.class);
+			UpdateTriggers updateTriggers = newInst.getClass().getAnnotation(UpdateTriggers.class);
 			if (updateTriggers == null)
 				return;
 			
-			System.out.println(inst.toString());
-			System.out.println(Arrays.asList(inst.getClass().getAnnotations()).toString());
+			System.out.println("Invoking Update Trigger for:  " + newInst.toString());
+			System.out.println("Triggers List: " + Arrays.asList(newInst.getClass().getAnnotations()).toString());
 			
 			UpdateTrigger[] updateTriggersArray = updateTriggers.value();
 			
 			for (UpdateTrigger updateTrigger : updateTriggersArray) {
 			
 				if (!updateTrigger.phase().equals(phase)) {
-					System.out.println("Not in " + updateTrigger.phase());
+					System.out.println("Not in relevant phase " + updateTrigger.phase());
 					continue;
 				}
 			
@@ -132,7 +141,8 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				Class<UpdateObjectTrigger> trigger = (Class<UpdateObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
 				UpdateObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(AppConfig.context);
-				t.handleUpdateObject(inst, phase);
+				System.out.println("Trigger executed: " + t.getClass().getSimpleName());
+				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
 		catch (ClassNotFoundException e) {
@@ -152,9 +162,9 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			DeleteTriggers deleteTriggers = inst.getClass().getAnnotation(DeleteTriggers.class);
 			if (deleteTriggers == null)
 				return;
-			
-			System.out.println(inst.toString());
-			System.out.println(Arrays.asList(inst.getClass().getAnnotations()).toString());
+
+			System.out.println("Invoking Delete Trigger for:  " + inst.toString());
+			System.out.println("Triggers List: " + Arrays.asList(inst.getClass().getAnnotations()).toString());
 			
 			DeleteTrigger[] deleteTriggersArray = deleteTriggers.value();
 			
@@ -163,6 +173,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(AppConfig.context);
+				System.out.println("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleDeleteObject(inst);	
 			}
 		} 

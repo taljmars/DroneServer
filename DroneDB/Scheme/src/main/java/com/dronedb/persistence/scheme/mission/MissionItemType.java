@@ -1,4 +1,4 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.mission;
 
 import java.util.HashMap;
 import java.util.Map;

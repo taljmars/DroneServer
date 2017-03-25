@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.dronedb.persistence.services.QueryRequest;
 import com.dronedb.persistence.services.QuerySvc;
 import com.dronedb.persistence.scheme.BaseObject;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class QuerySvcImpl implements QuerySvc {
@@ -22,7 +23,7 @@ public class QuerySvcImpl implements QuerySvc {
 	private EntityManager entityManager;
 
 	@Override
-	//@Transactional
+	@Transactional
 	public <T extends BaseObject> List<T> runNativeQuery(String queryString, Class<T> clz)
 	{
 		Query query = entityManager.createNativeQuery(queryString, clz);
@@ -41,7 +42,7 @@ public class QuerySvcImpl implements QuerySvc {
 	}
 	
 	@Override
-	//@Transactional
+	@Transactional
 	public <T extends BaseObject> List<T> runNamedQuery(String queryString, Class<T> clz)
 	{
 		System.err.println("Running named query");
@@ -62,7 +63,7 @@ public class QuerySvcImpl implements QuerySvc {
 	}
 
 	@Override
-	//@Transactional
+	@Transactional
 	public <T extends BaseObject> List<? extends BaseObject> query(QueryRequest queryRequest)
 	{
 		System.out.println(queryRequest.toString());

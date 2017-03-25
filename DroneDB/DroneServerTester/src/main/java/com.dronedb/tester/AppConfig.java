@@ -11,8 +11,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.dronedb.persistence.ws.DroneDbCrudSvcRemote;
-import com.dronedb.persistence.ws.QuerySvcRemote;
+import com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote;
+import com.dronedb.persistence.scheme.apis.QuerySvcRemote;
 
 @Configuration
 public class AppConfig
@@ -44,4 +44,5 @@ public class AppConfig
 	public QuerySvcRemote querySvcRemote() {
 		return LoadServices(QuerySvcRemote.class);
 	}
+
 }

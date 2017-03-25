@@ -4,40 +4,44 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.Basic;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import com.dronedb.persistence.scheme.mission.Mission;
+import com.dronedb.persistence.scheme.mission.MissionItem;
+import com.dronedb.persistence.scheme.perimeter.Perimeter;
+import com.dronedb.persistence.scheme.perimeter.Point;
 import jdk.nashorn.internal.objects.annotations.Getter;
 
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@XmlSeeAlso({Mission.class, MissionItem.class})
+@XmlSeeAlso({Mission.class, MissionItem.class, Perimeter.class, Point.class})
 @MappedSuperclass
 public abstract class BaseObject implements Serializable
 {	
 	private static final long serialVersionUID = 1L;
 	
 	public BaseObject() {
-		UUID uuid = UUID.randomUUID();
-		objId = uuid.toString();
+		this.objId = UUID.randomUUID();
 	}
+
+	public BaseObject(BaseObject baseObject) {
+		this.objId = UUID.randomUUID();
+	}
+
+	@Transient
+	public abstract BaseObject clone();
+
+	@Transient
+	public abstract BaseObject copy();
 	
 	@Id
 	@Basic(optional = false)
 	@XmlElement(required = true)
-	protected String objId;
+	protected UUID objId;
 
 	@Getter
-	public String getObjId() {
+	public UUID getObjId() {
 		return objId;
 	}
 	
@@ -78,10 +82,8 @@ public abstract class BaseObject implements Serializable
 		return version;
 	}
     
-	public <T extends BaseObject> void set(T baseObject) {
-		this.objId = baseObject.objId;
-	}
-	
+	public abstract void set(BaseObject baseObject);
+
 	@Override  
 	public int hashCode() {  
 		int hash = 0;  
@@ -109,6 +111,5 @@ public abstract class BaseObject implements Serializable
 	@Override  
 	public String toString() {  
 		return this.getClass().getCanonicalName() + " [objId=" + objId + "]";  
-	}  
-
+	}
 }
