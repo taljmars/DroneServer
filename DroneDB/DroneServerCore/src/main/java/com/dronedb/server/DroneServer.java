@@ -3,6 +3,7 @@ package com.dronedb.server;
 import javax.xml.ws.Endpoint;
 
 import com.dronedb.persistence.scheme.apis.MissionCrudSvcRemote;
+import com.dronedb.persistence.scheme.apis.PerimeterCrudSvcRemote;
 import org.springframework.stereotype.Component;
 
 import com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote;
@@ -18,6 +19,7 @@ public class DroneServer {
 		DroneDbCrudSvcRemote droneDbCrudSvcRemote 		= AppConfig.context.getBean(DroneDbCrudSvcRemote.class);
 		QuerySvcRemote querySvcRemote 					= AppConfig.context.getBean(QuerySvcRemote.class);
 		MissionCrudSvcRemote missionCrudSvcRemote 		= AppConfig.context.getBean(MissionCrudSvcRemote.class);
+		PerimeterCrudSvcRemote perimeterCrudSvcRemote 	= AppConfig.context.getBean(PerimeterCrudSvcRemote.class);
 		
 		System.err.println("Sign " + DroneDbCrudSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + DroneDbCrudSvcRemote.class.getSimpleName(), droneDbCrudSvcRemote);
@@ -27,6 +29,9 @@ public class DroneServer {
 
 		System.err.println("Sign " + MissionCrudSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + MissionCrudSvcRemote.class.getSimpleName(), missionCrudSvcRemote);
+
+		System.err.println("Sign " + PerimeterCrudSvcRemote.class.getSimpleName());
+		Endpoint.publish("http://localhost:9999/ws/" + PerimeterCrudSvcRemote.class.getSimpleName(), perimeterCrudSvcRemote);
 
 	}
 

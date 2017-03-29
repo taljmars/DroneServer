@@ -4,13 +4,14 @@ import com.dronedb.persistence.scheme.BaseObject;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Created by taljmars on 3/19/17.
  */
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = "GetAllCircleParameter",
+                name = "GetAllCirclePerimeters",
                 query = "select * from circleperimeters",
                 resultClass = CirclePerimeter.class
         )
@@ -20,7 +21,7 @@ import javax.persistence.*;
 public class CirclePerimeter extends Perimeter {
 
     @Column(nullable = true)
-    protected Point center;
+    protected UUID center;
 
     @Column(nullable = true)
     protected Double radius;
@@ -54,12 +55,12 @@ public class CirclePerimeter extends Perimeter {
     }
 
     @Getter
-    public Point getCenter() {
+    public UUID getCenter() {
         return center;
     }
 
     @Setter
-    public void setCenter(Point center) {
+    public void setCenter(UUID center) {
         this.center = center;
     }
 

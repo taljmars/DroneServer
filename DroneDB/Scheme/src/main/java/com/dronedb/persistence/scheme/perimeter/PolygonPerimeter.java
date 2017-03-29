@@ -8,13 +8,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by taljmars on 3/19/17.
  */
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = "GetAllPolygonParameter",
+                name = "GetAllPolygonPerimeters",
                 query = "select * from polygonperimeters",
                 resultClass = PolygonPerimeter.class
         )
@@ -24,11 +25,12 @@ import java.util.List;
 @Access(javax.persistence.AccessType.FIELD)
 public class PolygonPerimeter extends Perimeter implements Serializable {
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinTable( name = "polygonperimeter_point",
-            joinColumns = @JoinColumn(name = "perimeter_id", referencedColumnName = "objid"),
-            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName="objid"))
-    protected List<Point> points;
+//    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @JoinTable( name = "polygonperimeter_point",
+//            joinColumns = @JoinColumn(name = "perimeter_id", referencedColumnName = "objid"),
+//            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName="objid"))
+    @ElementCollection
+    protected List<UUID> points;
 
     public PolygonPerimeter() {
         super();
@@ -38,8 +40,8 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     public PolygonPerimeter(PolygonPerimeter polygonPerimeter) {
         super(polygonPerimeter);
         this.points = new ArrayList<>();
-        for (Point point : polygonPerimeter.getPoints())
-            this.points.add(point.clone());
+        for (UUID point : polygonPerimeter.getPoints())
+            this.points.add(point);
     }
 
     @Override
@@ -62,20 +64,20 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     }
 
     @Getter
-    public List<Point> getPoints() {
+    public List<UUID> getPoints() {
         return points;
     }
 
     @Setter
-    public void setPoints(List<Point> points) {
+    public void setPoints(List<UUID> points) {
         this.points = points;
     }
 
-    public void addPoint(Point point) {
+    public void addPoint(UUID point) {
         points.add(point);
     }
 
-    public void removePoint(Point point) {
+    public void removePoint(UUID point) {
         if (points != null)
             points.remove(point);
     }

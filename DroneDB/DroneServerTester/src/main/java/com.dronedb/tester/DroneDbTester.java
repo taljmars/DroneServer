@@ -61,12 +61,12 @@ public class DroneDbTester
 		CirclePerimeter circlePerimeter = new CirclePerimeter();
 		circlePerimeter.setRadius(10.0);
 		circlePerimeter.setName("tal");
-		circlePerimeter.setCenter(new Point(1.0, 1.0));
-		droneDbCrudSvcRemote.update(circlePerimeter);
+		//circlePerimeter.setCenter(new Point(1.0, 1.0));
+		//droneDbCrudSvcRemote.update(circlePerimeter);
 
 		circlePerimeter.setName("tatatat");
-		circlePerimeter.getCenter().setLat(3.0);
-		droneDbCrudSvcRemote.update(circlePerimeter);
+		//circlePerimeter.getCenter().setLat(3.0);
+		//droneDbCrudSvcRemote.update(circlePerimeter);
 
 
 //		QuerySvcRemote querySvcRemote = (QuerySvcRemote) AppConfig.context.getBean("querySvcRemote");
