@@ -20,7 +20,7 @@
         </property>
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> <!-- Flush DB at the end-->
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
             </props>
         </property>
