@@ -47,10 +47,10 @@ public interface DroneDbCrudSvcRemote {
     @WebResult(partName = "return")
     @Action(input = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassRequest", output = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassResponse")
     public BaseObject readByClass(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+            @WebParam(name = "arg0", partName = "arg0")
+                    String arg0,
+            @WebParam(name = "arg1", partName = "arg1")
+                    String arg1);
 
     /**
      * 
@@ -62,8 +62,8 @@ public interface DroneDbCrudSvcRemote {
     @WebResult(partName = "return")
     @Action(input = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateRequest", output = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateResponse")
     public BaseObject update(
-        @WebParam(name = "arg0", partName = "arg0")
-        BaseObject arg0);
+            @WebParam(name = "arg0", partName = "arg0")
+                    BaseObject arg0);
 
     /**
      * 
@@ -75,8 +75,8 @@ public interface DroneDbCrudSvcRemote {
     @WebResult(partName = "return")
     @Action(input = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readRequest", output = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readResponse")
     public BaseObject read(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0);
+            @WebParam(name = "arg0", partName = "arg0")
+                    String arg0);
 
     /**
      * 
@@ -85,8 +85,8 @@ public interface DroneDbCrudSvcRemote {
     @WebMethod
     @Action(input = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteRequest", output = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteResponse")
     public void delete(
-        @WebParam(name = "arg0", partName = "arg0")
-        BaseObject arg0);
+            @WebParam(name = "arg0", partName = "arg0")
+                    BaseObject arg0);
 
     /**
      * 
@@ -98,7 +98,7 @@ public interface DroneDbCrudSvcRemote {
     @WebResult(partName = "return")
     @Action(input = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/createRequest", output = "http://apis.scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/createResponse")
     public BaseObject create(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0);
+            @WebParam(name = "arg0", partName = "arg0")
+                    String arg0);
 
 }

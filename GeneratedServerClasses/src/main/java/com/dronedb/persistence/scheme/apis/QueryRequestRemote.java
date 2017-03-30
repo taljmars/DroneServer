@@ -62,17 +62,17 @@ public class QueryRequestRemote {
     @XmlElement(required = true)
     protected String clz;
     @XmlElement(required = true)
-    protected QueryRequestRemote.Parameters parameters;
+    protected Parameters parameters;
     @XmlElement(required = true)
     protected String query;
 
     /**
      * Gets the value of the clz property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getClz() {
         return clz;
@@ -80,11 +80,11 @@ public class QueryRequestRemote {
 
     /**
      * Sets the value of the clz property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setClz(String value) {
         this.clz = value;
@@ -92,35 +92,35 @@ public class QueryRequestRemote {
 
     /**
      * Gets the value of the parameters property.
-     * 
+     *
      * @return
      *     possible object is
-     *     {@link QueryRequestRemote.Parameters }
-     *     
+     *     {@link Parameters }
+     *
      */
-    public QueryRequestRemote.Parameters getParameters() {
+    public Parameters getParameters() {
         return parameters;
     }
 
     /**
      * Sets the value of the parameters property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link QueryRequestRemote.Parameters }
-     *     
+     *     {@link Parameters }
+     *
      */
-    public void setParameters(QueryRequestRemote.Parameters value) {
+    public void setParameters(Parameters value) {
         this.parameters = value;
     }
 
     /**
      * Gets the value of the query property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getQuery() {
         return query;
@@ -128,11 +128,11 @@ public class QueryRequestRemote {
 
     /**
      * Sets the value of the query property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setQuery(String value) {
         this.query = value;
@@ -141,9 +141,9 @@ public class QueryRequestRemote {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -166,8 +166,8 @@ public class QueryRequestRemote {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -175,33 +175,33 @@ public class QueryRequestRemote {
     })
     public static class Parameters {
 
-        protected List<QueryRequestRemote.Parameters.Entry> entry;
+        protected List<Entry> entry;
 
         /**
          * Gets the value of the entry property.
-         * 
+         *
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the entry property.
-         * 
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getEntry().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link QueryRequestRemote.Parameters.Entry }
-         * 
-         * 
+         * {@link Entry }
+         *
+         *
          */
-        public List<QueryRequestRemote.Parameters.Entry> getEntry() {
+        public List<Entry> getEntry() {
             if (entry == null) {
-                entry = new ArrayList<QueryRequestRemote.Parameters.Entry>();
+                entry = new ArrayList<Entry>();
             }
             return this.entry;
         }

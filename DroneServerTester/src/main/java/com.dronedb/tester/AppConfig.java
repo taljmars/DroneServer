@@ -6,13 +6,13 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
+import com.dronedb.persistence.ws.internal.QuerySvcRemote;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote;
-import com.dronedb.persistence.scheme.apis.QuerySvcRemote;
 
 @Configuration
 public class AppConfig

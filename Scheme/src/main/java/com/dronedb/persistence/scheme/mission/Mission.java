@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.jws.WebMethod;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.triggers.DeleteTrigger;
@@ -113,10 +118,12 @@ public class Mission extends BaseObject implements Serializable
 			this.missionItemsUids.addAll(missionItemsUids);
 	}
 
+	@Transient
 	public void addMissionItemUid(UUID missionItemUid) {
 		this.missionItemsUids.add(missionItemUid);
 	}
 
+	@Transient
 	public boolean removeMissionItemUid(UUID missionItemUid) {
 		return this.missionItemsUids.remove(missionItemUid);
 	}

@@ -36,7 +36,7 @@ public interface MissionCrudSvcRemote {
     @WebResult(partName = "return")
     @Action(input = "http://apis.scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionRequest", output = "http://apis.scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionResponse")
     public Mission cloneMission(
-        @WebParam(name = "arg0", partName = "arg0")
-        Mission arg0);
+            @WebParam(name = "arg0", partName = "arg0")
+                    Mission arg0);
 
 }

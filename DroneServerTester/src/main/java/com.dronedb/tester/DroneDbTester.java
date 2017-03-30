@@ -1,15 +1,16 @@
 package com.dronedb.tester;
 
-import com.dronedb.persistence.scheme.apis.*;
-import com.dronedb.persistence.scheme.mission.Mission;
-import com.dronedb.persistence.scheme.mission.MissionItem;
-import com.dronedb.persistence.scheme.mission.Takeoff;
-import com.dronedb.persistence.scheme.mission.Waypoint;
-import com.dronedb.persistence.scheme.perimeter.CirclePerimeter;
-import com.dronedb.persistence.scheme.perimeter.Point;
+//import com.dronedb.persistence.scheme.apis.*;
+//import com.dronedb.persistence.scheme.mission.Mission;
+//import com.dronedb.persistence.scheme.mission.MissionItem;
+//import com.dronedb.persistence.scheme.mission.Takeoff;
+//import com.dronedb.persistence.scheme.mission.Waypoint;
+//import com.dronedb.persistence.scheme.perimeter.CirclePerimeter;
+//import com.dronedb.persistence.scheme.perimeter.Point;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.dronedb.persistence.scheme.apis.*;
+import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
+
 
 import javax.transaction.Transactional;
 
@@ -23,13 +24,13 @@ public class DroneDbTester
 		System.setProperty("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory"); 
 		
 		DroneDbCrudSvcRemote droneDbCrudSvcRemote = (DroneDbCrudSvcRemote) AppConfig.context.getBean("droneDbCrudSvcRemote");
-		System.err.println(droneDbCrudSvcRemote.CheckConnection());
+		//System.err.println(droneDbCrudSvcRemote.CheckConnection());
 
 		System.out.println("Get mission");
 		Mission mission = new Mission();
 		mission.setDefaultAlt(2);
 		mission.setName("Talma11");
-		mission = droneDbCrudSvcRemote.update(mission);
+		mission = (Mission) droneDbCrudSvcRemote.update(mission);
 		
 		System.out.println("Get waypoint");
 		Waypoint waypoint = new Waypoint();
@@ -37,24 +38,24 @@ public class DroneDbTester
 		waypoint.setYawAngle(20);
 		waypoint.setLat(11.1);
 		waypoint.setLon(13.1);
-		waypoint = droneDbCrudSvcRemote.update(waypoint);
-		mission.addMissionItemUid(waypoint.getObjId());
+		waypoint = (Waypoint) droneDbCrudSvcRemote.update(waypoint);
+		mission.getMissionItemsUids().add(waypoint.getObjId());
 
 		System.out.println("--> " + mission);
-		mission = droneDbCrudSvcRemote.update(mission);
+		mission = (Mission) droneDbCrudSvcRemote.update(mission);
 
-		mission.removeMissionItemUid(waypoint.getObjId());
+		mission.getMissionItemsUids().remove(waypoint.getObjId());
 		System.out.println("Get waypoint2");
 		waypoint = new Waypoint();
 		waypoint.setOrbitalRadius(6);
 		waypoint.setYawAngle(60);
 		waypoint.setLat(61.1);
 		waypoint.setLon(63.1);
-		waypoint = droneDbCrudSvcRemote.update(waypoint);
-		mission.addMissionItemUid(waypoint.getObjId());
+		waypoint = (Waypoint) droneDbCrudSvcRemote.update(waypoint);
+		mission.getMissionItemsUids().add(waypoint.getObjId());
 
 		mission.setName("Bob");
-		mission = droneDbCrudSvcRemote.update(mission);
+		mission = (Mission) droneDbCrudSvcRemote.update(mission);
 
 		System.out.println("Mission created");
 
