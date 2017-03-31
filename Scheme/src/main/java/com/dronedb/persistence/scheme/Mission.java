@@ -7,11 +7,11 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
-import com.dronedb.triggers.DeleteTrigger;
-import com.dronedb.triggers.DeleteTriggers;
+import com.dronedb.persistence.triggers.DeleteTrigger;
+import com.dronedb.persistence.triggers.DeleteTriggers;
 
-import com.dronedb.triggers.UpdateTrigger;
-import com.dronedb.triggers.UpdateTriggers;
+import com.dronedb.persistence.triggers.UpdateTrigger;
+import com.dronedb.persistence.triggers.UpdateTriggers;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 

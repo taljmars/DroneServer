@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.dronedb.persistence.scheme.BaseObject;
-import com.dronedb.persistence.scheme.perimeter.Perimeter;
 
 public interface DroneDbCrudSvc {
 	

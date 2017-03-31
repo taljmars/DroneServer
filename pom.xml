@@ -13,7 +13,7 @@
         <module>Scheme</module>
         <module>DroneServerCore</module>
         <module>DroneServerTester</module>
-        <module>GeneratedServerClasses</module>
+        <module>DroneServerExportedServices</module>
     </modules>
 
     <properties>

@@ -1,6 +1,6 @@
-package com.dronedb.persistence.scheme.ws;
+package com.dronedb.persistence.scheme;
 
-import com.dronedb.persistence.scheme.apis.BaseObject;
+import com.dronedb.persistence.scheme.BaseObject;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

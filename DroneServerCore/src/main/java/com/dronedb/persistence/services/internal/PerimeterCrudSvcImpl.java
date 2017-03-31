@@ -1,9 +1,9 @@
 package com.dronedb.persistence.services.internal;
 
-import com.dronedb.persistence.scheme.perimeter.CirclePerimeter;
-import com.dronedb.persistence.scheme.perimeter.Perimeter;
-import com.dronedb.persistence.scheme.perimeter.Point;
-import com.dronedb.persistence.scheme.perimeter.PolygonPerimeter;
+import com.dronedb.persistence.scheme.CirclePerimeter;
+import com.dronedb.persistence.scheme.Perimeter;
+import com.dronedb.persistence.scheme.Point;
+import com.dronedb.persistence.scheme.PolygonPerimeter;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.PerimeterCrudSvc;
 import org.springframework.beans.factory.annotation.Autowired;

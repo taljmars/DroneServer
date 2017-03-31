@@ -2,12 +2,12 @@ package com.dronedb.server;
 
 import javax.xml.ws.Endpoint;
 
-import com.dronedb.persistence.scheme.apis.MissionCrudSvcRemote;
-import com.dronedb.persistence.scheme.apis.PerimeterCrudSvcRemote;
+import com.dronedb.persistence.scheme.MissionCrudSvcRemote;
+import com.dronedb.persistence.scheme.PerimeterCrudSvcRemote;
 import org.springframework.stereotype.Component;
 
-import com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote;
-import com.dronedb.persistence.scheme.apis.QuerySvcRemote;
+import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
+import com.dronedb.persistence.scheme.QuerySvcRemote;
 
 @Component
 public class DroneServer {

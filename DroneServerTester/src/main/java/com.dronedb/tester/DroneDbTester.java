@@ -1,19 +1,10 @@
 package com.dronedb.tester;
 
-//import com.dronedb.persistence.scheme.apis.*;
-//import com.dronedb.persistence.scheme.mission.Mission;
-//import com.dronedb.persistence.scheme.mission.MissionItem;
-//import com.dronedb.persistence.scheme.mission.Takeoff;
-//import com.dronedb.persistence.scheme.mission.Waypoint;
-//import com.dronedb.persistence.scheme.perimeter.CirclePerimeter;
-//import com.dronedb.persistence.scheme.perimeter.Point;
-
-import com.dronedb.persistence.scheme.apis.*;
+import com.dronedb.persistence.scheme.*;
 import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
 
 
 import javax.transaction.Transactional;
-
 public class DroneDbTester
 {	
 	@Transactional

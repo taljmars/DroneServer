@@ -1,7 +1,7 @@
 package com.dronedb.persistence.services.internal;
 
-import com.dronedb.persistence.scheme.mission.Mission;
-import com.dronedb.persistence.scheme.mission.MissionItem;
+import com.dronedb.persistence.scheme.Mission;
+import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.MissionCrudSvc;
 import org.springframework.beans.factory.annotation.Autowired;

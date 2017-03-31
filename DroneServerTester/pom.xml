@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>GeneratedServerClasses</artifactId>
+            <artifactId>DroneServerExportedServices</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -1,11 +1,11 @@
 package com.dronedb.persistence.triggers;
 
 import com.dronedb.persistence.scheme.BaseObject;
-import com.dronedb.persistence.scheme.mission.Mission;
-import com.dronedb.persistence.scheme.mission.MissionItem;
+import com.dronedb.persistence.scheme.Mission;
+import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.QuerySvc;
-import com.dronedb.triggers.UpdateTrigger;
+import com.dronedb.persistence.triggers.UpdateTrigger;
 
 import java.util.UUID;
 

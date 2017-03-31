@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.dronedb.persistence.services.QueryRequest;
 import com.dronedb.persistence.services.QuerySvc;
-import com.dronedb.persistence.scheme.apis.QueryRequestRemote;
-import com.dronedb.persistence.scheme.apis.QueryResponseRemote;
-import com.dronedb.persistence.scheme.apis.QuerySvcRemote;
+import com.dronedb.persistence.scheme.QueryRequestRemote;
+import com.dronedb.persistence.scheme.QueryResponseRemote;
+import com.dronedb.persistence.scheme.QuerySvcRemote;
 import com.dronedb.persistence.scheme.BaseObject;
 
 @Component
-@WebService(endpointInterface = "com.dronedb.persistence.scheme.apis.QuerySvcRemote")
+@WebService(endpointInterface = "com.dronedb.persistence.scheme.QuerySvcRemote")
 public class QuerySvcRemoteImpl implements QuerySvcRemote {
 	
 	@Autowired

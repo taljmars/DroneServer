@@ -1,21 +1,18 @@
 package com.dronedb.persistence.ws.internal;
 
-import com.dronedb.persistence.scheme.apis.PerimeterCrudSvcRemote;
-import com.dronedb.persistence.scheme.mission.Mission;
-import com.dronedb.persistence.scheme.perimeter.Perimeter;
+import com.dronedb.persistence.scheme.PerimeterCrudSvcRemote;
+import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.services.PerimeterCrudSvc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 /**
  * Created by oem on 3/27/17.
  */
 @Component
-@WebService(endpointInterface = "com.dronedb.persistence.scheme.apis.PerimeterCrudSvcRemote")
+@WebService(endpointInterface = "com.dronedb.persistence.scheme.PerimeterCrudSvcRemote")
 public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
 
     @Autowired

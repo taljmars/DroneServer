@@ -8,18 +8,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dronedb.persistence.services.DroneDbCrudSvc;
-import com.dronedb.triggers.DeleteObjectTrigger;
-import com.dronedb.triggers.DeleteTrigger;
-import com.dronedb.triggers.DeleteTriggers;
-import com.dronedb.triggers.UpdateObjectTrigger;
-import com.dronedb.triggers.UpdateTrigger;
-import com.dronedb.triggers.UpdateTriggers;
-import com.dronedb.triggers.UpdateTrigger.PHASE;
+import com.dronedb.persistence.triggers.DeleteObjectTrigger;
+import com.dronedb.persistence.triggers.DeleteTrigger;
+import com.dronedb.persistence.triggers.DeleteTriggers;
+import com.dronedb.persistence.triggers.UpdateObjectTrigger;
+import com.dronedb.persistence.triggers.UpdateTrigger;
+import com.dronedb.persistence.triggers.UpdateTriggers;
+import com.dronedb.persistence.triggers.UpdateTrigger.PHASE;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.server.AppConfig;
 

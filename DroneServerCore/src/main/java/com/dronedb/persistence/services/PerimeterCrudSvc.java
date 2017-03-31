@@ -1,6 +1,6 @@
 package com.dronedb.persistence.services;
 
-import com.dronedb.persistence.scheme.perimeter.Perimeter;
+import com.dronedb.persistence.scheme.Perimeter;
 
 /**
  * Created by oem on 3/27/17.

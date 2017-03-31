@@ -1,7 +1,7 @@
 package com.dronedb.persistence.triggers;
 
 import org.springframework.context.ApplicationContext;
-import com.dronedb.triggers.UpdateObjectTrigger;
+import com.dronedb.persistence.triggers.UpdateObjectTrigger;
 
 public abstract class UpdateObjectTriggerImpl implements UpdateObjectTrigger {
 

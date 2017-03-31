@@ -1,4 +1,4 @@
-package com.dronedb.persistence.scheme.apis;
+package com.dronedb.persistence.scheme;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;

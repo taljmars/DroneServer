@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.dronedb.persistence.services.DroneDbCrudSvc;
-import com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote;
+import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
 import com.dronedb.persistence.scheme.BaseObject;
 
 import java.util.UUID;
 
 @Component
-@WebService(endpointInterface = "com.dronedb.persistence.scheme.apis.DroneDbCrudSvcRemote")
+@WebService(endpointInterface = "com.dronedb.persistence.scheme.DroneDbCrudSvcRemote")
 public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 {
 	
