@@ -1,4 +1,4 @@
-package com.dronedb.persistence.scheme;
+package com.dronedb.persistence.scheme.apis;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,10 +8,6 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import com.dronedb.persistence.scheme.mission.Mission;
-import com.dronedb.persistence.scheme.mission.MissionItem;
-import com.dronedb.persistence.scheme.perimeter.Perimeter;
-import com.dronedb.persistence.scheme.perimeter.Point;
 import jdk.nashorn.internal.objects.annotations.Getter;
 
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
