@@ -14,7 +14,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 //@DiscriminatorColumn(name="type")
 //@Table(name="missionitems")
 //@Table
-public abstract class MissionItem extends BaseObject implements CovertDatabaseVisited, Serializable
+public abstract class MissionItem extends BaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

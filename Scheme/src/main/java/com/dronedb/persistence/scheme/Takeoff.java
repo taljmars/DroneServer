@@ -62,10 +62,5 @@ public class Takeoff extends MissionItem implements Serializable {
 	public String toString() {
 		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
 	}
-
-	@Override
-	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-		convertDatabaseVisitor.visit(this);
-	}
 }
 

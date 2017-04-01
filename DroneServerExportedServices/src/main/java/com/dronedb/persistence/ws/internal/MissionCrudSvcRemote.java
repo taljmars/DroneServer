@@ -9,6 +9,7 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
 import com.dronedb.persistence.scheme.Mission;
+import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.scheme.ObjectFactory;
 
 
@@ -25,6 +26,29 @@ import com.dronedb.persistence.scheme.ObjectFactory;
 })
 public interface MissionCrudSvcRemote {
 
+
+    /**
+     * 
+     * @return
+     *     returns com.dronedb.persistence.scheme.Mission
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionResponse")
+    public Mission createMission();
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns com.dronedb.persistence.scheme.MissionItem
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionItemRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionItemResponse")
+    public MissionItem createMissionItem(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0);
 
     /**
      * 

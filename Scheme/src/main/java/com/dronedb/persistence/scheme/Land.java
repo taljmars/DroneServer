@@ -59,8 +59,4 @@ public class Land extends MissionItem implements Altitudable, Serializable {
 				'}';
 	}
 
-	@Override
-	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-		convertDatabaseVisitor.visit(this);
-	}
 }

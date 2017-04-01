@@ -174,9 +174,4 @@ public class Waypoint extends MissionItem implements Delayable, Altitudable, Ser
 		result = 31 * result + (altitude != null ? altitude.hashCode() : 0);
 		return result;
 	}
-
-	@Override
-	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-		convertDatabaseVisitor.visit(this);
-	}
 }

@@ -36,4 +36,14 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
 
         return clonedMission;
     }
+
+    @Override
+    public Mission createMission() {
+        return droneDbCrudSvc.create(Mission.class).clone();
+    }
+
+    @Override
+    public <T extends MissionItem> T createMissionItem(Class<T> clz) {
+        return (T) droneDbCrudSvc.create(clz).clone();
+    }
 }

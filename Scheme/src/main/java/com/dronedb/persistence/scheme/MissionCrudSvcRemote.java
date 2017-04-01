@@ -15,4 +15,10 @@ public interface MissionCrudSvcRemote {
     @WebMethod
     Mission cloneMission(@WebParam Mission mission);
 
+    @WebMethod
+    <T extends MissionItem> T createMissionItem(Class<T> clz);
+
+    @WebMethod
+    Mission createMission();
+
 }

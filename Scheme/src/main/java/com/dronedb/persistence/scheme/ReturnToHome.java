@@ -56,10 +56,5 @@ public class ReturnToHome extends MissionItem implements Altitudable, Serializab
 	public Double getAltitude() {
 		return this.altitude;
 	}
-
-	@Override
-	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-		convertDatabaseVisitor.visit(this);
-	}
 }
 

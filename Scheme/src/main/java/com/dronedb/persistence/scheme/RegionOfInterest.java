@@ -51,8 +51,4 @@ public class RegionOfInterest extends MissionItem implements Altitudable, Serial
         return this.altitude;
     }
 
-    @Override
-    public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-        convertDatabaseVisitor.visit(this);
-    }
 }

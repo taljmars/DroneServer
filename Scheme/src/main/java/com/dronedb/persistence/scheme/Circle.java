@@ -84,9 +84,4 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	public String toString() {
 		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
 	}
-
-	@Override
-	public void accept(ConvertDatabaseVisitor convertDatabaseVisitor) {
-		convertDatabaseVisitor.visit(this);
-	}
 }
