@@ -13,7 +13,7 @@ import javax.jws.soap.SOAPBinding;
 public interface MissionCrudSvcRemote {
 
     @WebMethod
-    Mission cloneMission(@WebParam Mission mission);
+    Mission cloneMission(@WebParam Mission mission) throws DatabaseRemoteValidationException;
 
     @WebMethod
     <T extends MissionItem> T createMissionItem(Class<T> clz);

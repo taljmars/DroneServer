@@ -3,6 +3,7 @@ package com.dronedb.persistence.services;
 import java.util.Set;
 import java.util.UUID;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.BaseObject;
 
 public interface DroneDbCrudSvc {
@@ -11,7 +12,7 @@ public interface DroneDbCrudSvc {
 		
 	<T extends BaseObject> T create(final Class<T> clz);
 	
-	<T extends BaseObject> T update(T object);
+	<T extends BaseObject> T update(T object) throws DatabaseValidationException;
 	
 	<T extends BaseObject> void updateSet(Set<T> objects);
 	

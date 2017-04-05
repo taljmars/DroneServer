@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
+import javax.xml.ws.FaultAction;
 import com.dronedb.persistence.scheme.ObjectFactory;
 import com.dronedb.persistence.scheme.Perimeter;
 
@@ -31,12 +32,17 @@ public interface PerimeterCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.Perimeter
+     * @throws DatabaseRemoteValidationException
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterRequest", output = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterResponse")
+    @Action(input = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterRequest", output = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterResponse", fault = {
+        @FaultAction(className = DatabaseRemoteValidationException.class, value = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeter/Fault/DatabaseRemoteValidationException")
+    })
     public Perimeter clonePerimeter(
         @WebParam(name = "arg0", partName = "arg0")
-        Perimeter arg0);
+        Perimeter arg0)
+        throws DatabaseRemoteValidationException
+    ;
 
 }

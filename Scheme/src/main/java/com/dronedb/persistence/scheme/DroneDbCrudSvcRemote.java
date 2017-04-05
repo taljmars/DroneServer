@@ -21,7 +21,7 @@ public interface DroneDbCrudSvcRemote
 	<T extends BaseObject> T create(@WebParam final Class<T> clz);
 	
 	@WebMethod 
-	<T extends BaseObject> T update(@WebParam T object);
+	<T extends BaseObject> T update(@WebParam T object) throws DatabaseRemoteValidationException;
 	
 //	@WebMethod 
 //	<T extends BaseObject> void updateSet(@WebParam Set<T> objects);

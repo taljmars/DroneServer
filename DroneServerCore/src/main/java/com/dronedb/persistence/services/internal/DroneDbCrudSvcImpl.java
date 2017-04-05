@@ -8,6 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
+import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.generic_tools.validations.RuntimeValidator;
+import com.generic_tools.validations.ValidatorResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +24,16 @@ import com.dronedb.persistence.triggers.UpdateTrigger;
 import com.dronedb.persistence.triggers.UpdateTriggers;
 import com.dronedb.persistence.triggers.UpdateTrigger.PHASE;
 import com.dronedb.persistence.scheme.BaseObject;
-import com.dronedb.server.AppConfig;
+import com.dronedb.server.DroneDBServerAppConfig;
 
 @Component
 public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 {
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private RuntimeValidator runtimeValidator;
 
 	public String CheckConnection() {
 		return "Inside Implementation";
@@ -50,16 +57,26 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	}
 
 	@Transactional
-	public <T extends BaseObject> T update(T object) {
+	public <T extends BaseObject> T update(T object) throws DatabaseValidationException {
 		System.out.println("Crud UPDATE called " + object);
 		PHASE phase;
 		T oldVersion = null;
 		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
 		if (existingObject == null) {
+			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
+			if (validatorResponse.isFailed()) {
+				System.out.println("Validation failed: " + validatorResponse);
+				throw new DatabaseValidationException(validatorResponse.toString());
+			}
 			entityManager.persist(object);
 			phase = PHASE.CREATE;
 		}
 		else {
+			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
+			if (validatorResponse.isFailed()) {
+				System.out.println("Validation failed: " + validatorResponse);
+				throw new DatabaseValidationException(validatorResponse.toString());
+			}
 			oldVersion = (T) existingObject.clone();
 			existingObject.set(object);
 			phase = PHASE.UPDATE;
@@ -139,7 +156,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				String triggerClasspath = updateTrigger.trigger();
 				Class<UpdateObjectTrigger> trigger = (Class<UpdateObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
 				UpdateObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(AppConfig.context);
+				t.setApplicationContext(DroneDBServerAppConfig.context);
 				System.out.println("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
@@ -171,7 +188,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				String triggerClasspath = deleteTrigger.trigger();
 				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(AppConfig.context);
+				t.setApplicationContext(DroneDBServerAppConfig.context);
 				System.out.println("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleDeleteObject(inst);	
 			}

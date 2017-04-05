@@ -1,5 +1,6 @@
 package com.dronedb.persistence.services.internal;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.CirclePerimeter;
 import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.scheme.Point;
@@ -23,7 +24,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
     private DroneDbCrudSvc droneDbCrudSvc;
 
     @Override
-    public <T extends Perimeter> T clonePerimeter(T perimeter) {
+    public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationException {
         if (perimeter instanceof PolygonPerimeter)
             return (T) clonePolygon((PolygonPerimeter) perimeter);
 
@@ -33,7 +34,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
         throw new RuntimeException("Unexpected type");
     }
 
-    private Perimeter cloneCircle(CirclePerimeter perimeter) {
+    private Perimeter cloneCircle(CirclePerimeter perimeter) throws DatabaseValidationException {
         CirclePerimeter clonePolygon = perimeter.clone();
         Point point = droneDbCrudSvc.readByClass(perimeter.getCenter(), Point.class);
         Point clonePoint = point.clone();
@@ -43,7 +44,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
         return clonePolygon;
     }
 
-    private PolygonPerimeter clonePolygon(PolygonPerimeter perimeter) {
+    private PolygonPerimeter clonePolygon(PolygonPerimeter perimeter) throws DatabaseValidationException {
         PolygonPerimeter clonePolygon = perimeter.clone();
         List<UUID> uuidList = new ArrayList<>();
         for (UUID uuid : clonePolygon.getPoints()) {

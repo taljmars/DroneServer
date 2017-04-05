@@ -1,5 +1,6 @@
 package com.dronedb.persistence.services.internal;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
@@ -20,7 +21,7 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
     @Autowired DroneDbCrudSvc droneDbCrudSvc;
 
     @Override
-    public Mission cloneMission(Mission mission) {
+    public Mission cloneMission(Mission mission) throws DatabaseValidationException {
 
         List<UUID> newUid = new ArrayList<>();
         Mission clonedMission = mission.clone();

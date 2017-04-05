@@ -1,5 +1,7 @@
 package com.dronedb.persistence.ws.internal;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
 import com.dronedb.persistence.scheme.PerimeterCrudSvcRemote;
 import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.services.PerimeterCrudSvc;
@@ -19,7 +21,12 @@ public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
     private PerimeterCrudSvc perimeterCrudSvc;
 
     @Override
-    public <T extends Perimeter> T clonePerimeter(T perimeter) {
-        return perimeterCrudSvc.clonePerimeter(perimeter);
+    public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseRemoteValidationException {
+        try {
+            return perimeterCrudSvc.clonePerimeter(perimeter);
+        }
+        catch (DatabaseValidationException e) {
+            throw new DatabaseRemoteValidationException(e.getMessage());
+        }
     }
 }

@@ -29,7 +29,6 @@
             <version>${version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
@@ -52,6 +51,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>4.3.3.RELEASE</version>
+        </dependency>
+
+        <!--Validation-->
+
+        <dependency>
+            <groupId>com.generic_tools</groupId>
+            <artifactId>Validations</artifactId>
+            <version>1.0</version>
         </dependency>
 
     </dependencies>
@@ -78,6 +85,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+
+        <repository>
+            <id>taljmars-mvn-repo</id>
+            <name>taljmars-mvn-repo</name>
+            <url>https://raw.githubusercontent.com/taljmars/mvn-repo/master/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+    </repositories>
 
 
 </project>

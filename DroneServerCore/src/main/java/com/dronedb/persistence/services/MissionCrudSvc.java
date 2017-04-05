@@ -1,5 +1,6 @@
 package com.dronedb.persistence.services;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 
@@ -8,7 +9,7 @@ import com.dronedb.persistence.scheme.MissionItem;
  */
 public interface MissionCrudSvc {
 
-    Mission cloneMission(Mission mission);
+    Mission cloneMission(Mission mission) throws DatabaseValidationException;
 
     Mission createMission();
 

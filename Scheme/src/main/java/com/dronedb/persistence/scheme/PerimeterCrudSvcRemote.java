@@ -11,6 +11,6 @@ import javax.jws.soap.SOAPBinding;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface PerimeterCrudSvcRemote {
 
-    <T extends Perimeter> T clonePerimeter(@WebParam T perimeter);
+    <T extends Perimeter> T clonePerimeter(@WebParam T perimeter) throws DatabaseRemoteValidationException;
 
 }

@@ -2,6 +2,9 @@ package com.dronedb.persistence.ws.internal;
 
 import javax.annotation.PostConstruct;
 import javax.jws.WebService;
+
+import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -37,9 +40,16 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	}
 	
 	@Override
-	public <T extends BaseObject> T update(T object) {
+	public <T extends BaseObject> T update(T object) throws DatabaseRemoteValidationException {
 		System.out.println("Crud REMOTE UPDATE called " + object);
-		return (T) droneDbCrudSvc.update(object).copy();
+		T obj = null;
+		try {
+			obj = droneDbCrudSvc.update(object);
+			return (T) obj.copy();
+		}
+		catch (DatabaseValidationException e) {
+			throw new DatabaseRemoteValidationException(e.getMessage());
+		}
 	}
 	
 //	@Override

@@ -1,5 +1,6 @@
 package com.dronedb.persistence.services;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.Perimeter;
 
 /**
@@ -7,6 +8,6 @@ import com.dronedb.persistence.scheme.Perimeter;
  */
 public interface PerimeterCrudSvc {
 
-    <T extends Perimeter> T clonePerimeter(T perimeter);
+    <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationException;
 
 }

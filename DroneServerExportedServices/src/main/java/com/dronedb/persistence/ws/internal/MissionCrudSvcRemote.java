@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
+import javax.xml.ws.FaultAction;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.scheme.ObjectFactory;
@@ -26,6 +27,24 @@ import com.dronedb.persistence.scheme.ObjectFactory;
 })
 public interface MissionCrudSvcRemote {
 
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns com.dronedb.persistence.scheme.Mission
+     * @throws DatabaseRemoteValidationException
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionResponse", fault = {
+        @FaultAction(className = DatabaseRemoteValidationException.class, value = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMission/Fault/DatabaseRemoteValidationException")
+    })
+    public Mission cloneMission(
+        @WebParam(name = "arg0", partName = "arg0")
+        Mission arg0)
+        throws DatabaseRemoteValidationException
+    ;
 
     /**
      * 
@@ -49,18 +68,5 @@ public interface MissionCrudSvcRemote {
     public MissionItem createMissionItem(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0);
-
-    /**
-     * 
-     * @param arg0
-     * @return
-     *     returns com.dronedb.persistence.scheme.Mission
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionResponse")
-    public Mission cloneMission(
-        @WebParam(name = "arg0", partName = "arg0")
-        Mission arg0);
 
 }

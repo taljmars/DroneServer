@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
+import javax.xml.ws.FaultAction;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.ObjectFactory;
 
@@ -57,13 +58,18 @@ public interface DroneDbCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.BaseObject
+     * @throws DatabaseRemoteValidationException
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateResponse")
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateResponse", fault = {
+        @FaultAction(className = DatabaseRemoteValidationException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/update/Fault/DatabaseRemoteValidationException")
+    })
     public BaseObject update(
         @WebParam(name = "arg0", partName = "arg0")
-        BaseObject arg0);
+        BaseObject arg0)
+        throws DatabaseRemoteValidationException
+    ;
 
     /**
      * 

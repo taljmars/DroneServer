@@ -1,19 +1,15 @@
 package com.dronedb.persistence.scheme;
 
+import com.dronedb.persistence.triggers.*;
+import com.dronedb.persistence.validations.NameNotEmpty;
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.*;
-
-import com.dronedb.persistence.triggers.DeleteTrigger;
-import com.dronedb.persistence.triggers.DeleteTriggers;
-
-import com.dronedb.persistence.triggers.UpdateTrigger;
-import com.dronedb.persistence.triggers.UpdateTriggers;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
 
 @NamedNativeQueries({
 	@NamedNativeQuery(
@@ -35,11 +31,12 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 @Entity
 @Table(name="missions")
 @UpdateTriggers({
-	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTriggerImpl", phase = UpdateTrigger.PHASE.UPDATE)
+	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTriggerImpl", phase = UpdateTrigger.PHASE.UPDATE),
 })
 @DeleteTriggers({
 	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTriggerImpl")
 })
+@NameNotEmpty
 @Access(javax.persistence.AccessType.FIELD)
 public class Mission extends BaseObject implements Serializable
 {
