@@ -11,7 +11,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 /**
- * Created by oem on 3/22/17.
+ * Created by taljmars on 3/22/17.
  */
 @Configuration
 @EnableTransactionManagement

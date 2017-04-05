@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.jws.WebService;
 
 /**
- * Created by oem on 3/27/17.
+ * Created by taljmars on 3/27/17.
  */
 @Component
 @WebService(endpointInterface = "com.dronedb.persistence.scheme.PerimeterCrudSvcRemote")

@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Created by oem on 4/5/17.
+ * Created by taljmars on 4/5/17.
  */
 public class NameNotEmptyValidator implements ConstraintValidator<NameNotEmpty, Mission> {
     @Override
