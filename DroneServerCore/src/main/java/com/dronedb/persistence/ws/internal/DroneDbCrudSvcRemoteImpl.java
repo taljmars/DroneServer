@@ -36,7 +36,7 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	@Override
 	public <T extends BaseObject> T create(final Class<T> clz) {
 		System.out.println("Crud REMOTE CREATE called " + clz);
-		return droneDbCrudSvc.create(clz);
+		return (T) droneDbCrudSvc.create(clz).copy();
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	@Override
 	public <T extends BaseObject> T read(final UUID objId) {
 		System.out.println("Crud REMOTE READ called " + objId);
-		return droneDbCrudSvc.read(objId);
+		return (T) droneDbCrudSvc.read(objId).copy();
 	}
 	
 	@Override
@@ -73,6 +73,6 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 		System.out.println("Crud REMOTE READ called " + objId + ", class " + clz);
 		T object = droneDbCrudSvc.readByClass(objId, clz);
 		System.out.println("Send object to client -> '" + object + "'");
-		return object;
+		return (T) object.copy();
 	}
 }

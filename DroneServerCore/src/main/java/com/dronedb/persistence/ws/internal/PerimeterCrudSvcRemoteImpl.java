@@ -23,7 +23,7 @@ public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
     @Override
     public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseRemoteValidationException {
         try {
-            return perimeterCrudSvc.clonePerimeter(perimeter);
+            return (T) perimeterCrudSvc.clonePerimeter(perimeter).copy();
         }
         catch (DatabaseValidationException e) {
             throw new DatabaseRemoteValidationException(e.getMessage());

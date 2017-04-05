@@ -20,6 +20,13 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
 
     @Autowired DroneDbCrudSvc droneDbCrudSvc;
 
+    /**
+     * Will clone the mission object and every mission item.
+     * Mind the the objid of each object and subobject is being regenerated
+     * @param mission
+     * @return
+     * @throws DatabaseValidationException
+     */
     @Override
     public Mission cloneMission(Mission mission) throws DatabaseValidationException {
 
@@ -28,23 +35,23 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
         for (UUID uid : clonedMission.getMissionItemsUids()) {
             MissionItem missionItem = droneDbCrudSvc.readByClass(uid, MissionItem.class);
             MissionItem cloneMissionItem = missionItem.clone();
-            droneDbCrudSvc.update(cloneMissionItem);
+            cloneMissionItem = droneDbCrudSvc.update(cloneMissionItem);
             newUid.add(cloneMissionItem.getObjId());
         }
 
         clonedMission.setMissionItemsUids(newUid);
-        droneDbCrudSvc.update(clonedMission);
+        clonedMission = droneDbCrudSvc.update(clonedMission);
 
         return clonedMission;
     }
 
     @Override
     public Mission createMission() {
-        return droneDbCrudSvc.create(Mission.class).clone();
+        return droneDbCrudSvc.create(Mission.class);
     }
 
     @Override
     public <T extends MissionItem> T createMissionItem(Class<T> clz) {
-        return (T) droneDbCrudSvc.create(clz).clone();
+        return (T) droneDbCrudSvc.create(clz);
     }
 }

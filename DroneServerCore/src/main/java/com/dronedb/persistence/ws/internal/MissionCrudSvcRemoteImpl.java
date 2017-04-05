@@ -20,10 +20,17 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote {
 
     @Autowired MissionCrudSvc missionCrudSvc;
 
+    /**
+     * Will clone the mission object and every mission item.
+     * Mind the the objid of each object and subobject is being regenerated
+     * @param mission
+     * @return
+     * @throws DatabaseRemoteValidationException
+     */
     @Override
     public Mission cloneMission(Mission mission) throws DatabaseRemoteValidationException {
         try {
-            return missionCrudSvc.cloneMission(mission);
+            return (Mission) missionCrudSvc.cloneMission(mission).copy();
         }
         catch (DatabaseValidationException e) {
             throw new DatabaseRemoteValidationException(e.getMessage());
@@ -32,11 +39,11 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote {
 
     @Override
     public <T extends MissionItem> T createMissionItem(Class<T> clz) {
-        return missionCrudSvc.createMissionItem(clz);
+        return (T) missionCrudSvc.createMissionItem(clz).copy();
     }
 
     @Override
     public Mission createMission() {
-        return missionCrudSvc.createMission();
+        return (Mission) missionCrudSvc.createMission().copy();
     }
 }

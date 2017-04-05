@@ -66,12 +66,18 @@ public class Mission extends BaseObject implements Serializable
 		this.missionItemsUids = mission.getMissionItemsUids();
 	}
 
+	/**
+	 * Clone will generate new Objid for the new object
+ 	 */
 	@Override
 	@Transient
 	public Mission clone() {
 		return new Mission(this);
 	}
 
+	/**
+	 * Copy will do the same as clone but with the same objid
+	 */
 	@Override
 	public BaseObject copy() {
 		Mission mission = this.clone();

@@ -66,7 +66,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 			if (validatorResponse.isFailed()) {
 				System.out.println("Validation failed: " + validatorResponse);
-				throw new DatabaseValidationException(validatorResponse.toString());
+				throw new DatabaseValidationException(validatorResponse.getMessage());
 			}
 			entityManager.persist(object);
 			phase = PHASE.CREATE;
@@ -75,7 +75,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 			if (validatorResponse.isFailed()) {
 				System.out.println("Validation failed: " + validatorResponse);
-				throw new DatabaseValidationException(validatorResponse.toString());
+				throw new DatabaseValidationException(validatorResponse.getMessage());
 			}
 			oldVersion = (T) existingObject.clone();
 			existingObject.set(object);
@@ -113,6 +113,10 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	public <T extends BaseObject> void delete(T object) {
 		System.out.println("Crud DELETE called " + object);
 		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+		if (existingObject == null) {
+			System.out.println("Object doesn't exist in the DB, no need to invoke triggers");
+			return;
+		}
 		handleDeleteTriggers(existingObject);
 		System.out.println("Removing " + existingObject);
 		entityManager.remove(existingObject);

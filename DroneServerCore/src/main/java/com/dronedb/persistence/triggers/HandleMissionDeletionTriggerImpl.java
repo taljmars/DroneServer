@@ -27,6 +27,10 @@ public class HandleMissionDeletionTriggerImpl extends DeleteObjectTriggerImpl {
 
         for (UUID missionItemuid : ((Mission) inst).getMissionItemsUids()) {
             MissionItem missionItem = droneDbCrudSvc.readByClass(missionItemuid, MissionItem.class);
+            if (missionItem == null) {
+                System.out.println("Mission Item " + missionItemuid + " wasn't found in the DB, skip it deletion");
+                continue;
+            }
             droneDbCrudSvc.delete(missionItem);
         }
     }
