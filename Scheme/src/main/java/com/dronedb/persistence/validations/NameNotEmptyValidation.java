@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = { NameNotEmptyValidator.class })
-public @interface NameNotEmpty {
+public @interface NameNotEmptyValidation {
 	
 	String message() default "Name value cannot be null or empty";
 

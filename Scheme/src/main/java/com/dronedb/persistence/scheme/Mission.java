@@ -1,7 +1,7 @@
 package com.dronedb.persistence.scheme;
 
 import com.dronedb.persistence.triggers.*;
-import com.dronedb.persistence.validations.NameNotEmpty;
+import com.dronedb.persistence.validations.NameNotEmptyValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -36,7 +36,7 @@ import java.util.UUID;
 @DeleteTriggers({
 	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTriggerImpl")
 })
-@NameNotEmpty
+@NameNotEmptyValidation
 @Access(javax.persistence.AccessType.FIELD)
 public class Mission extends BaseObject implements Serializable
 {

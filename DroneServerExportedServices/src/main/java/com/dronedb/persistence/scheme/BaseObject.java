@@ -4,10 +4,8 @@ package com.dronedb.persistence.scheme;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
@@ -21,9 +19,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="objId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="createdAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="updatedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="version" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,10 +29,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "baseObject", propOrder = {
-    "objId",
-    "createdAt",
-    "updatedAt",
-    "version"
+    "objId"
 })
 @XmlSeeAlso({
     Point.class,
@@ -49,13 +41,6 @@ public abstract class BaseObject {
 
     @XmlElement(required = true)
     protected String objId;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar createdAt;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar updatedAt;
-    protected long version;
 
     /**
      * Gets the value of the objId property.
@@ -79,70 +64,6 @@ public abstract class BaseObject {
      */
     public void setObjId(String value) {
         this.objId = value;
-    }
-
-    /**
-     * Gets the value of the createdAt property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * Sets the value of the createdAt property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setCreatedAt(XMLGregorianCalendar value) {
-        this.createdAt = value;
-    }
-
-    /**
-     * Gets the value of the updatedAt property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * Sets the value of the updatedAt property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setUpdatedAt(XMLGregorianCalendar value) {
-        this.updatedAt = value;
-    }
-
-    /**
-     * Gets the value of the version property.
-     * 
-     */
-    public long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the value of the version property.
-     * 
-     */
-    public void setVersion(long value) {
-        this.version = value;
     }
 
 }

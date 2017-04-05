@@ -40,39 +40,39 @@ public abstract class BaseObject implements Serializable
 	public UUID getObjId() {
 		return objId;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@XmlElement(required = true)
 	private Date createdAt;
 
 	@PrePersist  
 	public void onCreate() {  
 		this.createdAt = new Date();
 	}
-    
+
+	@Transient
 	@Getter
 	public Date getCreationDate() {  
 		return createdAt;  
 	}
-  
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@XmlElement(required = true)
 	private Date updatedAt;
     
 	@PreUpdate
 	public void onUpdate() {
 		this.updatedAt = new Date();
 	}
-    
+
+	@Transient
 	@Getter
-	public Date getChangeDate() {  
+	public Date getUpdatedAt() {
 		return updatedAt;
-	} 
+	}
 
 	@Version
-	@XmlElement(required = true)
 	protected Long version;
-    
+
+	@Transient
 	@Getter
 	public Long getVersion() {
 		return version;
