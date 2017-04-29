@@ -11,82 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.dronedb.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRIVATE;
+
 @NamedNativeQueries({
-		/**
-		 * Queries that can be use by clients
-		 */
 	@NamedNativeQuery(
 		name = "GetAllMissions",
-			query = "SELECT * FROM mission WHERE " +
-				// Not in private sessions
-				"(objId, toRevision) NOT IN ( " +
-					"SELECT objId, toRevision FROM mission " +
-					"WHERE NOT deleted AND privatelyModified = true " +
-					"GROUP BY objId, privatelyModified, toRevision " +
-				") " +
-				// And in public session, this and the above give us the ones only in the public !
-				"AND (objId, toRevision) IN (" +
-					"SELECT objId, MAX(toRevision) " +
-					"FROM mission " +
-					"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
-					"GROUP BY objId " +
-				") " +
-				"GROUP BY objId, privatelyModified, toRevision " +
-				"UNION " +
-				// Getting the private sessions missions
-				"SELECT * FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = true " +
-				"GROUP BY objId, privatelyModified, toRevision ",
+		query = "SELECT * FROM mission WHERE " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
 		resultClass = Mission.class
 	),
     @NamedNativeQuery(
     	name = "GetMissionById",
-    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " +
-				// Not in private sessions
-				"(objId, toRevision) NOT IN ( " +
-				"SELECT objId, toRevision FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = true " +
-				"GROUP BY objId, privatelyModified, toRevision " +
-				") " +
-				// And in public session, this and the above give us the ones only in the public !
-				"AND (objId, toRevision) IN (" +
-				"SELECT objId, MAX(toRevision) " +
-				"FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
-				"GROUP BY objId " +
-				") " +
-				"GROUP BY objId, privatelyModified, toRevision " +
-				"UNION " +
-				// Getting the private sessions missions
-				"SELECT * FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = true " +
-				"GROUP BY objId, privatelyModified, toRevision ",
+    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
     	resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 		name = "GetMissionByName",
-		query = "SELECT * FROM mission WHERE name ilike =:NAME AND " +
-				// Not in private sessions
-				"(objId, toRevision) NOT IN ( " +
-				"SELECT objId, toRevision FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = true " +
-				"GROUP BY objId, privatelyModified, toRevision " +
-				") " +
-				// And in public session, this and the above give us the ones only in the public !
-				"AND (objId, toRevision) IN (" +
-				"SELECT objId, MAX(toRevision) " +
-				"FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
-				"GROUP BY objId " +
-				") " +
-				"GROUP BY objId, privatelyModified, toRevision " +
-				"UNION " +
-				// Getting the private sessions missions
-				"SELECT * FROM mission " +
-				"WHERE NOT deleted AND privatelyModified = true " +
-				"GROUP BY objId, privatelyModified, toRevision ",
+		query = "SELECT * FROM mission WHERE name ilike =:NAME AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
 		resultClass = Mission.class
-    )
+    ),
+	@NamedNativeQuery(
+			name = "GetAllModifiedMissions",
+			query = "SELECT * FROM mission WHERE privatelyModified = true",
+			resultClass = Mission.class
+	)
 })
 @Entity
 @Table

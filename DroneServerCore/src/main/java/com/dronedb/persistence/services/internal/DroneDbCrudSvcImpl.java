@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
 import com.dronedb.persistence.exception.DatabaseValidationException;
-import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
+import com.dronedb.persistence.scheme.Constants;
 import com.dronedb.persistence.scheme.KeyId;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
@@ -83,7 +83,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				throw new DatabaseValidationException(validatorResponse.getMessage());
 			}
 
-			object.getKeyId().setToRevision(Integer.MAX_VALUE);
+			object.getKeyId().setToRevision(Constants.TIP_REVISION);
 			entityManager.persist(object);
 			existingObject = object;
 			phase = PHASE.CREATE;
@@ -269,7 +269,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	private <T extends BaseObject> T findInPrivate(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
 		KeyId key = keyId.copy();
 		key.setPrivatelyModified(true);
-		key.setToRevision(Integer.MAX_VALUE);
+		key.setToRevision(Constants.TIP_REVISION);
 		T obj = entityManager.find(clz, key);
 		return obj;
 	}
@@ -277,7 +277,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	private <T extends BaseObject> T findInPublic(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
 		KeyId key = keyId.copy();
 		key.setPrivatelyModified(false);
-		key.setToRevision(Integer.MAX_VALUE);
+		key.setToRevision(Constants.TIP_REVISION);
 		T obj = entityManager.find(clz, key);
 		return obj;
 	}

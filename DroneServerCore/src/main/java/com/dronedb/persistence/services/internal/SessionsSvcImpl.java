@@ -107,7 +107,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		// Building a new tip
 		privateItemDup.setFromRevision(nextRevision);
 		privateItemDup.getKeyId().setPrivatelyModified(false);
-		privateItemDup.getKeyId().setToRevision(Integer.MAX_VALUE);
+		privateItemDup.getKeyId().setToRevision(Constants.TIP_REVISION);
 		entityManager.persist(privateItemDup);
 
 		// Clean private
