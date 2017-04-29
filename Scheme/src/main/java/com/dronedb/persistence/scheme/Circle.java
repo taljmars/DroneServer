@@ -39,7 +39,7 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	@Override
 	public BaseObject copy() {
 		Circle circle = this.clone();
-		circle.objId = this.objId;
+		circle.setKeyId(this.getKeyId());
 		return circle;
 	}
 
@@ -79,9 +79,13 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	public void setTurns(int turns) {
 		this.turns = turns;
 	}
-	
+
 	@Override
 	public String toString() {
-		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
+		return "Circle{" +
+				"radius=" + radius +
+				", altitude=" + altitude +
+				", turns=" + turns +
+				'}';
 	}
 }

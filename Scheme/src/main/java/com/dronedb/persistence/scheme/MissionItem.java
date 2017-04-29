@@ -1,7 +1,7 @@
 package com.dronedb.persistence.scheme;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
@@ -14,6 +14,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 //@DiscriminatorColumn(name="type")
 //@Table(name="missionitems")
 //@Table
+//
 public abstract class MissionItem extends BaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;

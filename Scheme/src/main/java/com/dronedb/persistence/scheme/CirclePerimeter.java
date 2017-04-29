@@ -41,7 +41,7 @@ public class CirclePerimeter extends Perimeter {
     @Override
     public BaseObject copy() {
         CirclePerimeter circlePerimeter = this.clone();
-        circlePerimeter.objId = this.objId;
+        circlePerimeter.setKeyId(this.getKeyId());
         return circlePerimeter;
     }
 

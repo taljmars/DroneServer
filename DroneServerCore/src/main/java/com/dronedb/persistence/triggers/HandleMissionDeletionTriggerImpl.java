@@ -1,5 +1,6 @@
 package com.dronedb.persistence.triggers;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
@@ -31,7 +32,11 @@ public class HandleMissionDeletionTriggerImpl extends DeleteObjectTriggerImpl {
                 System.out.println("Mission Item " + missionItemuid + " wasn't found in the DB, skip it deletion");
                 continue;
             }
-            droneDbCrudSvc.delete(missionItem);
+            try {
+                droneDbCrudSvc.delete(missionItem);
+            } catch (DatabaseValidationException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

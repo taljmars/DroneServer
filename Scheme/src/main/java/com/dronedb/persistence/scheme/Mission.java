@@ -12,24 +12,84 @@ import java.util.List;
 import java.util.UUID;
 
 @NamedNativeQueries({
+		/**
+		 * Queries that can be use by clients
+		 */
 	@NamedNativeQuery(
 		name = "GetAllMissions",
-		query = "select * from missions",
+			query = "SELECT * FROM mission WHERE " +
+				// Not in private sessions
+				"(objId, toRevision) NOT IN ( " +
+					"SELECT objId, toRevision FROM mission " +
+					"WHERE NOT deleted AND privatelyModified = true " +
+					"GROUP BY objId, privatelyModified, toRevision " +
+				") " +
+				// And in public session, this and the above give us the ones only in the public !
+				"AND (objId, toRevision) IN (" +
+					"SELECT objId, MAX(toRevision) " +
+					"FROM mission " +
+					"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
+					"GROUP BY objId " +
+				") " +
+				"GROUP BY objId, privatelyModified, toRevision " +
+				"UNION " +
+				// Getting the private sessions missions
+				"SELECT * FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = true " +
+				"GROUP BY objId, privatelyModified, toRevision ",
 		resultClass = Mission.class
 	),
     @NamedNativeQuery(
     	name = "GetMissionById",
-    	query = "SELECT * FROM missions where objid=:OBJID",
+    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " +
+				// Not in private sessions
+				"(objId, toRevision) NOT IN ( " +
+				"SELECT objId, toRevision FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = true " +
+				"GROUP BY objId, privatelyModified, toRevision " +
+				") " +
+				// And in public session, this and the above give us the ones only in the public !
+				"AND (objId, toRevision) IN (" +
+				"SELECT objId, MAX(toRevision) " +
+				"FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
+				"GROUP BY objId " +
+				") " +
+				"GROUP BY objId, privatelyModified, toRevision " +
+				"UNION " +
+				// Getting the private sessions missions
+				"SELECT * FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = true " +
+				"GROUP BY objId, privatelyModified, toRevision ",
     	resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 		name = "GetMissionByName",
-		query = "SELECT * FROM missions where name ilike =:NAME",
+		query = "SELECT * FROM mission WHERE name ilike =:NAME AND " +
+				// Not in private sessions
+				"(objId, toRevision) NOT IN ( " +
+				"SELECT objId, toRevision FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = true " +
+				"GROUP BY objId, privatelyModified, toRevision " +
+				") " +
+				// And in public session, this and the above give us the ones only in the public !
+				"AND (objId, toRevision) IN (" +
+				"SELECT objId, MAX(toRevision) " +
+				"FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = false AND torevision=2147483647 " +
+				"GROUP BY objId " +
+				") " +
+				"GROUP BY objId, privatelyModified, toRevision " +
+				"UNION " +
+				// Getting the private sessions missions
+				"SELECT * FROM mission " +
+				"WHERE NOT deleted AND privatelyModified = true " +
+				"GROUP BY objId, privatelyModified, toRevision ",
 		resultClass = Mission.class
     )
 })
 @Entity
-@Table(name="missions")
+@Table
 @UpdateTriggers({
 	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTriggerImpl", phase = UpdateTrigger.PHASE.UPDATE),
 })
@@ -63,7 +123,10 @@ public class Mission extends BaseObject implements Serializable
 		Mission mission = (Mission) baseObject;
 		this.name = mission.getName();
 		this.defaultAlt = mission.getDefaultAlt();
-		this.missionItemsUids = mission.getMissionItemsUids();
+		this.missionItemsUids = new ArrayList<>();
+		for (UUID missionItemUid : mission.getMissionItemsUids()) {
+			this.missionItemsUids.add(missionItemUid);
+		}
 	}
 
 	/**
@@ -81,7 +144,7 @@ public class Mission extends BaseObject implements Serializable
 	@Override
 	public BaseObject copy() {
 		Mission mission = this.clone();
-		mission.objId = this.objId;
+		mission.setKeyId(this.getKeyId().copy());
 		return mission;
 	}
 

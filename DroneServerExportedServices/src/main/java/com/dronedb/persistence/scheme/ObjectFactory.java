@@ -67,22 +67,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PolygonPerimeter }
-     * 
-     */
-    public PolygonPerimeter createPolygonPerimeter() {
-        return new PolygonPerimeter();
-    }
-
-    /**
-     * Create an instance of {@link CirclePerimeter }
-     * 
-     */
-    public CirclePerimeter createCirclePerimeter() {
-        return new CirclePerimeter();
-    }
-
-    /**
      * Create an instance of {@link Takeoff }
      * 
      */
@@ -104,6 +88,14 @@ public class ObjectFactory {
      */
     public ReturnToHome createReturnToHome() {
         return new ReturnToHome();
+    }
+
+    /**
+     * Create an instance of {@link KeyId }
+     * 
+     */
+    public KeyId createKeyId() {
+        return new KeyId();
     }
 
     /**

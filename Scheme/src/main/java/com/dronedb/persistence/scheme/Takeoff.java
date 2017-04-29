@@ -37,7 +37,7 @@ public class Takeoff extends MissionItem implements Serializable {
 	@Override
 	public BaseObject copy() {
 		Takeoff takeoff = this.clone();
-		takeoff.objId = this.objId;
+		takeoff.setKeyId(this.getKeyId());
 		return takeoff;
 	}
 
@@ -57,10 +57,12 @@ public class Takeoff extends MissionItem implements Serializable {
 	public void setFinishedAlt(double finishedAlt) {
 		this.finishedAlt = finishedAlt;
 	}
-	
+
 	@Override
 	public String toString() {
-		return getClass().getCanonicalName() + " [objId=" + objId + "]"; 
+		return "Takeoff{" +
+				"finishedAlt=" + finishedAlt +
+				'}';
 	}
 }
 

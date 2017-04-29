@@ -29,6 +29,16 @@ public interface DroneDbCrudSvcRemote {
 
     /**
      * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "CheckConnection")
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionResponse")
+    public String checkConnection();
+
+    /**
+     * 
      * @param arg1
      * @param arg0
      * @return
@@ -42,16 +52,6 @@ public interface DroneDbCrudSvcRemote {
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
         String arg1);
-
-    /**
-     * 
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "CheckConnection")
-    @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionResponse")
-    public String checkConnection();
 
     /**
      * 

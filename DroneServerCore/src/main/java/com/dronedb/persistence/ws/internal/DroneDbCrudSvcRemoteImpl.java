@@ -59,7 +59,11 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	
 	@Override
 	public <T extends BaseObject> void delete(T object) {
-		droneDbCrudSvc.delete(object);
+		try {
+			droneDbCrudSvc.delete(object);
+		} catch (DatabaseValidationException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

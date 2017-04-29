@@ -47,7 +47,8 @@ public class QuerySvcImpl implements QuerySvc {
 	{
 		System.err.println("Running named query");
 		TypedQuery<T> query = entityManager.createNamedQuery(queryString, clz);
-		query = query.setParameter(1, "9c0ee519-c4eb-420b-ac05-613bce92a1c0");
+		System.out.println(query.toString());
+//		query = query.setParameter(1, "9c0ee519-c4eb-420b-ac05-613bce92a1c0");
 		List<T> lst = query.getResultList();
 		System.err.println("Service " + lst);
 		List<T> arr = new ArrayList();

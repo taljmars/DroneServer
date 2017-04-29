@@ -63,7 +63,7 @@ public class Waypoint extends MissionItem implements Delayable, Altitudable, Ser
 	@Override
 	public BaseObject copy() {
 		Waypoint waypoint = this.clone();
-		waypoint.objId = this.objId;
+		waypoint.getKeyId().setObjId(this.getKeyId().getObjId());
 		return waypoint;
 	}
 

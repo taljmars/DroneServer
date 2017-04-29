@@ -2,10 +2,8 @@ package com.dronedb.server;
 
 import com.generic_tools.validations.RuntimeValidator;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -20,5 +18,4 @@ public class DroneDBServerAppConfig {
 	public RuntimeValidator runtimeValidator() {
 		return new RuntimeValidator();
 	}
-
 }

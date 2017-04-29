@@ -17,7 +17,7 @@ public class QueryRequestRemote {
 	private Class<? extends BaseObject> clz;
 		
 	private Map<String, String> params;
-	
+
 	public QueryRequestRemote() {
 		params = new HashMap();
 	}
@@ -53,7 +53,7 @@ public class QueryRequestRemote {
 	}
 	
 	@Getter
-	@XmlElement(required = true)
+	@XmlElement
 	public Map<String, String> getParameters() {
 		return params;
 	}

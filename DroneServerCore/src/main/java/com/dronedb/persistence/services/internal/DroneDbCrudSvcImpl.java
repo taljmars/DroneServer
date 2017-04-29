@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 
 //import org.eclipse.persistence.jpa.jpql.Assert;
 import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
+import com.dronedb.persistence.scheme.KeyId;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,17 +63,33 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		System.out.println("Crud UPDATE called " + object);
 		PHASE phase;
 		T oldVersion = null;
-		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+
+		T existingObject = findInPrivate((Class<T>) object.getClass(), object.getKeyId());
 		if (existingObject == null) {
+			// Search in public
+			existingObject = findInPublic((Class<T>) object.getClass(), object.getKeyId());
+			if (existingObject != null) {
+				System.out.println("Found in public DB, make a private copy");
+				existingObject = movePublicToPrivate(existingObject);
+			}
+		}
+
+		if (existingObject == null) {
+			// Nothing exist at all, creating it in private db
+			System.out.println("Object will be written to the databse for the first time");
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 			if (validatorResponse.isFailed()) {
 				System.out.println("Validation failed: " + validatorResponse);
 				throw new DatabaseValidationException(validatorResponse.getMessage());
 			}
+
+			object.getKeyId().setToRevision(Integer.MAX_VALUE);
 			entityManager.persist(object);
+			existingObject = object;
 			phase = PHASE.CREATE;
 		}
 		else {
+			// found in private or public, existingObject is a private copy exist in DB
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 			if (validatorResponse.isFailed()) {
 				System.out.println("Validation failed: " + validatorResponse);
@@ -83,14 +101,24 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		}
 
 		entityManager.flush();
-		existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
+		existingObject = findInPrivate((Class<T>) object.getClass(),existingObject.getKeyId());
 		handleUpdateTriggers(oldVersion, existingObject, phase);
 
-		T mergedObject = (T) existingObject;
+		T mergedObject = existingObject;
 		System.out.println("Updated " + mergedObject);
 		return mergedObject;
 	}
-	
+
+	private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
+		T privateObject = (T) existingObject.copy();
+		privateObject.getKeyId().setPrivatelyModified(true);
+		entityManager.persist(privateObject);
+		System.out.println("Create object in private db");
+		System.out.println("Public " + existingObject);
+		System.out.println("Private " + privateObject);
+		return privateObject;
+	}
+
 	@Transactional
 	public <T extends BaseObject> void updateSet(Set<T> objects) {
 //		for (T object : objects) {
@@ -110,16 +138,34 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	}
 
 	@Transactional
-	public <T extends BaseObject> void delete(T object) {
+	public <T extends BaseObject> void delete(T object) throws DatabaseValidationException {
 		System.out.println("Crud DELETE called " + object);
-		T existingObject = entityManager.find((Class<T>) object.getClass(),object.getObjId());
-		if (existingObject == null) {
-			System.out.println("Object doesn't exist in the DB, no need to invoke triggers");
+
+		T existingPrivateObject = findInPrivate((Class<T>) object.getClass(),object.getKeyId());
+		T existingPublicObject = findInPublic((Class<T>) object.getClass(),object.getKeyId());
+
+		if (existingPublicObject == null && existingPrivateObject == null) {
+			System.err.println("No object found");
 			return;
 		}
-		handleDeleteTriggers(existingObject);
-		System.out.println("Removing " + existingObject);
-		entityManager.remove(existingObject);
+
+		if (existingPublicObject == null && existingPrivateObject != null) {
+			handleDeleteTriggers(existingPrivateObject);
+			entityManager.remove(existingPrivateObject);
+			return;
+		}
+
+		if (existingPublicObject != null && existingPrivateObject == null) {
+			existingPrivateObject = movePublicToPrivate(existingPublicObject);
+			handleDeleteTriggers(existingPrivateObject);
+			existingPrivateObject.setDeleted(true);
+			entityManager.flush();
+			return;
+		}
+
+		handleDeleteTriggers(existingPrivateObject);
+		existingPrivateObject.setDeleted(true);
+		entityManager.flush();
 	}
 	
 	@Transactional
@@ -131,7 +177,19 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	@Transactional
 	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) {
 		System.out.println("Crud READ called " + objId + ", class " + clz);
-		return entityManager.find(clz ,objId);
+
+		// Build a key for searches
+		KeyId keyId = new KeyId();
+		keyId.setObjId(objId);
+		keyId.setPrivatelyModified(true);
+
+		T object = entityManager.find(clz ,keyId);
+		if (object == null) {
+			keyId.setPrivatelyModified(false);
+			object = entityManager.find(clz ,keyId);
+		}
+
+		return object;
 	}
 	
 	/*
@@ -206,5 +264,21 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private <T extends BaseObject> T findInPrivate(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
+		KeyId key = keyId.copy();
+		key.setPrivatelyModified(true);
+		key.setToRevision(Integer.MAX_VALUE);
+		T obj = entityManager.find(clz, key);
+		return obj;
+	}
+
+	private <T extends BaseObject> T findInPublic(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
+		KeyId key = keyId.copy();
+		key.setPrivatelyModified(false);
+		key.setToRevision(Integer.MAX_VALUE);
+		T obj = entityManager.find(clz, key);
+		return obj;
 	}
 }

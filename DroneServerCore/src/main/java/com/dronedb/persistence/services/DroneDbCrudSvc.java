@@ -16,7 +16,7 @@ public interface DroneDbCrudSvc {
 	
 	<T extends BaseObject> void updateSet(Set<T> objects);
 	
-	<T extends BaseObject> void delete(T object);
+	<T extends BaseObject> void delete(T object) throws DatabaseValidationException;
 	
 	<T extends BaseObject> T read(final UUID objId);
 	

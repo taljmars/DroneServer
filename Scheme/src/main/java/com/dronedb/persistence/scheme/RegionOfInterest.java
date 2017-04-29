@@ -30,7 +30,7 @@ public class RegionOfInterest extends MissionItem implements Altitudable, Serial
     @Override
     public BaseObject copy() {
         RegionOfInterest regionOfInterest = this.clone();
-        regionOfInterest.objId = this.objId;
+        regionOfInterest.setKeyId(this.getKeyId());
         return regionOfInterest;
     }
 

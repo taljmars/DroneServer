@@ -36,7 +36,7 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
             MissionItem missionItem = droneDbCrudSvc.readByClass(uid, MissionItem.class);
             MissionItem cloneMissionItem = missionItem.clone();
             cloneMissionItem = droneDbCrudSvc.update(cloneMissionItem);
-            newUid.add(cloneMissionItem.getObjId());
+            newUid.add(cloneMissionItem.getKeyId().getObjId());
         }
 
         clonedMission.setMissionItemsUids(newUid);

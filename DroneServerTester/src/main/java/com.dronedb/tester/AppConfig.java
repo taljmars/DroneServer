@@ -8,6 +8,7 @@ import javax.xml.ws.Service;
 
 import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
 import com.dronedb.persistence.ws.internal.QuerySvcRemote;
+import com.dronedb.persistence.ws.internal.SessionsSvcRemote;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,11 @@ public class AppConfig
 	@Bean
 	public QuerySvcRemote querySvcRemote() {
 		return LoadServices(QuerySvcRemote.class);
+	}
+
+	@Bean
+	public SessionsSvcRemote sessionsSvcRemote() {
+		return LoadServices(SessionsSvcRemote.class);
 	}
 
 }

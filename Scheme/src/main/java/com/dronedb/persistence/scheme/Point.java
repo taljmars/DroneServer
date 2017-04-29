@@ -5,6 +5,8 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 
 /**
  * Created by taljmars on 3/20/17.
@@ -33,7 +35,7 @@ public class Point extends BaseObject {
     @Override
     public BaseObject copy() {
         Point point = this.clone();
-        point.objId = this.objId;
+        point.getKeyId().setObjId(this.getKeyId().getObjId());
         return point;
     }
 

@@ -31,7 +31,7 @@ public class Land extends MissionItem implements Altitudable, Serializable {
 	@Override
 	public BaseObject copy() {
 		Land land = this.clone();
-		land.objId = this.objId;
+		land.setKeyId(this.getKeyId());
 		return land;
 	}
 

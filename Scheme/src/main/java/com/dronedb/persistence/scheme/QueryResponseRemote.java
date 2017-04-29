@@ -8,8 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class QueryResponseRemote {
-	
-	@XmlElement(required = true)	
+
 	private List<BaseObject> resultListBase;
 	
 	public QueryResponseRemote() {
@@ -24,7 +23,8 @@ public class QueryResponseRemote {
 //			resultList[i] = lst.get(i).getObjId();
 //		}
 	}
-	
+
+	@XmlElement(required = true)
 	public List<BaseObject> getResultList() {
 //		List<Integer> lst = new ArrayList<>();
 //		lst.addAll(Arrays.asList(resultList));

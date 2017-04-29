@@ -35,7 +35,7 @@ public class ReturnToHome extends MissionItem implements Altitudable, Serializab
 	@Override
 	public BaseObject copy() {
 		ReturnToHome returnToHome = this.clone();
-		returnToHome.objId = this.objId;
+		returnToHome.setKeyId(this.getKeyId());
 		return returnToHome;
 	}
 

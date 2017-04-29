@@ -7,6 +7,23 @@
 	<persistence-unit name="DroneDB" transaction-type="RESOURCE_LOCAL">
 		
 		<!-- Enter local db manually by running 'sudo -u postgres psql dronedb' -->
+		<!--
+		Drop all tables:
+
+		sudo -u postgres psql dronedb -c "drop TABLE circle;"
+		sudo -u postgres psql dronedb -c "drop TABLE circleperimeters;"
+		sudo -u postgres psql dronedb -c "drop TABLE mission_missionitemsuids;"
+		sudo -u postgres psql dronedb -c "drop TABLE missions;"
+		sudo -u postgres psql dronedb -c "drop TABLE point;"
+		sudo -u postgres psql dronedb -c "drop TABLE polygonperimeter_points;"
+		sudo -u postgres psql dronedb -c "drop TABLE polygonperimeters;"
+		sudo -u postgres psql dronedb -c "drop TABLE regionofinterest;"
+		sudo -u postgres psql dronedb -c "drop TABLE returntohome;"
+		sudo -u postgres psql dronedb -c "drop TABLE takeoff;"
+		sudo -u postgres psql dronedb -c "drop TABLE land;"
+		sudo -u postgres psql dronedb -c "drop TABLE waypoint;"
+
+		-->
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/dronedb"/>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>

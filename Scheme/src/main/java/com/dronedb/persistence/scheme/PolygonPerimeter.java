@@ -51,7 +51,7 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     @Override
     public BaseObject copy() {
         PolygonPerimeter polygonPerimeter = this.clone();
-        polygonPerimeter.objId = this.objId;
+        polygonPerimeter.setKeyId(this.getKeyId());
         return polygonPerimeter;
     }
 

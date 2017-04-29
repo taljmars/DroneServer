@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="resultListBase" type="{http://scheme.persistence.dronedb.com/}baseObject" maxOccurs="unbounded"/>
+ *         &lt;element name="resultList" type="{http://scheme.persistence.dronedb.com/}baseObject" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,26 +30,26 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "queryResponseRemote", propOrder = {
-    "resultListBase"
+    "resultList"
 })
 public class QueryResponseRemote {
 
     @XmlElement(required = true)
-    protected List<BaseObject> resultListBase;
+    protected List<BaseObject> resultList;
 
     /**
-     * Gets the value of the resultListBase property.
+     * Gets the value of the resultList property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the resultListBase property.
+     * This is why there is not a <CODE>set</CODE> method for the resultList property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getResultListBase().add(newItem);
+     *    getResultList().add(newItem);
      * </pre>
      * 
      * 
@@ -59,11 +59,11 @@ public class QueryResponseRemote {
      * 
      * 
      */
-    public List<BaseObject> getResultListBase() {
-        if (resultListBase == null) {
-            resultListBase = new ArrayList<BaseObject>();
+    public List<BaseObject> getResultList() {
+        if (resultList == null) {
+            resultList = new ArrayList<BaseObject>();
         }
-        return this.resultListBase;
+        return this.resultList;
     }
 
 }

@@ -39,7 +39,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
         Point point = droneDbCrudSvc.readByClass(perimeter.getCenter(), Point.class);
         Point clonePoint = point.clone();
         droneDbCrudSvc.update(clonePoint);
-        clonePolygon.setCenter(point.getObjId());
+        clonePolygon.setCenter(point.getKeyId().getObjId());
         droneDbCrudSvc.update(clonePolygon);
         return clonePolygon;
     }
@@ -51,7 +51,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
             Point point = droneDbCrudSvc.readByClass(uuid, Point.class);
             Point clonePoint = point.clone();
             droneDbCrudSvc.update(clonePoint);
-            uuidList.add(clonePoint.getObjId());
+            uuidList.add(clonePoint.getKeyId().getObjId());
         }
 
         clonePolygon.setPoints(uuidList);

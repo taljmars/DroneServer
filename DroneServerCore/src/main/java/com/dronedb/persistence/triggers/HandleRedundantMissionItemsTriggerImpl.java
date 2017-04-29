@@ -1,5 +1,6 @@
 package com.dronedb.persistence.triggers;
 
+import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
@@ -34,7 +35,11 @@ public class HandleRedundantMissionItemsTriggerImpl extends UpdateObjectTriggerI
 
             // Old Uuid, mission item should be cleared
             MissionItem missionItem = droneDbCrudSvc.readByClass(missionItemuid, MissionItem.class);
-            droneDbCrudSvc.delete(missionItem);
+            try {
+                droneDbCrudSvc.delete(missionItem);
+            } catch (DatabaseValidationException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
