@@ -4,12 +4,19 @@ import com.dronedb.persistence.scheme.*;
 import org.springframework.stereotype.Component;
 
 import javax.xml.ws.Endpoint;
+import org.apache.log4j.Logger;
 
 @Component
 public class DroneServer {
 
+	final static Logger logger = Logger.getLogger(DroneServer.class);
 
 	public static void main(String[] args) {
+		DroneServer droneServer	= DroneDBServerAppConfig.context.getBean(DroneServer.class);
+		droneServer.go();
+	}
+
+	private void go() {
 		System.setProperty("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");
 
 		DroneDbCrudSvcRemote droneDbCrudSvcRemote 		= DroneDBServerAppConfig.context.getBean(DroneDbCrudSvcRemote.class);
@@ -18,21 +25,21 @@ public class DroneServer {
 		SessionsSvcRemote sessionsSvcRemote 			= DroneDBServerAppConfig.context.getBean(SessionsSvcRemote.class);
 		PerimeterCrudSvcRemote perimeterCrudSvcRemote 	= DroneDBServerAppConfig.context.getBean(PerimeterCrudSvcRemote.class);
 
-		System.err.println("Sign " + DroneDbCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + DroneDbCrudSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + DroneDbCrudSvcRemote.class.getSimpleName(), droneDbCrudSvcRemote);
 
-		System.err.println("Sign " + QuerySvcRemote.class.getSimpleName());
+		logger.debug("Sign " + QuerySvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + QuerySvcRemote.class.getSimpleName(), querySvcRemote);
 
-		System.err.println("Sign " + MissionCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + MissionCrudSvcRemote.class.getSimpleName(), missionCrudSvcRemote);
 
-		System.err.println("Sign " + SessionsSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + SessionsSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + SessionsSvcRemote.class.getSimpleName(), sessionsSvcRemote);
 
-		System.err.println("Sign " + PerimeterCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName());
 		Endpoint.publish("http://localhost:9999/ws/" + PerimeterCrudSvcRemote.class.getSimpleName(), perimeterCrudSvcRemote);
 
+		logger.debug("Up and runnning!");
 	}
-
 }

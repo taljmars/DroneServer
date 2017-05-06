@@ -22,14 +22,14 @@ public interface SessionsSvcRemote {
      * 
      */
     @WebMethod
-    @Action(input = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/publishRequest", output = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/publishResponse")
-    public void publish();
+    @Action(input = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/discardRequest", output = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/discardResponse")
+    public void discard();
 
     /**
      * 
      */
     @WebMethod
-    @Action(input = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/discardRequest", output = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/discardResponse")
-    public void discard();
+    @Action(input = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/publishRequest", output = "http://scheme.persistence.dronedb.com/SessionsSvcRemote/publishResponse")
+    public void publish();
 
 }
