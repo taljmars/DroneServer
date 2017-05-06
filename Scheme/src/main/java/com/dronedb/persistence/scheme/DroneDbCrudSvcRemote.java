@@ -1,6 +1,7 @@
 package com.dronedb.persistence.scheme;
 
 import com.dronedb.persistence.scheme.BaseObject;
+import javassist.tools.rmi.ObjectNotFoundException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -30,8 +31,8 @@ public interface DroneDbCrudSvcRemote
 	<T extends BaseObject> void delete(@WebParam T object);
 	
 	@WebMethod 
-	<T extends BaseObject> T read(@WebParam final UUID objId);
+	<T extends BaseObject> T read(@WebParam final UUID objId) throws ObjectNotFoundException;
 	
 	@WebMethod 
-	<T extends BaseObject> T readByClass(@WebParam final UUID objId, @WebParam final Class<T> clz);
+	<T extends BaseObject> T readByClass(@WebParam final UUID objId, @WebParam final Class<T> clz) throws ObjectNotFoundException;
 }

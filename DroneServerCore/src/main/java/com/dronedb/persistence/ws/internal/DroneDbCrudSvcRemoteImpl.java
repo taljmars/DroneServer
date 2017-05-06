@@ -5,6 +5,7 @@ import javax.jws.WebService;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
 import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -67,15 +68,20 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	}
 	
 	@Override
-	public <T extends BaseObject> T read(final UUID objId) {
+	public <T extends BaseObject> T read(final UUID objId)  throws ObjectNotFoundException{
 		System.out.println("Crud REMOTE READ called " + objId);
-		return (T) droneDbCrudSvc.read(objId).copy();
+		T object = droneDbCrudSvc.read(objId);
+		if (object == null)
+			throw new ObjectNotFoundException("Failed to find object '" + objId + "'");
+		return (T) object.copy();
 	}
 	
 	@Override
-	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) {
+	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundException {
 		System.out.println("Crud REMOTE READ called " + objId + ", class " + clz);
 		T object = droneDbCrudSvc.readByClass(objId, clz);
+		if (object == null)
+			throw new ObjectNotFoundException("Failed to find object '" + objId + "'");
 		System.out.println("Send object to client -> '" + object + "'");
 		return (T) object.copy();
 	}

@@ -108,9 +108,9 @@ public class Mission extends BaseObject implements Serializable
 		this.name = name;
 	}
 	
-//	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+	//@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
 //	@JoinTable(name = "mission_missionitem", joinColumns = @JoinColumn(name = "mission_id", referencedColumnName = "objid"), inverseJoinColumns = @JoinColumn(name = "missionitem_id", referencedColumnName="objid"))
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<UUID> missionItemsUids;
 	
 	@Getter

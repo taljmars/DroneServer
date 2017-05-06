@@ -43,15 +43,20 @@ public interface DroneDbCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.BaseObject
+     * @throws ObjectNotFoundException
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassResponse")
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClassResponse", fault = {
+        @FaultAction(className = ObjectNotFoundException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readByClass/Fault/ObjectNotFoundException")
+    })
     public BaseObject readByClass(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+        String arg1)
+        throws ObjectNotFoundException
+    ;
 
     /**
      * 
@@ -76,13 +81,18 @@ public interface DroneDbCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.BaseObject
+     * @throws ObjectNotFoundException
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readResponse")
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/readResponse", fault = {
+        @FaultAction(className = ObjectNotFoundException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/read/Fault/ObjectNotFoundException")
+    })
     public BaseObject read(
         @WebParam(name = "arg0", partName = "arg0")
-        String arg0);
+        String arg0)
+        throws ObjectNotFoundException
+    ;
 
     /**
      * 
