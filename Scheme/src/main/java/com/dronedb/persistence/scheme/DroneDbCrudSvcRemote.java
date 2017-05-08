@@ -1,6 +1,5 @@
 package com.dronedb.persistence.scheme;
 
-import com.dronedb.persistence.scheme.BaseObject;
 import javassist.tools.rmi.ObjectNotFoundException;
 
 import javax.jws.WebMethod;
@@ -16,19 +15,16 @@ import java.util.UUID;
 public interface DroneDbCrudSvcRemote
 {
 	@WebMethod 
-	String CheckConnection();
+	<T extends BaseObject> T create(@WebParam final Class<T> clz) throws ObjectInstanceRemoteException;
 	
 	@WebMethod 
-	<T extends BaseObject> T create(@WebParam final Class<T> clz);
-	
-	@WebMethod 
-	<T extends BaseObject> T update(@WebParam T object) throws DatabaseRemoteValidationException;
+	<T extends BaseObject> T update(@WebParam T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 	
 //	@WebMethod 
 //	<T extends BaseObject> void updateSet(@WebParam Set<T> objects);
 //	
 	@WebMethod 
-	<T extends BaseObject> void delete(@WebParam T object);
+	<T extends BaseObject> void delete(@WebParam T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException;
 	
 	@WebMethod 
 	<T extends BaseObject> T read(@WebParam final UUID objId) throws ObjectNotFoundException;

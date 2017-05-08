@@ -13,12 +13,12 @@ import javax.jws.soap.SOAPBinding;
 public interface MissionCrudSvcRemote {
 
     @WebMethod
-    Mission cloneMission(@WebParam Mission mission) throws DatabaseRemoteValidationException;
+    Mission cloneMission(@WebParam Mission mission) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException;
 
     @WebMethod
-    <T extends MissionItem> T createMissionItem(Class<T> clz);
+    <T extends MissionItem> T createMissionItem(Class<T> clz) throws ObjectInstanceRemoteException;
 
     @WebMethod
-    Mission createMission();
+    Mission createMission() throws ObjectInstanceRemoteException;
 
 }

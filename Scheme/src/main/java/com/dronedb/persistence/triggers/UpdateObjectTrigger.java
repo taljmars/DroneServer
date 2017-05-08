@@ -7,7 +7,7 @@ import com.dronedb.persistence.scheme.BaseObject;
 
 public interface UpdateObjectTrigger {
 	
-	public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, PHASE phase);
+	public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, PHASE phase) throws Exception;
 	
 	public void setApplicationContext(ApplicationContext applicationContext);
 

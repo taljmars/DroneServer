@@ -32,17 +32,19 @@ public interface PerimeterCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.Perimeter
-     * @throws DatabaseRemoteValidationException
+     * @throws ObjectNotFoundRemoteException
+     * @throws DatabaseValidationRemoteException
      */
     @WebMethod
     @WebResult(partName = "return")
     @Action(input = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterRequest", output = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeterResponse", fault = {
-        @FaultAction(className = DatabaseRemoteValidationException.class, value = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeter/Fault/DatabaseRemoteValidationException")
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeter/Fault/DatabaseValidationRemoteException"),
+        @FaultAction(className = ObjectNotFoundRemoteException.class, value = "http://scheme.persistence.dronedb.com/PerimeterCrudSvcRemote/clonePerimeter/Fault/ObjectNotFoundRemoteException")
     })
     public Perimeter clonePerimeter(
         @WebParam(name = "arg0", partName = "arg0")
         Perimeter arg0)
-        throws DatabaseRemoteValidationException
+        throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException
     ;
 
 }

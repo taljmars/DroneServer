@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 public class DroneDbTester
 {	
 	@Transactional
-	public static void main(String[] args) throws com.dronedb.persistence.ws.internal.DatabaseRemoteValidationException {
+	public static void main(String[] args) throws com.dronedb.persistence.ws.internal.DatabaseValidationRemoteException {
 		//DroneDbClient client = (DroneDbClient) AppConfig.context.getBean("droneDbClient");
 		//System.err.println(client.getDroneDbCrudSvcRemote().CheckConnection());
 

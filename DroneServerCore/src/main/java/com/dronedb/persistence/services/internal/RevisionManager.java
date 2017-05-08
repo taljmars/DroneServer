@@ -3,6 +3,7 @@ package com.dronedb.persistence.services.internal;
 import com.dronedb.persistence.scheme.Revision;
 import com.dronedb.persistence.services.QueryRequest;
 import com.dronedb.persistence.services.QuerySvc;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,8 @@ import java.util.List;
 @Component
 public class RevisionManager {
 
+    final static Logger logger = Logger.getLogger(RevisionManager.class);
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -30,7 +33,7 @@ public class RevisionManager {
         revision.setCurrentRevision(0);
         revision.getKeyId().setPrivatelyModified(false);
         revision.getKeyId().setToRevision(0);
-        System.out.println("First time creating revision " + revision);
+        logger.debug("First time creating revision " + revision);
         entityManager.persist(revision);
         revision = entityManager.find(Revision.class, revision.getKeyId());
         return revision;
@@ -51,11 +54,7 @@ public class RevisionManager {
 
     public void advance() {
         Revision revision = getRevisionObject();
-//        Revision revisionDup = revision.copy();
-//        revisionDup.getKeyId().setToRevision();
         revision.setCurrentRevision(getNextRevision());
-//        revision.
-
         entityManager.flush();
     }
 }

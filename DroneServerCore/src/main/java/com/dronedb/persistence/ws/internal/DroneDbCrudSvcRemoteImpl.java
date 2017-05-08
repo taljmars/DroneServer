@@ -4,8 +4,11 @@ import javax.annotation.PostConstruct;
 import javax.jws.WebService;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
-import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
+import com.dronedb.persistence.exception.ObjectInstanceException;
+import com.dronedb.persistence.scheme.DatabaseValidationRemoteException;
+import com.dronedb.persistence.scheme.ObjectInstanceRemoteException;
 import javassist.tools.rmi.ObjectNotFoundException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -20,6 +23,7 @@ import java.util.UUID;
 @WebService(endpointInterface = "com.dronedb.persistence.scheme.DroneDbCrudSvcRemote")
 public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 {
+	final static Logger logger = Logger.getLogger(DroneDbCrudSvcRemoteImpl.class);
 	
 	@Autowired
 	private DroneDbCrudSvc droneDbCrudSvc;
@@ -30,26 +34,32 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	}
 
 	@Override
-	public String CheckConnection() {
-		return droneDbCrudSvc.CheckConnection();
+	public <T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceRemoteException {
+		logger.debug("Crud REMOTE CREATE called " + clz);
+		try {
+			return (T) droneDbCrudSvc.create(clz).copy();
+		}
+		catch (ObjectInstanceException e) {
+			logger.error("Failed to create object", e);
+			throw new ObjectInstanceRemoteException("Failed to create object");
+		}
 	}
 	
 	@Override
-	public <T extends BaseObject> T create(final Class<T> clz) {
-		System.out.println("Crud REMOTE CREATE called " + clz);
-		return (T) droneDbCrudSvc.create(clz).copy();
-	}
-	
-	@Override
-	public <T extends BaseObject> T update(T object) throws DatabaseRemoteValidationException {
-		System.out.println("Crud REMOTE UPDATE called " + object);
+	public <T extends BaseObject> T update(T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+		logger.debug("Crud REMOTE UPDATE called " + object);
 		T obj = null;
 		try {
 			obj = droneDbCrudSvc.update(object);
 			return (T) obj.copy();
 		}
 		catch (DatabaseValidationException e) {
-			throw new DatabaseRemoteValidationException(e.getMessage());
+			logger.error("Failed to update object", e);
+			throw new DatabaseValidationRemoteException("Failed to update object");
+		}
+		catch (ObjectInstanceException e) {
+			logger.error("Failed to update object", e);
+			throw new ObjectInstanceRemoteException("Failed to update object");
 		}
 	}
 	
@@ -59,30 +69,39 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 //	}
 	
 	@Override
-	public <T extends BaseObject> void delete(T object) {
+	public <T extends BaseObject> void delete(T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException {
 		try {
 			droneDbCrudSvc.delete(object);
-		} catch (DatabaseValidationException e) {
-			e.printStackTrace();
+		}
+		catch (DatabaseValidationException e) {
+			logger.error("Failed to delete object", e);
+			throw new DatabaseValidationRemoteException("Failed to delete object");
+		}
+		catch (ObjectInstanceException e) {
+			logger.error("Failed to delete object", e);
+			throw new ObjectInstanceRemoteException("Failed to delete object");
 		}
 	}
 	
 	@Override
 	public <T extends BaseObject> T read(final UUID objId)  throws ObjectNotFoundException{
-		System.out.println("Crud REMOTE READ called " + objId);
+		logger.debug("Crud REMOTE READ called " + objId);
 		T object = droneDbCrudSvc.read(objId);
-		if (object == null)
+		if (object == null) {
+			logger.error("Failed to find object '" + objId + "'");
 			throw new ObjectNotFoundException("Failed to find object '" + objId + "'");
+		}
 		return (T) object.copy();
 	}
 	
 	@Override
 	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundException {
-		System.out.println("Crud REMOTE READ called " + objId + ", class " + clz);
+		logger.debug("Crud REMOTE READ called " + objId + ", class " + clz);
 		T object = droneDbCrudSvc.readByClass(objId, clz);
-		if (object == null)
+		if (object == null) {
+			logger.error("Failed to find object '" + objId + "'");
 			throw new ObjectNotFoundException("Failed to find object '" + objId + "'");
-		System.out.println("Send object to client -> '" + object + "'");
+		}
 		return (T) object.copy();
 	}
 }

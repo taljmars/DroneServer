@@ -1,6 +1,7 @@
 package com.dronedb.persistence.services.internal;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.exception.ObjectInstanceException;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Constants;
 import com.dronedb.persistence.scheme.KeyId;
@@ -10,6 +11,7 @@ import com.dronedb.persistence.triggers.UpdateTrigger.PHASE;
 import com.dronedb.server.DroneDBServerAppConfig;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,6 @@ import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
-
-//import org.eclipse.persistence.jpa.jpql.Assert;
 
 @Component
 public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
@@ -34,36 +34,27 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	@Autowired
 	private RuntimeValidator runtimeValidator;
 
-	public String CheckConnection() {
-		return "Inside Implementation";
-	}
-	
+	@Override
 	@Transactional
-	public <T extends BaseObject> T create(final Class<T> clz) {
+	public <T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceException {
 		logger.debug("Crud CREATE called " + clz);
 		try {
-			T inst = clz.newInstance();
-			handleUpdateTriggers(null, inst, PHASE.CREATE);
-			return inst;
+			return clz.newInstance();
 		} 
-		catch (InstantiationException e) {
-			e.printStackTrace();
+		catch (InstantiationException | IllegalAccessException e) {
 			logger.error("Failed to create object of type " + clz, e);
+			throw new ObjectInstanceException(e);
 		}
-		catch (IllegalAccessException e) {
-			e.printStackTrace();
-			logger.error("Failed to create object of type " + clz, e);
-		}
-		logger.error("Failed to create object of type " + clz);
-		return null;
 	}
 
+	@Override
 	@Transactional
-	public <T extends BaseObject> T update(T object) throws DatabaseValidationException {
+	public <T extends BaseObject> T update(T object) throws DatabaseValidationException, ObjectInstanceException {
 		logger.debug("Crud UPDATE called " + object);
 		PHASE phase;
 		T oldVersion = null;
 
+		// Handling a case where it is the first update of a public object
 		T existingObject = findInPrivate((Class<T>) object.getClass(), object.getKeyId());
 		if (existingObject == null) {
 			// Search in public
@@ -71,9 +62,12 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			if (existingObject != null) {
 				logger.debug("Found in public DB, make a private copy");
 				existingObject = movePublicToPrivate(existingObject);
+				// Later in this function we will treat it as private session
 			}
 		}
 
+		// Handling a case were the object doesn't exist in the private not publish db.
+		// This is the creation time of this object
 		if (existingObject == null) {
 			// Nothing exist at all, creating it in private db
 			logger.debug("Object will be written to the database for the first time");
@@ -83,11 +77,14 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				throw new DatabaseValidationException(validatorResponse.getMessage());
 			}
 
+			// Setting toVersion field to represent the last version
 			object.getKeyId().setToRevision(Constants.TIP_REVISION);
 			entityManager.persist(object);
 			existingObject = object;
 			phase = PHASE.CREATE;
 		}
+
+		// Handling a case where we've found an object in the private session.
 		else {
 			// found in private or public, existingObject is a private copy exist in DB
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
@@ -119,6 +116,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		return privateObject;
 	}
 
+	@Override
 	@Transactional
 	public <T extends BaseObject> void updateSet(Set<T> objects) {
 //		for (T object : objects) {
@@ -137,24 +135,28 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 //		}
 	}
 
+	@Override
 	@Transactional
-	public <T extends BaseObject> void delete(T object) throws DatabaseValidationException {
+	public <T extends BaseObject> void delete(T object) throws DatabaseValidationException, ObjectInstanceException {
 		logger.debug("Crud DELETE called " + object);
 
 		T existingPrivateObject = findInPrivate((Class<T>) object.getClass(),object.getKeyId());
 		T existingPublicObject = findInPublic((Class<T>) object.getClass(),object.getKeyId());
 
+		// Object doesn't exist at all
 		if (existingPublicObject == null && existingPrivateObject == null) {
 			logger.warn("No object found");
 			return;
 		}
 
+		// The object was just created in the private session
 		if (existingPublicObject == null && existingPrivateObject != null) {
 			handleDeleteTriggers(existingPrivateObject);
 			entityManager.remove(existingPrivateObject);
 			return;
 		}
 
+		// Object exist in public db only
 		if (existingPublicObject != null && existingPrivateObject == null) {
 			existingPrivateObject = movePublicToPrivate(existingPublicObject);
 			handleDeleteTriggers(existingPrivateObject);
@@ -167,15 +169,17 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		existingPrivateObject.setDeleted(true);
 		entityManager.flush();
 	}
-	
+
+	@Override
 	@Transactional
 	public <T extends BaseObject> T read(final UUID uid) {
 		//Assert.fail("Not implemeted yet");
 		return null;
 	}
-	
+
+	@Override
 	@Transactional
-	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) {
+	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundException {
 		logger.debug("Crud READ called " + objId + ", class " + clz);
 
 		// Build a key for searches
@@ -183,10 +187,17 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		keyId.setObjId(objId);
 		keyId.setPrivatelyModified(true);
 
+		// First search in the private db
 		T object = entityManager.find(clz ,keyId);
 		if (object == null) {
+			// We haven't found the object in the private db, going to search in public db
 			keyId.setPrivatelyModified(false);
 			object = entityManager.find(clz ,keyId);
+		}
+
+		// Check if we've found any object
+		if (object == null) {
+			throw new ObjectNotFoundException("Failed to get object " + objId + " of type " + clz);
 		}
 
 		return object;
@@ -195,26 +206,29 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 	/*
 	 * Handling triggers
 	 */
-	
-	@SuppressWarnings("unchecked")
-	private <T extends BaseObject> void handleUpdateTriggers(T oldInst, T newInst, PHASE phase) {
+
+	private <T extends BaseObject> void handleUpdateTriggers(T oldInst, T newInst, PHASE phase) throws ObjectInstanceException {
 		try {
+			// Check if we have any update annotation
 			UpdateTriggers updateTriggers = newInst.getClass().getAnnotation(UpdateTriggers.class);
 			if (updateTriggers == null)
 				return;
 
 			logger.debug("Invoking Update Trigger for:  " + newInst.toString());
 			logger.debug("Triggers List: " + Arrays.asList(newInst.getClass().getAnnotations()).toString());
-			
+
+			// Getting update trigger arrays
 			UpdateTrigger[] updateTriggersArray = updateTriggers.value();
 			
 			for (UpdateTrigger updateTrigger : updateTriggersArray) {
-			
+
+				// Check if the required phase of the trigger matches the phase we've got
 				if (!updateTrigger.phase().equals(phase)) {
 					logger.debug("Not in relevant phase " + updateTrigger.phase());
 					continue;
 				}
-			
+
+				// Prepare update trigger
 				String triggerClasspath = updateTrigger.trigger();
 				Class<UpdateObjectTrigger> trigger = (Class<UpdateObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
 				UpdateObjectTrigger t = trigger.newInstance();
@@ -223,19 +237,13 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} 
-		catch (InstantiationException e) {
-			e.printStackTrace();
-		} 
-		catch (IllegalAccessException e) {
-			e.printStackTrace();
+		catch (Exception e) {
+			logger.error("Failed to update trigger", e);
+			throw new ObjectInstanceException(e);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	private <T extends BaseObject> void handleDeleteTriggers(T inst) {
+
+	private <T extends BaseObject> void handleDeleteTriggers(T inst) throws ObjectInstanceException {
 		try {
 			DeleteTriggers deleteTriggers = inst.getClass().getAnnotation(DeleteTriggers.class);
 			if (deleteTriggers == null)
@@ -255,17 +263,9 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 				t.handleDeleteObject(inst);	
 			}
 		} 
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		catch (Exception e) {
 			logger.error("Failed to handle delete trigger", e);
-		} 
-		catch (InstantiationException e) {
-			e.printStackTrace();
-			logger.error("Failed to handle delete trigger", e);
-		} 
-		catch (IllegalAccessException e) {
-			e.printStackTrace();
-			logger.error("Failed to handle delete trigger", e);
+			throw new ObjectInstanceException(e);
 		}
 	}
 
@@ -283,5 +283,6 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		key.setToRevision(Constants.TIP_REVISION);
 		T obj = entityManager.find(clz, key);
 		return obj;
+
 	}
 }

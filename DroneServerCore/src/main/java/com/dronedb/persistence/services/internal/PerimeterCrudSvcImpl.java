@@ -1,12 +1,14 @@
 package com.dronedb.persistence.services.internal;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.exception.ObjectInstanceException;
 import com.dronedb.persistence.scheme.CirclePerimeter;
 import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.scheme.Point;
 import com.dronedb.persistence.scheme.PolygonPerimeter;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.PerimeterCrudSvc;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
     private DroneDbCrudSvc droneDbCrudSvc;
 
     @Override
-    public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationException {
+    public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
         if (perimeter instanceof PolygonPerimeter)
             return (T) clonePolygon((PolygonPerimeter) perimeter);
 
@@ -34,7 +36,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
         throw new RuntimeException("Unexpected type");
     }
 
-    private Perimeter cloneCircle(CirclePerimeter perimeter) throws DatabaseValidationException {
+    private Perimeter cloneCircle(CirclePerimeter perimeter) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
         CirclePerimeter clonePolygon = perimeter.clone();
         Point point = droneDbCrudSvc.readByClass(perimeter.getCenter(), Point.class);
         Point clonePoint = point.clone();
@@ -44,7 +46,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
         return clonePolygon;
     }
 
-    private PolygonPerimeter clonePolygon(PolygonPerimeter perimeter) throws DatabaseValidationException {
+    private PolygonPerimeter clonePolygon(PolygonPerimeter perimeter) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
         PolygonPerimeter clonePolygon = perimeter.clone();
         List<UUID> uuidList = new ArrayList<>();
         for (UUID uuid : clonePolygon.getPoints()) {

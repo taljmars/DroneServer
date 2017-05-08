@@ -1,11 +1,11 @@
 package com.dronedb.persistence.ws.internal;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
-import com.dronedb.persistence.scheme.DatabaseRemoteValidationException;
-import com.dronedb.persistence.scheme.MissionCrudSvcRemote;
-import com.dronedb.persistence.scheme.Mission;
-import com.dronedb.persistence.scheme.MissionItem;
+import com.dronedb.persistence.exception.ObjectInstanceException;
+import com.dronedb.persistence.scheme.*;
 import com.dronedb.persistence.services.MissionCrudSvc;
+import javassist.tools.rmi.ObjectNotFoundException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,9 @@ import javax.jws.WebService;
  */
 @Component
 @WebService(endpointInterface = "com.dronedb.persistence.scheme.MissionCrudSvcRemote")
-public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote {
+public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
+{
+    final static Logger logger = Logger.getLogger(MissionCrudSvcRemoteImpl.class);
 
     @Autowired MissionCrudSvc missionCrudSvc;
 
@@ -25,25 +27,46 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote {
      * Mind the the objid of each object and subobject is being regenerated
      * @param mission
      * @return
-     * @throws DatabaseRemoteValidationException
+     * @throws DatabaseValidationRemoteException
      */
     @Override
-    public Mission cloneMission(Mission mission) throws DatabaseRemoteValidationException {
+    public Mission cloneMission(Mission mission) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
         try {
             return (Mission) missionCrudSvc.cloneMission(mission).copy();
         }
         catch (DatabaseValidationException e) {
-            throw new DatabaseRemoteValidationException(e.getMessage());
+            logger.error("Failed to clone mission", e);
+            throw new DatabaseValidationRemoteException(e.getMessage());
+        }
+        catch (ObjectNotFoundException e) {
+            logger.error("Failed to clone mission", e);
+            throw new ObjectNotFoundRemoteException(e.getMessage());
+        }
+        catch (ObjectInstanceException e) {
+            logger.error("Failed to clone mission", e);
+            throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
 
     @Override
-    public <T extends MissionItem> T createMissionItem(Class<T> clz) {
-        return (T) missionCrudSvc.createMissionItem(clz).copy();
+    public <T extends MissionItem> T createMissionItem(Class<T> clz) throws ObjectInstanceRemoteException {
+        try {
+            return (T) missionCrudSvc.createMissionItem(clz).copy();
+        }
+        catch (ObjectInstanceException e) {
+            logger.error("Failed to create mission item", e);
+            throw new ObjectInstanceRemoteException(e.getMessage());
+        }
     }
 
     @Override
-    public Mission createMission() {
-        return (Mission) missionCrudSvc.createMission().copy();
+    public Mission createMission() throws ObjectInstanceRemoteException {
+        try {
+            return (Mission) missionCrudSvc.createMission().copy();
+        }
+        catch (ObjectInstanceException e) {
+            logger.error("Failed to create mission", e);
+            throw new ObjectInstanceRemoteException(e.getMessage());
+        }
     }
 }

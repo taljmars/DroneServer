@@ -29,16 +29,6 @@ public interface DroneDbCrudSvcRemote {
 
     /**
      * 
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "CheckConnection")
-    @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/CheckConnectionResponse")
-    public String checkConnection();
-
-    /**
-     * 
      * @param arg1
      * @param arg0
      * @return
@@ -63,17 +53,17 @@ public interface DroneDbCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.BaseObject
-     * @throws DatabaseRemoteValidationException
+     * @throws DatabaseValidationRemoteException
      */
     @WebMethod
     @WebResult(partName = "return")
     @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateResponse", fault = {
-        @FaultAction(className = DatabaseRemoteValidationException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/update/Fault/DatabaseRemoteValidationException")
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/update/Fault/DatabaseValidationRemoteException")
     })
     public BaseObject update(
         @WebParam(name = "arg0", partName = "arg0")
         BaseObject arg0)
-        throws DatabaseRemoteValidationException
+        throws DatabaseValidationRemoteException
     ;
 
     /**
@@ -97,12 +87,17 @@ public interface DroneDbCrudSvcRemote {
     /**
      * 
      * @param arg0
+     * @throws DatabaseValidationRemoteException
      */
     @WebMethod
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteResponse")
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/deleteResponse", fault = {
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/delete/Fault/DatabaseValidationRemoteException")
+    })
     public void delete(
         @WebParam(name = "arg0", partName = "arg0")
-        BaseObject arg0);
+        BaseObject arg0)
+        throws DatabaseValidationRemoteException
+    ;
 
     /**
      * 

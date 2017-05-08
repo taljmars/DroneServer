@@ -1,10 +1,12 @@
 package com.dronedb.persistence.services.internal;
 
 import com.dronedb.persistence.exception.DatabaseValidationException;
+import com.dronedb.persistence.exception.ObjectInstanceException;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.MissionCrudSvc;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,7 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
      * @throws DatabaseValidationException
      */
     @Override
-    public Mission cloneMission(Mission mission) throws DatabaseValidationException {
+    public Mission cloneMission(Mission mission) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
 
         List<UUID> newUid = new ArrayList<>();
         Mission clonedMission = mission.clone();
@@ -46,12 +48,12 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
     }
 
     @Override
-    public Mission createMission() {
+    public Mission createMission() throws ObjectInstanceException {
         return droneDbCrudSvc.create(Mission.class);
     }
 
     @Override
-    public <T extends MissionItem> T createMissionItem(Class<T> clz) {
+    public <T extends MissionItem> T createMissionItem(Class<T> clz) throws ObjectInstanceException {
         return (T) droneDbCrudSvc.create(clz);
     }
 }

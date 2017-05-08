@@ -4,6 +4,7 @@ import com.dronedb.persistence.scheme.*;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.services.QuerySvc;
 import com.dronedb.persistence.services.SessionsSvc;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,8 @@ import java.util.List;
 @Lazy
 @Component
 public class SessionsSvcImpl implements SessionsSvc {
+
+	final static Logger logger = Logger.getLogger(SessionsSvcImpl.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -33,24 +36,26 @@ public class SessionsSvcImpl implements SessionsSvc {
 	@Transactional
 	public void publish() {
 		// In case we've modified Revision
+		logger.debug("Update revision value in revision manager");
 		handlePublish(revisionManager.getNextRevision());
 		revisionManager.advance();
 	}
 
 	private void handlePublish(int nextRevision) {
+		logger.debug("Publish started");
 		// Handle Mission Item
 		handlePublishForType(Point.class, nextRevision);
 		handlePublishForType(Waypoint.class, nextRevision);
 		handlePublishForType(Mission.class, nextRevision);
-
-		System.out.println("Publishing!!!!");
+		logger.debug("Publish finished");
 	}
 
 	private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
+		logger.debug("Handle publish for object of type '" + clz + "'");
 		List<T> objs = (List<T>) querySvc.runNativeQuery(buildGetPrivateQuery(clz), clz);
 		for (T item : objs) {
 			T tip = getPublishedByPrivateObject(clz, item);
-			System.out.println("Tip object " + tip);
+			logger.debug("Tip object " + tip);
 			if (tip != null)
 				movePrivateToPublic(item, tip, clz, nextRevision);
 			else {
@@ -60,19 +65,20 @@ public class SessionsSvcImpl implements SessionsSvc {
 	}
 
 	private <T extends BaseObject> T getPublishedByPrivateObject(Class<T> clz, T item) {
+		logger.debug("Search for published object of " + item.getKeyId());
 		KeyId key = item.getKeyId().copy();
 		key.setPrivatelyModified(false);
-		System.err.println("Search for publish object of key " + key);
+		logger.debug("Search for publish object of key " + key);
 		return entityManager.find(clz, key);
 	}
 
 	private String buildGetPrivateQuery(Class<? extends BaseObject> objClass) {
-		System.out.println(objClass + " " + objClass.getSimpleName());
+		logger.debug("Build query to get object of " + objClass.getSimpleName());
 		return String.format("SELECT * FROM %s WHERE privatelyModified = true", objClass.getSimpleName().toLowerCase());
 	}
 
 	private <T extends BaseObject> void movePrivateToPublic(BaseObject privateItem, BaseObject publicItem, Class<T> clz, int nextRevision) {
-		System.out.println("Moving private to existing published object");
+		logger.debug("Moving private to existing published object");
 		BaseObject publicItemDup = publicItem.copy();
 
 		// Rewrite the last tip as old version
@@ -85,14 +91,14 @@ public class SessionsSvcImpl implements SessionsSvc {
 
 		// Updating the tip to be align to the private
 		if (privateItem.isDeleted()) {
-			System.out.println("Object for deletion " + publicItemDup);
+			logger.debug("Object for deletion " + publicItemDup);
 			entityManager.remove(publicItem);
 		}
 		else {
 			publicItem.set(privateItem);
 			publicItem.setFromRevision(nextRevision);
-			System.out.println("Old " + publicItemDup);
-			System.out.println("New " + publicItem);
+			logger.debug("Old " + publicItemDup);
+			logger.debug("New " + publicItem);
 			entityManager.flush();
 		}
 
@@ -101,7 +107,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 	}
 
 	private <T extends BaseObject> void movePrivateToPublic(BaseObject privateItem, Class<T> clz, int nextRevision) {
-		System.out.println("Moving private to NON existing published object");
+		logger.debug("Moving private to NON existing published object");
 		BaseObject privateItemDup = privateItem.copy();
 
 		// Building a new tip
@@ -113,7 +119,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		// Clean private
 		entityManager.remove(privateItem);
 
-		System.out.println("Object writting to public " + privateItemDup);
+		logger.debug("Object writting to public " + privateItemDup);
 	}
 
 	@Override
@@ -124,7 +130,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		handleDiscardForType(Waypoint.class);
 		handleDiscardForType(Mission.class);
 
-		System.out.println("Discarding!!!!");
+		logger.debug("Discarding!!!!");
 	}
 
 	public <T extends BaseObject> void handleDiscardForType(Class<T> clz) {
