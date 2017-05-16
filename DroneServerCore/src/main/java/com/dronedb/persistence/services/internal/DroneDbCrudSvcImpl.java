@@ -5,6 +5,7 @@ import com.dronedb.persistence.exception.ObjectInstanceException;
 import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Constants;
 import com.dronedb.persistence.scheme.KeyId;
+import com.dronedb.persistence.scheme.ObjectDeref;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.triggers.*;
 import com.dronedb.persistence.triggers.UpdateTrigger.PHASE;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -82,6 +84,9 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			entityManager.persist(object);
 			existingObject = object;
 			phase = PHASE.CREATE;
+
+			// Update ObjectDeref table for future search
+			CreateObjectDeref(object);
 		}
 
 		// Handling a case where we've found an object in the private session.
@@ -97,13 +102,33 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			phase = PHASE.UPDATE;
 		}
 
+		// Persisting changes
 		entityManager.flush();
+
+		// Search for object in private DB, there must be an object at this point
 		existingObject = findInPrivate((Class<T>) object.getClass(),existingObject.getKeyId());
+
+		// Invoking triggers
 		handleUpdateTriggers(oldVersion, existingObject, phase);
 
 		T mergedObject = existingObject;
 		logger.debug("Updated " + mergedObject);
 		return mergedObject;
+	}
+
+	private <T extends BaseObject> void CreateObjectDeref(T object) throws DatabaseValidationException, ObjectInstanceException {
+		if (object instanceof ObjectDeref) {
+			return;
+		}
+		ObjectDeref objectDeref = new ObjectDeref();
+		objectDeref.setKeyId(object.getKeyId());
+		objectDeref.setClz(object.getClass());
+		update(objectDeref);
+	}
+
+	private <T extends BaseObject> void DeleteObjectDeref(T object) throws ObjectNotFoundException, DatabaseValidationException, ObjectInstanceException {
+		ObjectDeref objectDeref = readByClass(object.getKeyId().getObjId(), ObjectDeref.class);
+		delete(objectDeref);
 	}
 
 	private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
@@ -118,30 +143,19 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> void updateSet(Set<T> objects) {
-//		for (T object : objects) {
-//			BaseObject mergedObject = object;
-//			if (object.getObjId() != null) {
-//				BaseObject existingObject = entityManager.find(object.getClass() ,object.getObjId());
-//				if (existingObject != null) {
-//					System.out.println("Found object " + object + " in the DB");
-//					mergedObject = entityManager.merge(mergedObject);
-//					handleUpdateTriggers(mergedObject, PHASE.CREATE);
-//					return;
-//				}
-//			}
-//			entityManager.persist(mergedObject);
-//			handleUpdateTriggers(mergedObject, PHASE.UPDATE);
-//		}
+	public void updateSet(List<? extends BaseObject> objects) throws DatabaseValidationException, ObjectInstanceException {
+		for (BaseObject object : objects)
+			update(object);
 	}
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> void delete(T object) throws DatabaseValidationException, ObjectInstanceException {
+	public void delete(BaseObject object) throws DatabaseValidationException, ObjectInstanceException, ObjectNotFoundException {
 		logger.debug("Crud DELETE called " + object);
 
-		T existingPrivateObject = findInPrivate((Class<T>) object.getClass(),object.getKeyId());
-		T existingPublicObject = findInPublic((Class<T>) object.getClass(),object.getKeyId());
+		// We first start by getting the deletion candidate from the public/private
+		BaseObject existingPrivateObject = findInPrivate(object.getClass(),object.getKeyId());
+		BaseObject existingPublicObject = findInPublic(object.getClass(),object.getKeyId());
 
 		// Object doesn't exist at all
 		if (existingPublicObject == null && existingPrivateObject == null) {
@@ -165,16 +179,24 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 			return;
 		}
 
+		// Calling deletion trigger
 		handleDeleteTriggers(existingPrivateObject);
+
+		// Mark object as deleted
 		existingPrivateObject.setDeleted(true);
+
+		// Delete ObjectDeref
+		DeleteObjectDeref(object);
+
 		entityManager.flush();
 	}
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T read(final UUID uid) {
-		//Assert.fail("Not implemeted yet");
-		return null;
+	public BaseObject read(final UUID uid) throws ObjectNotFoundException {
+		ObjectDeref objectDeref = readByClass(uid, ObjectDeref.class);
+		Class<? extends BaseObject> clz = objectDeref.getClz();
+		return readByClass(uid, clz);
 	}
 
 	@Override
@@ -203,9 +225,9 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		return object;
 	}
 	
-	/*
-	 * Handling triggers
-	 */
+	/***********************************************************************************/
+	/******************************** Handling triggers ********************************/
+	/***********************************************************************************/
 
 	private <T extends BaseObject> void handleUpdateTriggers(T oldInst, T newInst, PHASE phase) throws ObjectInstanceException {
 		try {

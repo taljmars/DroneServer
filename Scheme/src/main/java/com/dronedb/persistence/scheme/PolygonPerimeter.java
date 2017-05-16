@@ -15,11 +15,11 @@ import java.util.UUID;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllPolygonPerimeters",
-                query = "select * from polygonperimeters",
+                query = "select * from polygonperimeter",
                 resultClass = PolygonPerimeter.class
         )
 })
-@Table(name = "polygonperimeters")
+@Table
 @Entity
 @Access(javax.persistence.AccessType.FIELD)
 public class PolygonPerimeter extends Perimeter implements Serializable {

@@ -1,7 +1,12 @@
 package com.dronedb.server;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -26,12 +31,28 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource({ "/com/dronedb/persistence-mysql.properties" })
 public class PersistenceJPAConfig {
 
+    private static final String FILENAME = "PASS_FILE";
+
     @Autowired
     private Environment env;
 
     public PersistenceJPAConfig() {
         super();
         System.out.println("PersistenceJPAConfig Created");
+    }
+
+    private static String getPassword() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(FILENAME));
+            return br.readLine();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // beans
@@ -55,7 +76,11 @@ public class PersistenceJPAConfig {
     	dataSource.setDriverClassName("org.postgresql.Driver");
     	dataSource.setUrl("jdbc:postgresql://localhost:5432/dronedb");
     	dataSource.setUsername( "postgres" );
-    	dataSource.setPassword( "postgres" );
+    	String pass = getPassword();
+    	if (pass == null || pass.isEmpty())
+    	    dataSource.setPassword( "postgres" );
+    	else
+    	    dataSource.setPassword(pass);
         return dataSource;
     }
 

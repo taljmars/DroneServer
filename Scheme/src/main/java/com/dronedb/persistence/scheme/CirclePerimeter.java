@@ -15,7 +15,7 @@ import java.util.UUID;
                 resultClass = CirclePerimeter.class
         )
 })
-@Table(name = "circleperimeters")
+@Table
 @Entity
 public class CirclePerimeter extends Perimeter {
 

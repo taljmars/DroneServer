@@ -12,7 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.Metamodel;
+import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Set;
 
 @Lazy
 @Component
@@ -44,9 +48,19 @@ public class SessionsSvcImpl implements SessionsSvc {
 	private void handlePublish(int nextRevision) {
 		logger.debug("Publish started");
 		// Handle Mission Item
-		handlePublishForType(Point.class, nextRevision);
-		handlePublishForType(Waypoint.class, nextRevision);
-		handlePublishForType(Mission.class, nextRevision);
+		Metamodel mm = entityManager.getMetamodel();
+		for (final ManagedType<?> managedType : mm.getManagedTypes()) {
+			Class clz = managedType.getJavaType();
+			logger.error("Found class " + clz);
+			if (Modifier.isAbstract(clz.getModifiers()))
+				continue;
+
+			if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
+				continue;
+
+			logger.error("goint to handle " + clz);
+			handlePublishForType(clz, nextRevision);
+		}
 		logger.debug("Publish finished");
 	}
 

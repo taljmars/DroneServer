@@ -31,7 +31,6 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
      */
     @Override
     public Mission cloneMission(Mission mission) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
-
         List<UUID> newUid = new ArrayList<>();
         Mission clonedMission = mission.clone();
         for (UUID uid : clonedMission.getMissionItemsUids()) {

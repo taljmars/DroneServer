@@ -26,20 +26,20 @@ public class DroneServer {
 		PerimeterCrudSvcRemote perimeterCrudSvcRemote 	= DroneDBServerAppConfig.context.getBean(PerimeterCrudSvcRemote.class);
 
 		logger.debug("Sign " + DroneDbCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://localhost:9999/ws/" + DroneDbCrudSvcRemote.class.getSimpleName(), droneDbCrudSvcRemote);
+		Endpoint.publish("http://0.0.0.0:1234/ws/" + DroneDbCrudSvcRemote.class.getSimpleName(), droneDbCrudSvcRemote);
 
 		logger.debug("Sign " + QuerySvcRemote.class.getSimpleName());
-		Endpoint.publish("http://localhost:9999/ws/" + QuerySvcRemote.class.getSimpleName(), querySvcRemote);
+		Endpoint.publish("http://0.0.0.0:1234/ws/" + QuerySvcRemote.class.getSimpleName(), querySvcRemote);
 
 		logger.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://localhost:9999/ws/" + MissionCrudSvcRemote.class.getSimpleName(), missionCrudSvcRemote);
+		Endpoint.publish("http://0.0.0.0:1234/ws/" + MissionCrudSvcRemote.class.getSimpleName(), missionCrudSvcRemote);
 
 		logger.debug("Sign " + SessionsSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://localhost:9999/ws/" + SessionsSvcRemote.class.getSimpleName(), sessionsSvcRemote);
+		Endpoint.publish("http://0.0.0.0:1234/ws/" + SessionsSvcRemote.class.getSimpleName(), sessionsSvcRemote);
 
 		logger.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://localhost:9999/ws/" + PerimeterCrudSvcRemote.class.getSimpleName(), perimeterCrudSvcRemote);
+		Endpoint.publish("http://0.0.0.0:1234/ws/" + PerimeterCrudSvcRemote.class.getSimpleName(), perimeterCrudSvcRemote);
 
-		logger.debug("Up and runnning!");
+		logger.debug("Up and running!");
 	}
 }

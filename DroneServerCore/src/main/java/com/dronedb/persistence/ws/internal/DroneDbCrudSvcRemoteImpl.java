@@ -17,6 +17,7 @@ import com.dronedb.persistence.services.DroneDbCrudSvc;
 import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
 import com.dronedb.persistence.scheme.BaseObject;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -63,10 +64,20 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 		}
 	}
 	
-//	@Override
-//	public <T extends BaseObject> void updateSet(Set<T> objects) {
-//		droneDbCrudSvc.updateSet(objects);
-//	}
+	@Override
+	public <T extends BaseObject> void updateSet(List<T> objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+		try {
+			droneDbCrudSvc.updateSet(objects);
+		}
+		catch (DatabaseValidationException e) {
+			logger.error("Failed to update object", e);
+			throw new DatabaseValidationRemoteException("Failed to update object");
+		}
+		catch (ObjectInstanceException e) {
+			logger.error("Failed to update object", e);
+			throw new ObjectInstanceRemoteException("Failed to update object");
+		}
+	}
 	
 	@Override
 	public <T extends BaseObject> void delete(T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException {
@@ -77,21 +88,21 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 			logger.error("Failed to delete object", e);
 			throw new DatabaseValidationRemoteException("Failed to delete object");
 		}
-		catch (ObjectInstanceException e) {
+		catch (ObjectInstanceException | ObjectNotFoundException e) {
 			logger.error("Failed to delete object", e);
 			throw new ObjectInstanceRemoteException("Failed to delete object");
 		}
 	}
 	
 	@Override
-	public <T extends BaseObject> T read(final UUID objId)  throws ObjectNotFoundException{
+	public BaseObject read(final UUID objId)  throws ObjectNotFoundException{
 		logger.debug("Crud REMOTE READ called " + objId);
-		T object = droneDbCrudSvc.read(objId);
+		BaseObject object = droneDbCrudSvc.read(objId);
 		if (object == null) {
 			logger.error("Failed to find object '" + objId + "'");
 			throw new ObjectNotFoundException("Failed to find object '" + objId + "'");
 		}
-		return (T) object.copy();
+		return object.copy();
 	}
 	
 	@Override

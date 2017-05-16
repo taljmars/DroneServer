@@ -1,15 +1,16 @@
 package com.dronedb.tester;
 
 import com.dronedb.persistence.scheme.*;
+import com.dronedb.persistence.ws.internal.ObjectNotFoundException;
 import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
 import com.dronedb.persistence.ws.internal.QuerySvcRemote;
 import com.dronedb.persistence.ws.internal.SessionsSvcRemote;
-
 import javax.transaction.Transactional;
+
 public class DroneDbTester
 {	
 	@Transactional
-	public static void main(String[] args) throws com.dronedb.persistence.ws.internal.DatabaseValidationRemoteException {
+	public static void main(String[] args) throws com.dronedb.persistence.ws.internal.DatabaseValidationRemoteException, ObjectNotFoundException {
 		//DroneDbClient client = (DroneDbClient) AppConfig.context.getBean("droneDbClient");
 		//System.err.println(client.getDroneDbCrudSvcRemote().CheckConnection());
 
@@ -84,6 +85,11 @@ public class DroneDbTester
 		queryRequestRemote.setClz(Mission.class);
 		QueryResponseRemote list = querySvcRemote.query(queryRequestRemote);
 		System.err.println(list.getResultList());
+
+		BaseObject object = droneDbCrudSvcRemote.read(mission.getKeyId().getObjId().toString());
+		System.err.println(object.toString());
+
+		sessionsSvcRemote.publish();
 	}
 
 }

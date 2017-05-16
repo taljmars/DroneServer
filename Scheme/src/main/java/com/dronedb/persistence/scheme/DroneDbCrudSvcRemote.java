@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
+import java.util.List;
 import java.util.UUID;
 
 @WebService
@@ -20,9 +21,9 @@ public interface DroneDbCrudSvcRemote
 	@WebMethod 
 	<T extends BaseObject> T update(@WebParam T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 	
-//	@WebMethod 
-//	<T extends BaseObject> void updateSet(@WebParam Set<T> objects);
-//	
+	@WebMethod
+	<T extends BaseObject> void updateSet(@WebParam List<T> objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
+
 	@WebMethod 
 	<T extends BaseObject> void delete(@WebParam T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException;
 	
