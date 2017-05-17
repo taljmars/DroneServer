@@ -20,7 +20,7 @@ public class Point extends BaseObject {
     @Column(nullable = true)
     private Double lon;
 
-    public Point() {}
+    public Point() { super(); }
 
     public Point(Point point) {
         this.lat = point.getLat();

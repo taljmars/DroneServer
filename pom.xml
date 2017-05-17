@@ -90,6 +90,24 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>2</id>
+                        <inherited>false</inherited>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${build.output}/conf" >
+                                    <fileset dir="${project.basedir}/conf"/>
+                                </copy>
+                                <copy todir="${build.output}/scripts" >
+                                    <fileset dir="${project.basedir}/scripts"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <phase>site</phase>
                         <configuration>
                             <tasks>
@@ -119,12 +137,33 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>CMpub/pkg</outputDirectory>
+                            <outputDirectory>${build.output}/pkg</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>CMpub/jars/</directory>
-                                    <directory>CMpub/conf/</directory>
-                                    <directory>CMpub/scripts/</directory>
+                                    <directory>${build.output}/jars/</directory>
+                                    <excludes>
+                                        <exclude>DroneServerTester*</exclude>
+                                        <exclude>DroneServerExportedServices*</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${build.output}/scripts/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resource-two</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>${build.output}/pkg/conf</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${build.output}/conf/</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -156,10 +195,10 @@
                 <executions>
                     <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
                     <execution>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <phase>deploy</phase>
                     </execution>
                 </executions>
                 <inherited>false</inherited>

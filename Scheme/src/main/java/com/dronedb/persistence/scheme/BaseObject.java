@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 //@XmlSeeAlso({Mission.class, MissionItem.class, Perimeter.class, Point.class})
-@XmlSeeAlso({Mission.class, MissionItem.class, Point.class})
+@XmlSeeAlso({ObjectDeref.class, Mission.class, MissionItem.class, Point.class})
 @MappedSuperclass
 public abstract class BaseObject implements Serializable
 {	

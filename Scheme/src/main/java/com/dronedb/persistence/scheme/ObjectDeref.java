@@ -3,15 +3,16 @@ package com.dronedb.persistence.scheme;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created by oem on 5/9/17.
  */
+@Table
+@Access(AccessType.FIELD)
 @Entity
-public class ObjectDeref extends BaseObject implements Serializable {
+public class ObjectDeref extends BaseObject {
 
     public ObjectDeref() {
         super();

@@ -22,10 +22,10 @@ public class DroneDBServerAppConfig {
 	
 	public static ApplicationContext context = new AnnotationConfigApplicationContext(DroneDBServerAppConfig.class);
 
-	final static Logger logger = Logger.getLogger(DroneDBServerAppConfig.class);
+	private static final Logger logger = Logger.getLogger(DroneDBServerAppConfig.class);
 
-	private static final String portFile = "PORT";
-	private static final String ipFile = "IP";
+	private static final String portFile = "conf/PORT";
+	private static final String ipFile = "conf/IP";
 
 	@Bean
 	public String serverIp() {
