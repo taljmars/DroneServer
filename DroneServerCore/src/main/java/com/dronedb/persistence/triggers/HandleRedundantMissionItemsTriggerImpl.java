@@ -4,7 +4,7 @@ import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
-import com.dronedb.persistence.services.QuerySvc;
+import org.apache.log4j.Logger;
 
 import java.util.UUID;
 
@@ -13,6 +13,8 @@ import java.util.UUID;
  */
 public class HandleRedundantMissionItemsTriggerImpl extends UpdateObjectTriggerImpl {
 
+    private final static Logger logger = Logger.getLogger(HandleRedundantMissionItemsTriggerImpl.class);
+
     public HandleRedundantMissionItemsTriggerImpl() {
         super();
     }
@@ -20,11 +22,10 @@ public class HandleRedundantMissionItemsTriggerImpl extends UpdateObjectTriggerI
     @Override
     public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) throws Exception{
         if ((!(oldInst instanceof Mission)) || (!(newInst instanceof Mission))) {
-            System.out.println("No a mission, trigger skipped");
+            logger.debug("No a mission, trigger skipped");
             return;
         }
 
-        QuerySvc querySvc = applicationContext.getBean(QuerySvc.class);
         DroneDbCrudSvc droneDbCrudSvc = applicationContext.getBean(DroneDbCrudSvc.class);
 
         for (UUID missionItemuid : ((Mission) oldInst).getMissionItemsUids()) {

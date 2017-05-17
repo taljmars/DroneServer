@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Created by oem on 4/28/17.
+ * Created by taljmars on 4/28/17.
  */
 @Embeddable
 public class KeyId implements Serializable{

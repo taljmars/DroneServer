@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Created by oem on 5/9/17.
+ * Created by taljmars on 5/9/17.
  */
 @Table
 @Access(AccessType.FIELD)

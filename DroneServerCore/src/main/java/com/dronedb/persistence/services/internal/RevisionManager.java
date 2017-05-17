@@ -17,7 +17,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Created by oem on 4/29/17.
+ * Created by taljmars on 4/29/17.
  */
 @Lazy
 @Component

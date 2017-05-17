@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.jws.WebService;
 
 /**
- * Created by oem on 4/28/17.
+ * Created by taljmars on 4/28/17.
  */
 @Component
 @WebService(endpointInterface = "com.dronedb.persistence.scheme.SessionsSvcRemote")

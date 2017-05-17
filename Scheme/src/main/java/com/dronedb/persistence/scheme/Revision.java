@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 /**
- * Created by oem on 4/29/17.
+ * Created by taljmars on 4/29/17.
  */
 @Entity
 @Table
