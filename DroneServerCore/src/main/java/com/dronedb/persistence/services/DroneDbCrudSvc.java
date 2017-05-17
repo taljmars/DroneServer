@@ -47,7 +47,7 @@ public interface DroneDbCrudSvc {
 	 *
 	 * @param objects List of object to update
 	 */
-	void updateSet(List<? extends BaseObject> objects) throws DatabaseValidationException, ObjectInstanceException;
+	void updateArray(BaseObject[] objects) throws DatabaseValidationException, ObjectInstanceException;
 
 	/**
 	 * The following delete an object from the DB, the is a unique behavior for two main cases.

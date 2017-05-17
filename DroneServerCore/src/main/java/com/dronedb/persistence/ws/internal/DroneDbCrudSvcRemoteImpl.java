@@ -18,6 +18,7 @@ import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
 import com.dronedb.persistence.scheme.BaseObject;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -65,9 +66,9 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	}
 	
 	@Override
-	public <T extends BaseObject> void updateSet(List<T> objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+	public <T extends BaseObject> void updateArray(T[] objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
 		try {
-			droneDbCrudSvc.updateSet(objects);
+			droneDbCrudSvc.updateArray(objects);
 		}
 		catch (DatabaseValidationException e) {
 			logger.error("Failed to update object", e);

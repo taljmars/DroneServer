@@ -137,12 +137,12 @@
                 </configuration>
                 <executions>
                     <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>site</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>deploy</phase>-->
+                    <!--</execution>-->
                 </executions>
                 <inherited>false</inherited>
             </plugin>
@@ -184,13 +184,14 @@
                                         dir="/usr/bin/"
                                         executable="scp"
                                         failonerror="true">
-                                    <arg line="-r ${basedir}/CMpub/pkg root@178.62.1.156:~/pkg" />
+                                    <arg line="-r ${basedir}/CMpub/pkg root@178.62.1.156:~/" />
                                 </exec>
                             </tasks>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <inherited>false</inherited>
                     </execution>
                 </executions>
             </plugin>

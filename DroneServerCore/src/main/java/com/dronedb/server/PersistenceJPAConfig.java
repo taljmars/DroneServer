@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,12 +34,14 @@ public class PersistenceJPAConfig {
 
     private static final String FILENAME = "PASS_FILE";
 
+    final static Logger logger = Logger.getLogger(DroneServer.class);
+
     @Autowired
     private Environment env;
 
     public PersistenceJPAConfig() {
         super();
-        System.out.println("PersistenceJPAConfig Created");
+        logger.debug("PersistenceJPAConfig Created");
     }
 
     private static String getPassword() {
@@ -47,10 +50,10 @@ public class PersistenceJPAConfig {
             return br.readLine();
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Password file doesn't exist", e);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to read password file", e);
         }
         return null;
     }

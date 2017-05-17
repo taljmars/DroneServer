@@ -11,7 +11,7 @@ import java.util.UUID;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllCirclePerimeters",
-                query = "select * from circleperimeters",
+                query = "select * from circleperimeter",
                 resultClass = CirclePerimeter.class
         )
 })

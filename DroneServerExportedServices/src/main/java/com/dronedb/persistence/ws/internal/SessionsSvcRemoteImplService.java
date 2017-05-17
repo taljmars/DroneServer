@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "SessionsSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://localhost:9999/ws/SessionsSvcRemote?wsdl")
+@WebServiceClient(name = "SessionsSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://178.62.1.156:1234/ws/SessionsSvcRemote?wsdl")
 public class SessionsSvcRemoteImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class SessionsSvcRemoteImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://localhost:9999/ws/SessionsSvcRemote?wsdl");
+            url = new URL("http://178.62.1.156:1234/ws/SessionsSvcRemote?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

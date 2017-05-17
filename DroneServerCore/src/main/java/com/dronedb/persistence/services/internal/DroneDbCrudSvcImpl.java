@@ -143,7 +143,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 
 	@Override
 	@Transactional
-	public void updateSet(List<? extends BaseObject> objects) throws DatabaseValidationException, ObjectInstanceException {
+	public void updateArray(BaseObject[] objects) throws DatabaseValidationException, ObjectInstanceException {
 		for (BaseObject object : objects)
 			update(object);
 	}

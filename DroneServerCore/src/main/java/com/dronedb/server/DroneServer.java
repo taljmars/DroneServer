@@ -7,6 +7,7 @@ import javax.xml.ws.Endpoint;
 import org.apache.log4j.Logger;
 
 @Component
+//@SpringBootApplication
 public class DroneServer {
 
 	final static Logger logger = Logger.getLogger(DroneServer.class);
@@ -25,20 +26,35 @@ public class DroneServer {
 		SessionsSvcRemote sessionsSvcRemote 			= DroneDBServerAppConfig.context.getBean(SessionsSvcRemote.class);
 		PerimeterCrudSvcRemote perimeterCrudSvcRemote 	= DroneDBServerAppConfig.context.getBean(PerimeterCrudSvcRemote.class);
 
-		logger.debug("Sign " + DroneDbCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://0.0.0.0:1234/ws/" + DroneDbCrudSvcRemote.class.getSimpleName(), droneDbCrudSvcRemote);
+		String ip = DroneDBServerAppConfig.context.getBean("serverIp", String.class);
+		String port = DroneDBServerAppConfig.context.getBean("serverPort", String.class);
 
-		logger.debug("Sign " + QuerySvcRemote.class.getSimpleName());
-		Endpoint.publish("http://0.0.0.0:1234/ws/" + QuerySvcRemote.class.getSimpleName(), querySvcRemote);
+		String format = "http://%s:%s/ws/%s";
+		String url;
 
-		logger.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://0.0.0.0:1234/ws/" + MissionCrudSvcRemote.class.getSimpleName(), missionCrudSvcRemote);
+		url = String.format(format, ip, port, DroneDbCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + DroneDbCrudSvcRemote.class.getSimpleName() + " " + url);
+//		Endpoint endpoint = Endpoint.create(droneDbCrudSvcRemote);
+//		endpoint.publish(String.format(format, ip, port, DroneDbCrudSvcRemote.class.getSimpleName()));
+		Endpoint.publish(url, droneDbCrudSvcRemote);
 
-		logger.debug("Sign " + SessionsSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://0.0.0.0:1234/ws/" + SessionsSvcRemote.class.getSimpleName(), sessionsSvcRemote);
+		url = String.format(format, ip, port, QuerySvcRemote.class.getSimpleName());
+		logger.debug("Sign " + QuerySvcRemote.class.getSimpleName() + " " + url);
+//		endpoint = Endpoint.create(querySvcRemote);
+//		endpoint.publish(String.format(format, ip, port, QuerySvcRemote.class.getSimpleName()));
+		Endpoint.publish(url, querySvcRemote);
 
-		logger.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName());
-		Endpoint.publish("http://0.0.0.0:1234/ws/" + PerimeterCrudSvcRemote.class.getSimpleName(), perimeterCrudSvcRemote);
+		url = String.format(format, ip, port, MissionCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName() + " " + url);
+		Endpoint.publish(url, missionCrudSvcRemote);
+
+		url = String.format(format, ip, port, SessionsSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + SessionsSvcRemote.class.getSimpleName() + " " + url);
+		Endpoint.publish(url, sessionsSvcRemote);
+
+		url = String.format(format, ip, port, PerimeterCrudSvcRemote.class.getSimpleName());
+		logger.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName() + " " + url);
+		Endpoint.publish(url, perimeterCrudSvcRemote);
 
 		logger.debug("Up and running!");
 	}

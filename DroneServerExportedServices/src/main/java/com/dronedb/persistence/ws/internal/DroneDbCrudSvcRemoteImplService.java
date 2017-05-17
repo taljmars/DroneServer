@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "DroneDbCrudSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://localhost:9999/ws/DroneDbCrudSvcRemote?wsdl")
+@WebServiceClient(name = "DroneDbCrudSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://178.62.1.156:1234/ws/DroneDbCrudSvcRemote?wsdl")
 public class DroneDbCrudSvcRemoteImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class DroneDbCrudSvcRemoteImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://localhost:9999/ws/DroneDbCrudSvcRemote?wsdl");
+            url = new URL("http://178.62.1.156:1234/ws/DroneDbCrudSvcRemote?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

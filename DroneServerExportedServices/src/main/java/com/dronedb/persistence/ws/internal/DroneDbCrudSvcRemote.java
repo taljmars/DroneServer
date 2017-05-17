@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
 import javax.xml.ws.FaultAction;
 import com.dronedb.persistence.scheme.BaseObject;
+import com.dronedb.persistence.scheme.BaseObjectArray;
 import com.dronedb.persistence.scheme.ObjectFactory;
 
 
@@ -26,6 +27,21 @@ import com.dronedb.persistence.scheme.ObjectFactory;
 })
 public interface DroneDbCrudSvcRemote {
 
+
+    /**
+     * 
+     * @param arg0
+     * @throws DatabaseValidationRemoteException
+     */
+    @WebMethod
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayResponse", fault = {
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArray/Fault/DatabaseValidationRemoteException")
+    })
+    public void updateArray(
+        @WebParam(name = "arg0", partName = "arg0")
+        BaseObjectArray arg0)
+        throws DatabaseValidationRemoteException
+    ;
 
     /**
      * 
