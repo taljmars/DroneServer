@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.dronedb</groupId>
-        <artifactId>DroneDB</artifactId>
+        <artifactId>DroneServer</artifactId>
         <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -122,13 +122,13 @@
                     <repositoryOwner>taljmars</repositoryOwner>    <!-- github username  -->
                 </configuration>
                 <executions>
-                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>site</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>deploy</phase>-->
-                    <!--</execution>-->
+                     <!--run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase-->
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

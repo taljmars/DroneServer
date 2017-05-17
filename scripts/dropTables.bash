@@ -1,3 +1,4 @@
+#!/bin/bash
 
 sudo -u postgres psql dronedb -c "DROP SCHEMA public CASCADE;"
 
