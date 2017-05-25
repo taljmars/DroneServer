@@ -14,6 +14,7 @@
         <module>DroneServerCore</module>
         <module>DroneServerTester</module>
         <module>DroneServerExportedServices</module>
+        <module>DroneServerClientPlugin</module>
     </modules>
 
     <properties>
@@ -61,7 +62,7 @@
     </distributionManagement>
 
     <build>
-        <outputDirectory>${build.output}/classes</outputDirectory>
+        <!--<outputDirectory>${build.output}/classes</outputDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,7 +115,7 @@
                                 <exec dir="/usr/bin/"
                                       executable="scp"
                                       failonerror="true">
-                                    <arg line="-r ${basedir}/CMpub/pkg root@178.62.1.156:~/" />
+                                    <arg line="-r ${basedir}/CMpub/pkg_server root@178.62.1.156:~/" />
                                 </exec>
                             </tasks>
                         </configuration>
@@ -137,13 +138,14 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>${build.output}/pkg</outputDirectory>
+                            <outputDirectory>${build.output}/pkg_server</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${build.output}/jars/</directory>
                                     <excludes>
                                         <exclude>DroneServerTester*</exclude>
                                         <exclude>DroneServerExportedServices*</exclude>
+                                        <exclude>DroneServerClientPlugin*</exclude>
                                     </excludes>
                                 </resource>
                                 <resource>
@@ -160,7 +162,7 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>${build.output}/pkg/conf</outputDirectory>
+                            <outputDirectory>${build.output}/pkg_server/conf</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${build.output}/conf/</directory>
@@ -215,10 +217,10 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>CMpub/pkg</outputDirectory>
+                            <outputDirectory>CMpub/pkg_server</outputDirectory>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeGroupIds>
-                                DroneServerTester,DroneServerExportedServices
+                                com.dronedb, DroneServerTester,DroneServerExportedServices,DroneServerClientPlugin
                             </excludeGroupIds>
                         </configuration>
                     </execution>

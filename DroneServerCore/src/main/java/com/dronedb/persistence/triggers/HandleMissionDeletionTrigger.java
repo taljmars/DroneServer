@@ -4,7 +4,6 @@ import com.dronedb.persistence.scheme.BaseObject;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.DroneDbCrudSvc;
-import com.dronedb.persistence.services.internal.DroneDbCrudSvcImpl;
 import org.apache.log4j.Logger;
 
 import java.util.UUID;
@@ -12,11 +11,11 @@ import java.util.UUID;
 /**
  * Created by taljmars on 3/23/17.
  */
-public class HandleMissionDeletionTriggerImpl extends DeleteObjectTriggerImpl {
+public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(HandleMissionDeletionTriggerImpl.class);
+    private final static Logger logger = Logger.getLogger(HandleMissionDeletionTrigger.class);
 
-    public HandleMissionDeletionTriggerImpl() {
+    public HandleMissionDeletionTrigger() {
         super();
     }
 

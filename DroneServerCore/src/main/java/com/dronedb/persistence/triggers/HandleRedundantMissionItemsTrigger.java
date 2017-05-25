@@ -11,11 +11,11 @@ import java.util.UUID;
 /**
  * Created by taljmars on 3/23/17.
  */
-public class HandleRedundantMissionItemsTriggerImpl extends UpdateObjectTriggerImpl {
+public class HandleRedundantMissionItemsTrigger extends UpdateObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(HandleRedundantMissionItemsTriggerImpl.class);
+    private final static Logger logger = Logger.getLogger(HandleRedundantMissionItemsTrigger.class);
 
-    public HandleRedundantMissionItemsTriggerImpl() {
+    public HandleRedundantMissionItemsTrigger() {
         super();
     }
 

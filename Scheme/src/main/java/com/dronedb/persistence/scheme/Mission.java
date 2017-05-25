@@ -2,6 +2,7 @@ package com.dronedb.persistence.scheme;
 
 import com.dronedb.persistence.triggers.*;
 import com.dronedb.persistence.validations.NameNotEmptyValidation;
+import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -38,12 +39,13 @@ import static com.dronedb.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AN
 @Entity
 @Table
 @UpdateTriggers({
-	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTriggerImpl", phase = UpdateTrigger.PHASE.UPDATE),
+	@UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantMissionItemsTrigger", phase = UpdateTrigger.PHASE.UPDATE),
 })
 @DeleteTriggers({
-	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTriggerImpl")
+	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTrigger")
 })
 @NameNotEmptyValidation
+@NoPostLandOrRTLItemsValidation
 @Access(javax.persistence.AccessType.FIELD)
 public class Mission extends BaseObject implements Serializable
 {
