@@ -57,7 +57,7 @@
     </dependencies>
 
     <build>
-        <outputDirectory>../${build.output}/classes/</outputDirectory>
+        <!--<outputDirectory>../${build.output}/classes/</outputDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

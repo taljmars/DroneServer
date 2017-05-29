@@ -82,7 +82,7 @@ public class DroneDbTester
 		QuerySvcRemote querySvcRemote = AppConfig.context.getBean(QuerySvcRemote.class);
 		QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
 		queryRequestRemote.setQuery("GetAllMissions");
-		queryRequestRemote.setClz(Mission.class);
+		queryRequestRemote.setClz(Mission.class.toString());
 		QueryResponseRemote list = querySvcRemote.query(queryRequestRemote);
 		System.err.println(list.getResultList());
 
