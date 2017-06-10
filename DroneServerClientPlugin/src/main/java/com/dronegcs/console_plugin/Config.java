@@ -37,7 +37,7 @@ public class Config {
     }
 
     private static <T> T getSrvicePort(Class<T> clz, String ipStr, int port) throws MalformedURLException {
-        System.err.println("Got " + clz.getSimpleName());
+        System.err.println("Got " + clz.getSimpleName() + " on ip " + ipStr + " port " + port);
         //URL url = new URL("http://localhost:9999/ws/" + clz.getSimpleName() + "?wsdl");
         URL url = new URL("http://" + ipStr + ":" + port + "/ws/" + clz.getSimpleName() + "?wsdl");
         QName qName = new QName("http://internal.ws.persistence.dronedb.com/", clz.getSimpleName() + "ImplService");

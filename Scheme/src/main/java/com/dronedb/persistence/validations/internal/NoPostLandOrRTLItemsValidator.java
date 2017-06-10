@@ -14,17 +14,17 @@ import java.util.UUID;
 public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPostLandOrRTLItemsValidation, Mission> {
     @Override
     public void initialize(NoPostLandOrRTLItemsValidation constraintAnnotation) {
-
+        System.err.print("Initialize validator " + getClass().getSimpleName());
     }
 
     @Override
     public boolean isValid(Mission value, ConstraintValidatorContext context) {
         try {
             boolean foundLandOrRTL = false;
-            DroneDbCrudSvcRemote droneDbCrudSvcRemote = null;
+            DroneDbCrudSvcRemote droneDbCrudSvcRemote = null; // TODO: Must be fixed to add this validation
             for (UUID missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
-                    System.out.print("Found itelgal point"); // TODO: print normal
+                    System.out.print("Found illegal point"); // TODO: print normal
                     return false;
                 }
                 MissionItem item = droneDbCrudSvcRemote.readByClass(missionItemUid, MissionItem.class);
@@ -34,6 +34,10 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
             }
         } catch (ObjectNotFoundException e) {
             System.err.print("Failed to find item");
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.print("Unexpected failure in validation");
             return false;
         }
 

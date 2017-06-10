@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 public class NameNotEmptyValidator implements ConstraintValidator<NameNotEmptyValidation, Mission> {
     @Override
     public void initialize(NameNotEmptyValidation constraintAnnotation) {
-
+        System.err.print("Initialize validator " + getClass().getSimpleName());
     }
 
     @Override

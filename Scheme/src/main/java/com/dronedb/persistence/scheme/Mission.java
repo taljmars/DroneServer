@@ -45,7 +45,7 @@ import static com.dronedb.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AN
 	@DeleteTrigger(trigger = "com.dronedb.persistence.triggers.HandleMissionDeletionTrigger")
 })
 @NameNotEmptyValidation
-@NoPostLandOrRTLItemsValidation
+//@NoPostLandOrRTLItemsValidation
 @Access(javax.persistence.AccessType.FIELD)
 public class Mission extends BaseObject implements Serializable
 {
