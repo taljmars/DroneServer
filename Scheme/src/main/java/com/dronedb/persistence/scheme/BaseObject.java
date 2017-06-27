@@ -109,7 +109,7 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-	@Value("false")
+	@Value(value = "false")
 	@Setter
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;

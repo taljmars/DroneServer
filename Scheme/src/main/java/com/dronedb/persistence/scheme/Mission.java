@@ -5,6 +5,7 @@ import com.dronedb.persistence.validations.NameNotEmptyValidation;
 import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -136,8 +137,9 @@ public class Mission extends BaseObject implements Serializable
 	public boolean removeMissionItemUid(UUID missionItemUid) {
 		return this.missionItemsUids.remove(missionItemUid);
 	}
-	
-	@Column(nullable = true)
+
+	@Value(value = "20.0")
+	@Column(nullable = false)
 	protected double defaultAlt;
 	
 	@Getter
