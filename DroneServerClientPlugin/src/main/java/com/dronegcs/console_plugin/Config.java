@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by oem on 5/25/17.
+ * Created by talma on 5/25/17.
  */
 @Configuration
 public class Config {
@@ -20,17 +20,17 @@ public class Config {
 
     private static <T> T LoadServices(Class<T> clz) throws ClientPluginException {
         try {
-            return getSrvicePort(clz, "178.62.1.156", 1234);
-        }
-        catch (Throwable e) {
-            System.out.print("Failed to connect to the external database server, " + e.getMessage());
-        }
-
-        try {
             return getSrvicePort(clz, "127.0.0.1", 1234);
         }
         catch (Throwable e) {
             System.out.print("Failed to connect to the local database server, " + e.getMessage());
+
+            try {
+                return getSrvicePort(clz, "178.62.1.156", 1234);
+            }
+            catch (Throwable e1) {
+                System.out.print("Failed to connect to the external database server, " + e.getMessage());
+            }
         }
 
         throw new ClientPluginException("Failed to build connection to web service port");
