@@ -8,7 +8,7 @@
 @IF ERRORLEVEL 1 GOTO :DEFAULT_CASE
 
 :CASE_start
-	@ECHO start
+	@ECHO "Start DB Server"
 	@ECHO "Extracting DB files"
 	@if NOT EXIST pgsql (
 		@7za.exe x postgresql*
@@ -23,7 +23,7 @@
 		@SET firstTime=1
 	)
 
-	@ECHO "Starting deamon"
+	@ECHO "Starting DB Deamon"
 	@pgsql\bin\pg_ctl.exe -D dronedb_data -l mylog start
 
 	@IF %firstTime%==1 (
@@ -33,18 +33,25 @@
 
 	@ECHO "Register to startup"
 	@pgsql\bin\pg_ctl.exe register -N postgres -D "%cd%\dronedb_data"
+	
 	@GOTO exit
 
 	
 :CASE_stop
-	@ECHO stop
+	@ECHO "Stopping DB Server"
 	@pgsql\bin\pg_ctl.exe -D dronedb_data -l mylog stop
+	
+	@ECHO "Unregister from startup"
+	@pgsql\bin\pg_ctl.exe unregister -N postgres 
+	
 	@GOTO exit
 	
 :CASE_restart
 	@ECHO stop
 	@pgsql\bin\pg_ctl.exe -D dronedb_data -l mylog restart
+	
 	@GOTO exit
+	
 	
 :DEFAULT_CASE
 	@ECHO Unknown action, exiting
