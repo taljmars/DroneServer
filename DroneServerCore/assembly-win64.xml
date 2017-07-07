@@ -9,7 +9,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>
-            <outputFileNameMapping>DroneServerCore.${artifact.extension}</outputFileNameMapping>
+            <outputFileNameMapping>DroneServer.${artifact.extension}</outputFileNameMapping>
             <includes>
                 <include>com.dronedb</include>
             </includes>
@@ -17,7 +17,6 @@
     </dependencySets>
     <fileSets>
         <fileSet>
-            <!--<directory>${build.output}/pkg_server/</directory>-->
             <directory>${basedir}/../CMpub/pkg_server</directory>
             <outputDirectory>jars</outputDirectory>
             <includes>
