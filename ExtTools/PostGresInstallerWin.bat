@@ -1,17 +1,17 @@
+@echo off
 
-@SET arg=%1
-@IF %arg%. EQU . (
-    @SET arg=start
+set arg=%1
+if %arg%. EQU . (
+    set arg=start
 )
 
-@GOTO CASE_%arg%
-@IF ERRORLEVEL 1 GOTO :DEFAULT_CASE
+goto CASE_%arg%
+if ERRORLEVEL 1 GOTO :DEFAULT_CASE
 
 :CASE_start
-	@ECHO start
-	@ECHO "Extracting DB files"
-	@if NOT EXIST pgsql (
-		@7za.exe x postgresql*
+	echo "Extracting DB files"
+	if NOT EXIST pgsql (
+		7za.exe x postgresql*
 	)
 
 	@ECHO "Loading DB Deamon"
