@@ -90,24 +90,24 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>2</id>
-                        <inherited>false</inherited>
-                        <phase>compile</phase>
-                        <configuration>
-                            <target>
-                                <copy todir="${build.output}/conf" >
-                                    <fileset dir="${project.basedir}/conf"/>
-                                </copy>
-                                <copy todir="${build.output}/scripts" >
-                                    <fileset dir="${project.basedir}/scripts"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>2</id>-->
+                        <!--<inherited>false</inherited>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<configuration>-->
+                            <!--<target>-->
+                                <!--<copy todir="${build.output}/conf" >-->
+                                    <!--<fileset dir="${project.basedir}/conf"/>-->
+                                <!--</copy>-->
+                                <!--<copy todir="${build.output}/scripts" >-->
+                                    <!--<fileset dir="${project.basedir}/scripts"/>-->
+                                <!--</copy>-->
+                            <!--</target>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
                     <execution>
                         <phase>site</phase>
                         <configuration>
@@ -148,28 +148,28 @@
                                         <exclude>DroneServerClientPlugin*</exclude>
                                     </excludes>
                                 </resource>
-                                <resource>
-                                    <directory>${build.output}/scripts/</directory>
-                                </resource>
+                                <!--<resource>-->
+                                    <!--<directory>${build.output}/scripts/</directory>-->
+                                <!--</resource>-->
                             </resources>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>copy-resource-two</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
+                    <!--<execution>-->
+                        <!--<id>copy-resource-two</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
 
-                        <configuration>
-                            <outputDirectory>${build.output}/pkg_server/conf</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${build.output}/conf/</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${build.output}/pkg_server/conf</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>${build.output}/conf/</directory>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -222,7 +222,7 @@
                             <excludeGroupIds>
                                 com.dronedb, DroneServerTester,DroneServerExportedServices,DroneServerClientPlugin
                             </excludeGroupIds>
-                        </configuration>
+                            </configuration>
                     </execution>
                 </executions>
             </plugin>
