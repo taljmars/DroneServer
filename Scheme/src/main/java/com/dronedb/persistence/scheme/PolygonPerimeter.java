@@ -1,5 +1,6 @@
 package com.dronedb.persistence.scheme;
 
+import com.dronedb.persistence.validations.NameNotEmptyValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 /**
  * Created by taljmars on 3/19/17.
  */
+@Entity
+@Table
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllPolygonPerimeters",
@@ -19,17 +22,8 @@ import java.util.UUID;
                 resultClass = PolygonPerimeter.class
         )
 })
-@Table
-@Entity
 @Access(javax.persistence.AccessType.FIELD)
 public class PolygonPerimeter extends Perimeter implements Serializable {
-
-//    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
-//    @JoinTable( name = "polygonperimeter_point",
-//            joinColumns = @JoinColumn(name = "perimeter_id", referencedColumnName = "objid"),
-//            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName="objid"))
-    @ElementCollection
-    protected List<UUID> points;
 
     public PolygonPerimeter() {
         super();
@@ -51,7 +45,7 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     @Override
     public BaseObject copy() {
         PolygonPerimeter polygonPerimeter = this.clone();
-        polygonPerimeter.setKeyId(this.getKeyId());
+        polygonPerimeter.getKeyId().setObjId(this.getKeyId().getObjId());
         return polygonPerimeter;
     }
 
@@ -59,8 +53,20 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     public void set(BaseObject baseObject) {
         super.set(baseObject);
         PolygonPerimeter polygonPerimeter = (PolygonPerimeter) baseObject;
-        this.points = polygonPerimeter.getPoints();
+        this.points = new ArrayList<>();
+        for (UUID missionItemUid : polygonPerimeter.getPoints()) {
+            this.points.add(missionItemUid);
+        }
     }
+
+    //    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @JoinTable( name = "polygonperimeter_point",
+//            joinColumns = @JoinColumn(name = "perimeter_id", referencedColumnName = "objid"),
+//            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName="objid"))
+    //@ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    protected List<UUID> points;
+
 
     @Getter
     public List<UUID> getPoints() {
@@ -69,7 +75,9 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
 
     @Setter
     public void setPoints(List<UUID> points) {
-        this.points = points;
+        this.points.clear();
+        if (points != null)
+            this.points.addAll(points);
     }
 
     public void addPoint(UUID point) {

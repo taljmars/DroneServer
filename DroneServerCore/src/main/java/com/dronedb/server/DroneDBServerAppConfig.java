@@ -1,5 +1,6 @@
 package com.dronedb.server;
 
+import com.generic_tools.environment.Environment;
 import com.generic_tools.validations.RuntimeValidator;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -24,13 +25,14 @@ public class DroneDBServerAppConfig {
 
 	private static final Logger logger = Logger.getLogger(DroneDBServerAppConfig.class);
 
-	private static final String portFile = "conf/PORT";
-	private static final String ipFile = "conf/IP";
+	private static final String portFile = "PORT";
+	private static final String ipFile = "IP";
 
 	@Bean
 	public String serverIp() {
 		try {
-			FileReader fr = new FileReader(ipFile);
+			String path = System.getProperty("CONF.DIR") + Environment.DIR_SEPERATOR + ipFile;
+			FileReader fr = new FileReader(path);
 			System.err.println(fr.toString());
 			BufferedReader br = new BufferedReader(fr);
 			return br.readLine();
@@ -47,7 +49,8 @@ public class DroneDBServerAppConfig {
 	@Bean
 	public String serverPort() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(portFile));
+			String path = System.getProperty("CONF.DIR") + Environment.DIR_SEPERATOR + portFile;
+			BufferedReader br = new BufferedReader(new FileReader(path));
 			return br.readLine();
 		}
 		catch (FileNotFoundException e) {

@@ -20,6 +20,10 @@ public class DroneDbTester
 		SessionsSvcRemote sessionsSvcRemote = AppConfig.context.getBean(SessionsSvcRemote.class);
 		//System.err.println(droneDbCrudSvcRemote.CheckConnection());
 
+		System.out.println("Get perimeter");
+		PolygonPerimeter polygonPerimeter = (PolygonPerimeter) droneDbCrudSvcRemote.create(PolygonPerimeter.class.getName());
+		System.out.println("perimeter: " + polygonPerimeter);
+
 		System.out.println("Get mission");
 		Mission mission = (Mission) droneDbCrudSvcRemote.create(Mission.class.getName());
 		mission.setDefaultAlt(2);

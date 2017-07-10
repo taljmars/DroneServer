@@ -13,6 +13,8 @@ public class DroneServer {
 	final static Logger logger = Logger.getLogger(DroneServer.class);
 
 	public static void main(String[] args) {
+		System.setProperty("LOGS.DIR", args[0]);
+		System.setProperty("CONF.DIR", args[1]);
 		DroneServer droneServer	= DroneDBServerAppConfig.context.getBean(DroneServer.class);
 		droneServer.go();
 	}

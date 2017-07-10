@@ -39,7 +39,10 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 	public <T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceRemoteException {
 		logger.debug("Crud REMOTE CREATE called " + clz);
 		try {
-			return (T) droneDbCrudSvc.create(clz).copy();
+			T t = (T) droneDbCrudSvc.create(clz).copy();
+			logger.debug("TALMA Crud REMOTE CREATE called " + t);
+			return t;
+			//return (T) droneDbCrudSvc.create(clz).copy();
 		}
 		catch (ObjectInstanceException e) {
 			logger.error("Failed to create object", e);

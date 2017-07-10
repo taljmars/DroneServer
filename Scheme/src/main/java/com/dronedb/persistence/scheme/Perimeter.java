@@ -27,6 +27,8 @@ public abstract class Perimeter extends BaseObject implements Serializable {
         this.name = perimeter.getName();
     }
 
+    public abstract Perimeter clone();
+
     @Override
     public void set(BaseObject baseObject) {
         Perimeter perimeter = (Perimeter) baseObject;
