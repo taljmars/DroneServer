@@ -14,7 +14,6 @@
         <module>DroneServerCore</module>
         <module>DroneServerTester</module>
         <module>DroneServerExportedServices</module>
-        <module>DroneServerClientPlugin</module>
     </modules>
 
     <properties>
