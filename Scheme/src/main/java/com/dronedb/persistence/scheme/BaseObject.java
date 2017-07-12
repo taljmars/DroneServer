@@ -1,19 +1,18 @@
 package com.dronedb.persistence.scheme;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.Date;
+
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 //@XmlSeeAlso({Mission.class, MissionItem.class, Perimeter.class, Point.class})
-@XmlSeeAlso({ObjectDeref.class, Mission.class, MissionItem.class, Point.class})
+@XmlSeeAlso({ObjectDeref.class, Mission.class, MissionItem.class, Point.class, Perimeter.class})
 @MappedSuperclass
 public abstract class BaseObject implements Serializable
 {	

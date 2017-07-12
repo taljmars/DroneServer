@@ -32,7 +32,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlSeeAlso({
     Point.class,
+    ObjectDeref.class,
     Mission.class,
+    Perimeter.class,
     MissionItem.class
 })
 public abstract class BaseObject {

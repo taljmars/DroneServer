@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "PerimeterCrudSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://178.62.1.156:1234/ws/PerimeterCrudSvcRemote?wsdl")
+@WebServiceClient(name = "PerimeterCrudSvcRemoteImplService", targetNamespace = "http://internal.ws.persistence.dronedb.com/", wsdlLocation = "http://127.0.0.1:1234/ws/PerimeterCrudSvcRemote?wsdl")
 public class PerimeterCrudSvcRemoteImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class PerimeterCrudSvcRemoteImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://178.62.1.156:1234/ws/PerimeterCrudSvcRemote?wsdl");
+            url = new URL("http://127.0.0.1:1234/ws/PerimeterCrudSvcRemote?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

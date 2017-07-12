@@ -21,8 +21,9 @@ public class DroneDbTester
 		//System.err.println(droneDbCrudSvcRemote.CheckConnection());
 
 		System.out.println("Get perimeter");
-		PolygonPerimeter polygonPerimeter = (PolygonPerimeter) droneDbCrudSvcRemote.create(PolygonPerimeter.class.getName());
-		System.out.println("perimeter: " + polygonPerimeter);
+		//PolygonPerimeter perimeter = (PolygonPerimeter) droneDbCrudSvcRemote.create(PolygonPerimeter.class.getName());
+		CirclePerimeter perimeter = (CirclePerimeter) droneDbCrudSvcRemote.create(CirclePerimeter.class.getName());
+		System.out.println("perimeter: " + perimeter);
 
 		System.out.println("Get mission");
 		Mission mission = (Mission) droneDbCrudSvcRemote.create(Mission.class.getName());

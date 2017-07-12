@@ -133,7 +133,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		// Clean private
 		entityManager.remove(privateItem);
 
-		logger.debug("Object writting to public " + privateItemDup);
+		logger.debug("Object writing to public " + privateItemDup);
 	}
 
 	@Override
@@ -143,6 +143,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		handleDiscardForType(Point.class);
 		handleDiscardForType(Waypoint.class);
 		handleDiscardForType(Mission.class);
+		handleDiscardForType(PolygonPerimeter.class);
 
 		logger.debug("Discarding!!!!");
 	}

@@ -18,9 +18,11 @@ public abstract class Perimeter extends BaseObject implements Serializable {
     @Column(nullable = true)
     protected String name;
 
-    public Perimeter() {
-        super();
-    }
+//    public Perimeter() {
+//        super();
+//    }
+
+    public Perimeter() {}
 
     public Perimeter(Perimeter perimeter) {
         super(perimeter);
