@@ -21,9 +21,11 @@ public class DroneDbTester
 		//System.err.println(droneDbCrudSvcRemote.CheckConnection());
 
 		System.out.println("Get perimeter");
-		//PolygonPerimeter perimeter = (PolygonPerimeter) droneDbCrudSvcRemote.create(PolygonPerimeter.class.getName());
-		CirclePerimeter perimeter = (CirclePerimeter) droneDbCrudSvcRemote.create(CirclePerimeter.class.getName());
-		System.out.println("perimeter: " + perimeter);
+		CirclePerimeter circlePerimeter = (CirclePerimeter) droneDbCrudSvcRemote.create(CirclePerimeter.class.getName());
+		System.out.println("perimeter: " + circlePerimeter);
+
+		PolygonPerimeter polygonPerimeter = (PolygonPerimeter) droneDbCrudSvcRemote.create(PolygonPerimeter.class.getName());
+		System.out.println("perimeter: " + polygonPerimeter);
 
 		System.out.println("Get mission");
 		Mission mission = (Mission) droneDbCrudSvcRemote.create(Mission.class.getName());
@@ -84,15 +86,15 @@ public class DroneDbTester
 		mission.setName("in private");
 		droneDbCrudSvcRemote.update(mission);
 
-		QuerySvcRemote querySvcRemote = AppConfig.context.getBean(QuerySvcRemote.class);
-		QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
-		queryRequestRemote.setQuery("GetAllMissions");
-		queryRequestRemote.setClz(Mission.class.toString());
-		QueryResponseRemote list = querySvcRemote.query(queryRequestRemote);
-		System.err.println(list.getResultList());
-
-		BaseObject object = droneDbCrudSvcRemote.read(mission.getKeyId().getObjId().toString());
-		System.err.println(object.toString());
+//		QuerySvcRemote querySvcRemote = AppConfig.context.getBean(QuerySvcRemote.class);
+//		QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
+//		queryRequestRemote.setQuery("GetAllMissions");
+//		queryRequestRemote.setClz(Mission.class.toString());
+//		QueryResponseRemote list = querySvcRemote.query(queryRequestRemote);
+//		System.err.println(list.getResultList());
+//
+//		BaseObject object = droneDbCrudSvcRemote.read(mission.getKeyId().getObjId().toString());
+//		System.err.println(object.toString());
 
 		sessionsSvcRemote.publish();
 	}
