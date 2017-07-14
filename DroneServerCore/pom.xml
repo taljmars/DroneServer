@@ -158,6 +158,19 @@
                             <outputDirectory>../ServerInstallation/Windows64/</outputDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly-linux.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>../ServerInstallation/Linux/</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

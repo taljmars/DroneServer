@@ -24,7 +24,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/../ExtTools</directory>
+            <directory>${basedir}/../ExtTools/Windows</directory>
             <outputDirectory>externalTools</outputDirectory>
         </fileSet>
         <fileSet>

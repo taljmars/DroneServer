@@ -2,4 +2,4 @@
 
 echo "Running Server"
 
-java -cp '*' com.dronedb.server.DroneServer
+java -cp jars/'*' com.dronedb.server.DroneServer Logs/ conf/
