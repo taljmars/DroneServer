@@ -30,6 +30,26 @@ public interface MissionCrudSvcRemote {
 
     /**
      * 
+     * @param arg0
+     * @return
+     *     returns com.dronedb.persistence.scheme.Mission
+     * @throws ObjectNotFoundRemoteException
+     * @throws DatabaseValidationRemoteException
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionResponse", fault = {
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMission/Fault/DatabaseValidationRemoteException"),
+        @FaultAction(className = ObjectNotFoundRemoteException.class, value = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMission/Fault/ObjectNotFoundRemoteException")
+    })
+    public Mission cloneMission(
+        @WebParam(name = "arg0", partName = "arg0")
+        Mission arg0)
+        throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException
+    ;
+
+    /**
+     * 
      * @return
      *     returns com.dronedb.persistence.scheme.Mission
      */
@@ -50,25 +70,5 @@ public interface MissionCrudSvcRemote {
     public MissionItem createMissionItem(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0);
-
-    /**
-     * 
-     * @param arg0
-     * @return
-     *     returns com.dronedb.persistence.scheme.Mission
-     * @throws DatabaseValidationRemoteException
-     * @throws ObjectNotFoundRemoteException
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMissionResponse", fault = {
-        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMission/Fault/DatabaseValidationRemoteException"),
-        @FaultAction(className = ObjectNotFoundRemoteException.class, value = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/cloneMission/Fault/ObjectNotFoundRemoteException")
-    })
-    public Mission cloneMission(
-        @WebParam(name = "arg0", partName = "arg0")
-        Mission arg0)
-        throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException
-    ;
 
 }
