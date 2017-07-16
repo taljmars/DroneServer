@@ -20,6 +20,11 @@ import java.util.UUID;
                 name = "GetAllPolygonPerimeters",
                 query = "select * from polygonperimeter",
                 resultClass = PolygonPerimeter.class
+        ),
+        @NamedNativeQuery(
+                name = "GetAllModifiedPolygonPerimeters",
+                query = "SELECT * FROM polygonperimeter WHERE privatelyModified = true",
+                resultClass = PolygonPerimeter.class
         )
 })
 @Access(javax.persistence.AccessType.FIELD)

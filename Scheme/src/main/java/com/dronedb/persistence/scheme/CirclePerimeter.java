@@ -13,6 +13,11 @@ import java.util.UUID;
                 name = "GetAllCirclePerimeters",
                 query = "select * from circleperimeter",
                 resultClass = CirclePerimeter.class
+        ),
+        @NamedNativeQuery(
+                name = "GetAllModifiedCirclePerimeters",
+                query = "SELECT * FROM circleperimeter WHERE privatelyModified = true",
+                resultClass = CirclePerimeter.class
         )
 })
 @Table

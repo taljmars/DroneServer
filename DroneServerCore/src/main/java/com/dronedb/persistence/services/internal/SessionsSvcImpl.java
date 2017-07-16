@@ -139,10 +139,12 @@ public class SessionsSvcImpl implements SessionsSvc {
 	@Override
 	@Transactional
 	public void discard() {
+		// TODO: talma, make is more generic
 		// Handle Mission Item
 		handleDiscardForType(Point.class);
 		handleDiscardForType(Waypoint.class);
 		handleDiscardForType(Mission.class);
+		handleDiscardForType(CirclePerimeter.class);
 		handleDiscardForType(PolygonPerimeter.class);
 
 		logger.debug("Discarding!!!!");
