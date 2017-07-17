@@ -3,15 +3,20 @@ package com.dronedb.persistence.scheme;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
+
+import static com.dronedb.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE;
 
 /**
  * Created by taljmars on 3/19/17.
  */
+@Entity
+@Table
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllCirclePerimeters",
-                query = "select * from circleperimeter",
+                query = "SELECT * FROM circleperimeter WHERE " + CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
                 resultClass = CirclePerimeter.class
         ),
         @NamedNativeQuery(
@@ -20,17 +25,17 @@ import java.util.UUID;
                 resultClass = CirclePerimeter.class
         )
 })
-@Table
-@Entity
-public class CirclePerimeter extends Perimeter {
+@Access(javax.persistence.AccessType.FIELD)
+public class CirclePerimeter extends Perimeter implements Serializable {
 
     @Column(nullable = true)
+    @Basic(fetch=FetchType.EAGER)
     protected UUID center;
 
     @Column(nullable = true)
     protected Double radius;
 
-    public CirclePerimeter() {}
+    public CirclePerimeter() {super();}
 
     public CirclePerimeter(CirclePerimeter circlePerimeter) {
         super(circlePerimeter);
@@ -46,7 +51,7 @@ public class CirclePerimeter extends Perimeter {
     @Override
     public BaseObject copy() {
         CirclePerimeter circlePerimeter = this.clone();
-        circlePerimeter.setKeyId(this.getKeyId());
+        circlePerimeter.getKeyId().setObjId(this.getKeyId().getObjId());
         return circlePerimeter;
     }
 

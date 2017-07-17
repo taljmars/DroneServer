@@ -40,13 +40,14 @@ public class SessionsSvcImpl implements SessionsSvc {
 	@Transactional
 	public void publish() {
 		// In case we've modified Revision
+		logger.debug("PUBLISH START !!!");
 		logger.debug("Update revision value in revision manager");
 		handlePublish(revisionManager.getNextRevision());
 		revisionManager.advance();
+		logger.debug("PUBLISH END !!!");
 	}
 
 	private void handlePublish(int nextRevision) {
-		logger.debug("Publish started");
 		// Handle Mission Item
 		Metamodel mm = entityManager.getMetamodel();
 		for (final ManagedType<?> managedType : mm.getManagedTypes()) {
@@ -58,10 +59,9 @@ public class SessionsSvcImpl implements SessionsSvc {
 			if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
 				continue;
 
-			logger.error("goint to handle " + clz);
+			logger.error("going to handle " + clz);
 			handlePublishForType(clz, nextRevision);
 		}
-		logger.debug("Publish finished");
 	}
 
 	private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
@@ -118,6 +118,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 
 		// Clean the private
 		entityManager.remove(privateItem);
+		logger.debug("Done");
 	}
 
 	private <T extends BaseObject> void movePrivateToPublic(BaseObject privateItem, Class<T> clz, int nextRevision) {
@@ -134,11 +135,13 @@ public class SessionsSvcImpl implements SessionsSvc {
 		entityManager.remove(privateItem);
 
 		logger.debug("Object writing to public " + privateItemDup);
+		logger.debug("Done");
 	}
 
 	@Override
 	@Transactional
 	public void discard() {
+		logger.debug("DISCARD START !!!");
 		// TODO: talma, make is more generic
 		// Handle Mission Item
 		handleDiscardForType(Point.class);
@@ -147,7 +150,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		handleDiscardForType(CirclePerimeter.class);
 		handleDiscardForType(PolygonPerimeter.class);
 
-		logger.debug("Discarding!!!!");
+		logger.debug("DISCARD END !!!");
 	}
 
 	public <T extends BaseObject> void handleDiscardForType(Class<T> clz) {

@@ -1,6 +1,5 @@
 package com.dronedb.persistence.scheme;
 
-import com.dronedb.persistence.validations.NameNotEmptyValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -10,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.dronedb.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRIVATE;
+import static com.dronedb.persistence.scheme.Constants.POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE;
+
 /**
  * Created by taljmars on 3/19/17.
  */
@@ -18,7 +20,7 @@ import java.util.UUID;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllPolygonPerimeters",
-                query = "select * from polygonperimeter",
+                query = "SELECT * FROM polygonperimeter WHERE " + POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
                 resultClass = PolygonPerimeter.class
         ),
         @NamedNativeQuery(
@@ -64,11 +66,6 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
         }
     }
 
-    //    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
-//    @JoinTable( name = "polygonperimeter_point",
-//            joinColumns = @JoinColumn(name = "perimeter_id", referencedColumnName = "objid"),
-//            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName="objid"))
-    //@ElementCollection
     @ElementCollection(fetch = FetchType.EAGER)
     protected List<UUID> points;
 
