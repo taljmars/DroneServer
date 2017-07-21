@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 //                        resultClass = Waypoint.class
 //    )
 //})
+@Sessionable
 public class Waypoint extends MissionItem implements Delayable, Altitudable, Serializable {
 	
 	private static final long serialVersionUID = 1L;

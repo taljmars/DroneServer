@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 
 @Entity
 //@Table(name="missionitems")
+@Sessionable
 public class ReturnToHome extends MissionItem implements Altitudable, Serializable {
 		
 	private static final long serialVersionUID = 1L;

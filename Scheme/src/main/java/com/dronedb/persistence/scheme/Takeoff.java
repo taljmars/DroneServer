@@ -12,6 +12,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 
 @Entity
 //@Table(name="missionitems")
+@Sessionable
 public class Takeoff extends MissionItem implements Serializable {
 		
 	private static final long serialVersionUID = 1L;

@@ -26,6 +26,7 @@ import static com.dronedb.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FR
         )
 })
 @Access(javax.persistence.AccessType.FIELD)
+@Sessionable
 public class CirclePerimeter extends Perimeter implements Serializable {
 
     @Column(nullable = true)

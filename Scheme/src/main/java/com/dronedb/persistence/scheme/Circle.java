@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 
 @Entity
 //@Table(name="missionitems")
+@Sessionable
 public class Circle extends MissionItem implements Altitudable, Radiusable, Serializable {
 	
 	private static final long serialVersionUID = 1L;

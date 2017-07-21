@@ -30,6 +30,7 @@ import static com.dronedb.persistence.scheme.Constants.POLYGON_PERIMETER_QUERY_F
         )
 })
 @Access(javax.persistence.AccessType.FIELD)
+@Sessionable
 public class PolygonPerimeter extends Perimeter implements Serializable {
 
     public PolygonPerimeter() {

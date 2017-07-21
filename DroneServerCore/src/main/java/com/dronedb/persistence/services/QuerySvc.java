@@ -28,7 +28,7 @@ public interface QuerySvc {
 
 	/**
 	 * The following enable the user to send query request in order to get the list of objects
-	 * coorisponding to the query execution.
+	 * corresponding to the query execution.
 	 *
 	 * @param queryRequest Object represent the query demand
 	 * @param <T> Generic type of an object

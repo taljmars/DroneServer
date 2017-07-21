@@ -14,9 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.Set;
 
 @Lazy
 @Component
@@ -57,6 +57,9 @@ public class SessionsSvcImpl implements SessionsSvc {
 				continue;
 
 			if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
+				continue;
+
+			if (!clz.isAnnotationPresent(Sessionable.class))
 				continue;
 
 			logger.error("going to handle " + clz);
@@ -142,13 +145,17 @@ public class SessionsSvcImpl implements SessionsSvc {
 	@Transactional
 	public void discard() {
 		logger.debug("DISCARD START !!!");
-		// TODO: talma, make is more generic
-		// Handle Mission Item
-		handleDiscardForType(Point.class);
-		handleDiscardForType(Waypoint.class);
-		handleDiscardForType(Mission.class);
-		handleDiscardForType(CirclePerimeter.class);
-		handleDiscardForType(PolygonPerimeter.class);
+		Metamodel mm = entityManager.getMetamodel();
+		for (final ManagedType<?> managedType : mm.getManagedTypes()) {
+			Class clz = managedType.getJavaType();
+			logger.error("Found class " + clz);
+
+			if (!clz.isAnnotationPresent(Sessionable.class))
+				continue;
+
+			logger.error("going to handle " + clz);
+			handleDiscardForType(clz);
+		}
 
 		logger.debug("DISCARD END !!!");
 	}

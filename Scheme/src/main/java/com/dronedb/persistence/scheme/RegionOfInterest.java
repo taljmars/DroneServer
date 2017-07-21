@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by taljmars on 3/25/17.
  */
 @Entity
+@Sessionable
 public class RegionOfInterest extends MissionItem implements Altitudable, Serializable {
 
     @Column(nullable = true)

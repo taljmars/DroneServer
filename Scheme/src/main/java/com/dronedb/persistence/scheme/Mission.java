@@ -48,6 +48,7 @@ import static com.dronedb.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AN
 @NameNotEmptyValidation
 //@NoPostLandOrRTLItemsValidation
 @Access(javax.persistence.AccessType.FIELD)
+@Sessionable
 public class Mission extends BaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;

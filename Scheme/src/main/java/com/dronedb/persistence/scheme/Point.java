@@ -12,6 +12,7 @@ import javax.persistence.NamedNativeQuery;
  * Created by taljmars on 3/20/17.
  */
 @Entity
+@Sessionable
 public class Point extends BaseObject {
 
     @Column(nullable = true)
