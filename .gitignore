@@ -72,3 +72,4 @@ Temporary Items
 *.class
 
 .classpath
+/ServerInstallation/Windows64/DroneServer
