@@ -99,6 +99,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link LoiterUnlimited }
+     * 
+     */
+    public LoiterUnlimited createLoiterUnlimited() {
+        return new LoiterUnlimited();
+    }
+
+    /**
      * Create an instance of {@link ReturnToHome }
      * 
      */
@@ -147,6 +155,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link LoiterTime }
+     * 
+     */
+    public LoiterTime createLoiterTime() {
+        return new LoiterTime();
+    }
+
+    /**
      * Create an instance of {@link Land }
      * 
      */
@@ -155,11 +171,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Circle }
+     * Create an instance of {@link LoiterTurns }
      * 
      */
-    public Circle createCircle() {
-        return new Circle();
+    public LoiterTurns createLoiterTurns() {
+        return new LoiterTurns();
     }
 
     /**

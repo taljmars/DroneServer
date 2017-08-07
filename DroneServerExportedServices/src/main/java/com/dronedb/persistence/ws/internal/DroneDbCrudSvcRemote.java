@@ -94,6 +94,21 @@ public interface DroneDbCrudSvcRemote {
 
     /**
      * 
+     * @param arg0
+     * @throws DatabaseValidationRemoteException
+     */
+    @WebMethod
+    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayResponse", fault = {
+        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArray/Fault/DatabaseValidationRemoteException")
+    })
+    public void updateArray(
+        @WebParam(name = "arg0", partName = "arg0")
+        BaseObjectArray arg0)
+        throws DatabaseValidationRemoteException
+    ;
+
+    /**
+     * 
      * @param arg1
      * @param arg0
      * @return
@@ -111,21 +126,6 @@ public interface DroneDbCrudSvcRemote {
         @WebParam(name = "arg1", partName = "arg1")
         String arg1)
         throws ObjectNotFoundException
-    ;
-
-    /**
-     * 
-     * @param arg0
-     * @throws DatabaseValidationRemoteException
-     */
-    @WebMethod
-    @Action(input = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayRequest", output = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArrayResponse", fault = {
-        @FaultAction(className = DatabaseValidationRemoteException.class, value = "http://scheme.persistence.dronedb.com/DroneDbCrudSvcRemote/updateArray/Fault/DatabaseValidationRemoteException")
-    })
-    public void updateArray(
-        @WebParam(name = "arg0", partName = "arg0")
-        BaseObjectArray arg0)
-        throws DatabaseValidationRemoteException
     ;
 
 }

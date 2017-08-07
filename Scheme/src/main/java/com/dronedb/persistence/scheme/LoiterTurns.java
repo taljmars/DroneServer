@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 @Entity
 //@Table(name="missionitems")
 @Sessionable
-public class Circle extends MissionItem implements Altitudable, Radiusable, Serializable {
+public class LoiterTurns extends MissionItem implements Altitudable, Radiusable, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -21,11 +21,11 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	@Column(nullable = true)
 	protected int turns;
 	
-	public Circle() {
+	public LoiterTurns() {
 		super();
 	}
 
-	public Circle(Circle circle) {
+	public LoiterTurns(LoiterTurns circle) {
 		super(circle);
 		this.radius = circle.getRadius();
 		this.altitude = circle.getAltitude();
@@ -33,13 +33,13 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	}
 
 	@Override
-	public Circle clone() {
-		return new Circle(this);
+	public LoiterTurns clone() {
+		return new LoiterTurns(this);
 	}
 
 	@Override
 	public BaseObject copy() {
-		Circle circle = this.clone();
+		LoiterTurns circle = this.clone();
 		circle.setKeyId(this.getKeyId());
 		return circle;
 	}
@@ -47,7 +47,7 @@ public class Circle extends MissionItem implements Altitudable, Radiusable, Seri
 	@Override
 	public void set(BaseObject baseObject) {
 		super.set(baseObject);
-		Circle circle = (Circle) baseObject;
+		LoiterTurns circle = (LoiterTurns) baseObject;
 		this.radius = circle.getRadius();
 		this.altitude = circle.getAltitude();
 		this.turns = circle.getTurns();

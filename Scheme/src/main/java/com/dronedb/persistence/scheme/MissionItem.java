@@ -8,8 +8,9 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 @XmlSeeAlso({
-		Waypoint.class, Circle.class, ReturnToHome.class, Takeoff.class,
-		RegionOfInterest.class, Land.class, SplineWaypoint.class
+		Waypoint.class, LoiterTurns.class, ReturnToHome.class, Takeoff.class,
+		RegionOfInterest.class, Land.class, SplineWaypoint.class, LoiterTime.class,
+		LoiterUnlimited.class
 })
 //@MappedSuperclass
 @Entity

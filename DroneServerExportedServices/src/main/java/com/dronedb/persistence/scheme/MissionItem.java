@@ -36,10 +36,12 @@ import javax.xml.bind.annotation.XmlType;
     Waypoint.class,
     Takeoff.class,
     RegionOfInterest.class,
+    LoiterUnlimited.class,
     ReturnToHome.class,
     SplineWaypoint.class,
+    LoiterTime.class,
     Land.class,
-    Circle.class
+    LoiterTurns.class
 })
 public abstract class MissionItem
     extends BaseObject
