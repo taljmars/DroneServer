@@ -29,19 +29,16 @@ public interface QuerySvcRemote {
 
     /**
      * 
-     * @param arg1
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.QueryResponseRemote
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryResponse")
-    public QueryResponseRemote runNativeQuery(
+    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/queryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/queryResponse")
+    public QueryResponseRemote query(
         @WebParam(name = "arg0", partName = "arg0")
-        String arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+        QueryRequestRemote arg0);
 
     /**
      * 
@@ -61,15 +58,18 @@ public interface QuerySvcRemote {
 
     /**
      * 
+     * @param arg1
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.QueryResponseRemote
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/queryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/queryResponse")
-    public QueryResponseRemote query(
+    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryResponse")
+    public QueryResponseRemote runNativeQuery(
         @WebParam(name = "arg0", partName = "arg0")
-        QueryRequestRemote arg0);
+        String arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        String arg1);
 
 }

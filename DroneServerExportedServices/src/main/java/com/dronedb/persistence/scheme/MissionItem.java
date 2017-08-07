@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlType;
     Takeoff.class,
     RegionOfInterest.class,
     ReturnToHome.class,
+    SplineWaypoint.class,
     Land.class,
     Circle.class
 })

@@ -131,6 +131,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link SplineWaypoint }
+     * 
+     */
+    public SplineWaypoint createSplineWaypoint() {
+        return new SplineWaypoint();
+    }
+
+    /**
      * Create an instance of {@link Mission }
      * 
      */
