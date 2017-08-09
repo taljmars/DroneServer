@@ -32,8 +32,8 @@ public interface PerimeterCrudSvcRemote {
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.Perimeter
-     * @throws ObjectNotFoundRemoteException
      * @throws DatabaseValidationRemoteException
+     * @throws ObjectNotFoundRemoteException
      */
     @WebMethod
     @WebResult(partName = "return")

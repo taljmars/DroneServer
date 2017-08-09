@@ -49,8 +49,8 @@ public interface QuerySvcRemote {
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNamedQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNamedQueryResponse")
-    public QueryResponseRemote runNamedQuery(
+    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryResponse")
+    public QueryResponseRemote runNativeQuery(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
@@ -65,8 +65,8 @@ public interface QuerySvcRemote {
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNativeQueryResponse")
-    public QueryResponseRemote runNativeQuery(
+    @Action(input = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNamedQueryRequest", output = "http://scheme.persistence.dronedb.com/QuerySvcRemote/runNamedQueryResponse")
+    public QueryResponseRemote runNamedQuery(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")

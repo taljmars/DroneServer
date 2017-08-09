@@ -7,12 +7,9 @@ import java.io.Serializable;
 @Entity
 //@Table(name="missionitems")
 @Sessionable
-public class LoiterUnlimited extends MissionItem implements Altitudable, Radiusable, Serializable {
+public class LoiterUnlimited extends MissionItem implements Altitudable, Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	@Column(nullable = true)
-	protected double radius;
 
 	@Column
 	protected Double altitude;
@@ -23,7 +20,6 @@ public class LoiterUnlimited extends MissionItem implements Altitudable, Radiusa
 
 	public LoiterUnlimited(LoiterUnlimited loiterUnlimited) {
 		super(loiterUnlimited);
-		this.radius = loiterUnlimited.getRadius();
 		this.altitude = loiterUnlimited.getAltitude();
 	}
 
@@ -43,18 +39,7 @@ public class LoiterUnlimited extends MissionItem implements Altitudable, Radiusa
 	public void set(BaseObject baseObject) {
 		super.set(baseObject);
 		LoiterUnlimited loiterUnlimited = (LoiterUnlimited) baseObject;
-		this.radius = loiterUnlimited.getRadius();
 		this.altitude = loiterUnlimited.getAltitude();
-	}
-
-	@Override
-	public Double getRadius() {
-		return radius;
-	}
-
-	@Override
-	public void setRadius(Double radius) {
-		this.radius = radius;
 	}
 
 	@Override
@@ -71,7 +56,6 @@ public class LoiterUnlimited extends MissionItem implements Altitudable, Radiusa
 	public String toString() {
 		return "LoiterUnlimited{" +
 				super.toString() +
-				", radius=" + radius +
 				", altitude=" + altitude +
 				'}';
 	}

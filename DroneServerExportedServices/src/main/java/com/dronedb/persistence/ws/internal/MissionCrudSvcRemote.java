@@ -43,16 +43,6 @@ public interface MissionCrudSvcRemote {
 
     /**
      * 
-     * @return
-     *     returns com.dronedb.persistence.scheme.Mission
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionResponse")
-    public Mission createMission();
-
-    /**
-     * 
      * @param arg0
      * @return
      *     returns com.dronedb.persistence.scheme.Mission
@@ -70,5 +60,15 @@ public interface MissionCrudSvcRemote {
         Mission arg0)
         throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException
     ;
+
+    /**
+     * 
+     * @return
+     *     returns com.dronedb.persistence.scheme.Mission
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionRequest", output = "http://scheme.persistence.dronedb.com/MissionCrudSvcRemote/createMissionResponse")
+    public Mission createMission();
 
 }

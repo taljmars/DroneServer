@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{http://scheme.persistence.dronedb.com/}missionItem">
  *       &lt;sequence>
+ *         &lt;element name="altitude" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
  *         &lt;element name="delay" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
@@ -27,13 +28,39 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "splineWaypoint", propOrder = {
+    "altitude",
     "delay"
 })
 public class SplineWaypoint
     extends MissionItem
 {
 
+    protected Double altitude;
     protected Double delay;
+
+    /**
+     * Gets the value of the altitude property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Double }
+     *     
+     */
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    /**
+     * Sets the value of the altitude property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Double }
+     *     
+     */
+    public void setAltitude(Double value) {
+        this.altitude = value;
+    }
 
     /**
      * Gets the value of the delay property.

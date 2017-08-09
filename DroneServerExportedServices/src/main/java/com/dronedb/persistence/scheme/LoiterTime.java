@@ -17,7 +17,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://scheme.persistence.dronedb.com/}missionItem">
  *       &lt;sequence>
  *         &lt;element name="altitude" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
- *         &lt;element name="radius" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
  *         &lt;element name="seconds" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/extension>
@@ -30,7 +29,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "loiterTime", propOrder = {
     "altitude",
-    "radius",
     "seconds"
 })
 public class LoiterTime
@@ -38,7 +36,6 @@ public class LoiterTime
 {
 
     protected Double altitude;
-    protected Double radius;
     protected int seconds;
 
     /**
@@ -63,30 +60,6 @@ public class LoiterTime
      */
     public void setAltitude(Double value) {
         this.altitude = value;
-    }
-
-    /**
-     * Gets the value of the radius property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Double }
-     *     
-     */
-    public Double getRadius() {
-        return radius;
-    }
-
-    /**
-     * Sets the value of the radius property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Double }
-     *     
-     */
-    public void setRadius(Double value) {
-        this.radius = value;
     }
 
     /**

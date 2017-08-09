@@ -17,22 +17,27 @@ import java.io.Serializable;
 //    )
 //})
 @Sessionable
-public class SplineWaypoint extends MissionItem implements Delayable, Serializable {
+public class SplineWaypoint extends MissionItem implements Altitudable, Delayable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Column(nullable = true)
 	protected Double delay;
 
+	@Column(nullable = true)
+	private Double altitude;
+
 	public SplineWaypoint() {
 		super();
 //		type = MissionItemType.WAYPOINT.toString();
 		this.delay = 0.0;
+		this.altitude = 0.0;
 	}
 
 	public SplineWaypoint(SplineWaypoint waypoint) {
 		super(waypoint);
 		this.delay = waypoint.getDelay();
+		this.altitude = waypoint.getAltitude();
 	}
 
 	@Override
@@ -52,6 +57,7 @@ public class SplineWaypoint extends MissionItem implements Delayable, Serializab
 		super.set(baseObject);
 		SplineWaypoint waypoint = (SplineWaypoint) baseObject;
 		this.delay = waypoint.getDelay();
+		this.altitude = waypoint.getAltitude();
 	}
 
 	@Override
@@ -65,28 +71,21 @@ public class SplineWaypoint extends MissionItem implements Delayable, Serializab
 	}
 
 	@Override
+	public void setAltitude(Double altitude) {
+		this.altitude = altitude;
+	}
+
+	@Override
+	public Double getAltitude() {
+		return this.altitude;
+	}
+
+	@Override
 	public String toString() {
 		return "SplineWaypoint{" +
-				super.toString() +
+				", " +super.toString() +
 				", delay=" + delay +
+				", altitude=" + altitude +
 				'}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		if (!super.equals(o)) return false;
-
-		SplineWaypoint that = (SplineWaypoint) o;
-
-		return delay != null ? delay.equals(that.delay) : that.delay == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = super.hashCode();
-		result = 31 * result + (delay != null ? delay.hashCode() : 0);
-		return result;
 	}
 }
