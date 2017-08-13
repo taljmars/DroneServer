@@ -15,7 +15,7 @@ public class LoiterTime extends MissionItem implements Altitudable, Serializable
 	protected Double altitude;
 
 	@Column(nullable = true)
-	protected int seconds;
+	protected Integer seconds;
 
 	public LoiterTime() {
 		super();
@@ -57,11 +57,11 @@ public class LoiterTime extends MissionItem implements Altitudable, Serializable
 		return this.altitude;
 	}
 
-	public int getSeconds() {
+	public Integer getSeconds() {
 		return seconds;
 	}
 
-	public void setSeconds(int seconds) {
+	public void setSeconds(Integer seconds) {
 		this.seconds = seconds;
 	}
 

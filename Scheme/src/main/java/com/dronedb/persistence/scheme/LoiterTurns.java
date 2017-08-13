@@ -16,7 +16,7 @@ public class LoiterTurns extends MissionItem implements Altitudable, Serializabl
 	protected Double altitude;
 	
 	@Column(nullable = true)
-	protected int turns;
+	protected Integer turns;
 	
 	public LoiterTurns() {
 		super();
@@ -58,11 +58,11 @@ public class LoiterTurns extends MissionItem implements Altitudable, Serializabl
 		return this.altitude;
 	}
 
-	public int getTurns() {
+	public Integer getTurns() {
 		return turns;
 	}
 
-	public void setTurns(int turns) {
+	public void setTurns(Integer turns) {
 		this.turns = turns;
 	}
 

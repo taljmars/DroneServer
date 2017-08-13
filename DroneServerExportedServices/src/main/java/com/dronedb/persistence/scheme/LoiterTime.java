@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://scheme.persistence.dronedb.com/}missionItem">
  *       &lt;sequence>
  *         &lt;element name="altitude" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
- *         &lt;element name="seconds" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="seconds" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -36,7 +36,7 @@ public class LoiterTime
 {
 
     protected Double altitude;
-    protected int seconds;
+    protected Integer seconds;
 
     /**
      * Gets the value of the altitude property.
@@ -65,16 +65,24 @@ public class LoiterTime
     /**
      * Gets the value of the seconds property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public int getSeconds() {
+    public Integer getSeconds() {
         return seconds;
     }
 
     /**
      * Sets the value of the seconds property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setSeconds(int value) {
+    public void setSeconds(Integer value) {
         this.seconds = value;
     }
 

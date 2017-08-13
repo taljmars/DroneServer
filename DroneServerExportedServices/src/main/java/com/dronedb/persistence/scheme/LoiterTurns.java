@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://scheme.persistence.dronedb.com/}missionItem">
  *       &lt;sequence>
  *         &lt;element name="altitude" type="{http://www.w3.org/2001/XMLSchema}double" minOccurs="0"/>
- *         &lt;element name="turns" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="turns" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -36,7 +36,7 @@ public class LoiterTurns
 {
 
     protected Double altitude;
-    protected int turns;
+    protected Integer turns;
 
     /**
      * Gets the value of the altitude property.
@@ -65,16 +65,24 @@ public class LoiterTurns
     /**
      * Gets the value of the turns property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public int getTurns() {
+    public Integer getTurns() {
         return turns;
     }
 
     /**
      * Sets the value of the turns property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setTurns(int value) {
+    public void setTurns(Integer value) {
         this.turns = value;
     }
 
