@@ -12,6 +12,7 @@
     <modules>
         <module>Scheme</module>
         <module>DroneServerCore</module>
+        <module>DroneServerAnalyzer</module>
         <module>DroneServerTester</module>
         <module>DroneServerExportedServices</module>
     </modules>
@@ -142,6 +143,7 @@
                                 <resource>
                                     <directory>${build.output}/jars/</directory>
                                     <excludes>
+                                        <exclude>DroneServerAnalyzer*</exclude>
                                         <exclude>DroneServerTester*</exclude>
                                         <exclude>DroneServerExportedServices*</exclude>
                                         <exclude>DroneServerClientPlugin*</exclude>
@@ -219,7 +221,7 @@
                             <outputDirectory>CMpub/pkg_server</outputDirectory>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeGroupIds>
-                                com.dronedb, DroneServerTester,DroneServerExportedServices,DroneServerClientPlugin
+                                com.dronedb, DroneServerTester, DroneServerAnalyzer,DroneServerExportedServices,DroneServerClientPlugin
                             </excludeGroupIds>
                             </configuration>
                     </execution>
