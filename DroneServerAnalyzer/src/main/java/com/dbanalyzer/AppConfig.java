@@ -1,8 +1,8 @@
 package com.dbanalyzer;
 
-import com.dronedb.persistence.ws.internal.DroneDbCrudSvcRemote;
-import com.dronedb.persistence.ws.internal.QuerySvcRemote;
-import com.dronedb.persistence.ws.internal.SessionsSvcRemote;
+import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
+import com.dronedb.persistence.scheme.QuerySvcRemote;
+import com.dronedb.persistence.scheme.SessionsSvcRemote;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
