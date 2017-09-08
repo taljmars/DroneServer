@@ -72,7 +72,7 @@ public class DroneDbCrudSvcImpl implements DroneDbCrudSvc
 		// This is the creation time of this object
 		if (existingObject == null) {
 			// Nothing exist at all, creating it in private db
-			logger.debug("Object will be written to the database for the first time");
+			logger.debug("Object will be written to the database for the first time, validating object");
 			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 			if (validatorResponse.isFailed()) {
 				logger.error("Validation failed: " + validatorResponse);

@@ -3,11 +3,19 @@ package com.dronedb.server;
 import com.generic_tools.environment.Environment;
 import com.generic_tools.validations.RuntimeValidator;
 import org.apache.log4j.Logger;
+import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -63,7 +71,19 @@ public class DroneDBServerAppConfig {
 	}
 
 	@Bean
-	public RuntimeValidator runtimeValidator() {
-		return new RuntimeValidator();
+	public Validator validator(final AutowireCapableBeanFactory autowireCapableBeanFactory) {
+//		return new LocalValidatorFactoryBean();
+		ValidatorFactory validatorFactory = Validation.byProvider( HibernateValidator.class )
+				.configure().constraintValidatorFactory(new SpringConstraintValidatorFactory(autowireCapableBeanFactory))
+				.buildValidatorFactory();
+		Validator validator = validatorFactory.getValidator();
+		return validator;
+	}
+
+	@Bean
+	public RuntimeValidator runtimeValidator(@Autowired Validator validator) {
+		RuntimeValidator rtv = new RuntimeValidator();
+		rtv.setValidator(validator);
+		return rtv;
 	}
 }

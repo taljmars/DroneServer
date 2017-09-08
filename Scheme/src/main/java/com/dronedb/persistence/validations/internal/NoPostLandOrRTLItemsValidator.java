@@ -3,6 +3,8 @@ package com.dronedb.persistence.validations.internal;
 import com.dronedb.persistence.scheme.*;
 import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
 import javassist.tools.rmi.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,6 +14,10 @@ import java.util.UUID;
  * Created by taljmars on 4/5/17.
  */
 public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPostLandOrRTLItemsValidation, Mission> {
+
+    @Autowired
+    private DroneDbCrudSvcRemote droneDbCrudSvcRemote;
+
     @Override
     public void initialize(NoPostLandOrRTLItemsValidation constraintAnnotation) {
         System.err.print("Initialize validator " + getClass().getSimpleName());
@@ -21,7 +27,13 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
     public boolean isValid(Mission value, ConstraintValidatorContext context) {
         try {
             boolean foundLandOrRTL = false;
-            DroneDbCrudSvcRemote droneDbCrudSvcRemote = null; // TODO: Must be fixed to add this validation
+            if (droneDbCrudSvcRemote == null) {
+                System.err.println("TALMA lose");
+            }
+            else {
+                System.err.println("TALMA win");
+            }
+//            DroneDbCrudSvcRemote droneDbCrudSvcRemote = null; // TODO: Must be fixed to add this validation
             for (UUID missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
                     System.out.print("Found illegal point"); // TODO: print normal

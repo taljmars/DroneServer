@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -63,12 +65,17 @@ public class PersistenceJPAConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[] { "com.dronedb.persistence.scheme" });
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
+
+        //TODO: Remove this limitation, we should enable auto-validate in the future
+        // Prevent validation from automatic running during publish by hibernate
+         em.setValidationMode(ValidationMode.NONE);
 
         return em;
     }
@@ -104,8 +111,7 @@ public class PersistenceJPAConfig {
         // Flush the DB at the end
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-
-        //hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
+//        hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
         return hibernateProperties;
     }
 

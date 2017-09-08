@@ -59,12 +59,12 @@ public class DroneDbCrudSvcRemoteImpl implements DroneDbCrudSvcRemote
 			return (T) obj.copy();
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to update object", e);
-			throw new DatabaseValidationRemoteException("Failed to update object");
+			logger.error("Failed to update object, reason: " + e.getMessage());
+			throw new DatabaseValidationRemoteException("Failed to update object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to update object", e);
-			throw new ObjectInstanceRemoteException("Failed to update object");
+			logger.error("Failed to create object, reason: ", e);
+			throw new ObjectInstanceRemoteException("Failed to create object, " + e.getMessage());
 		}
 	}
 	
