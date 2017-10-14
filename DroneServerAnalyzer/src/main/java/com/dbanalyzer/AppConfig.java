@@ -1,11 +1,8 @@
 package com.dbanalyzer;
 
-import com.dronedb.persistence.scheme.DroneDbCrudSvcRemote;
-import com.dronedb.persistence.scheme.QuerySvcRemote;
-import com.dronedb.persistence.scheme.SessionsSvcRemote;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
@@ -14,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
+@ComponentScan("com.dbanalyzer")
+@ComponentScan("com.db.persistence.exceptionAdviser")
 @Configuration
 public class AppConfig
 {
@@ -39,19 +38,19 @@ public class AppConfig
 		return null;
 	}
 	
-	@Bean
-	public DroneDbCrudSvcRemote droneDbCrudSvcRemote() {
-		return LoadServices(DroneDbCrudSvcRemote.class);
-	}
-
-	@Bean
-	public QuerySvcRemote querySvcRemote() {
-		return LoadServices(QuerySvcRemote.class);
-	}
-
-	@Bean
-	public SessionsSvcRemote sessionsSvcRemote() {
-		return LoadServices(SessionsSvcRemote.class);
-	}
+//	@Bean
+//	public ObjectCrudRestSvcRemote objectCrudSvcRemote() {
+//		return LoadServices(ObjectCrudRestSvcRemote.class);
+//	}
+//
+//	@Bean
+//	public QueryRestSvcRemote querySvcRemote() {
+//		return LoadServices(QueryRestSvcRemote.class);
+//	}
+//
+//	@Bean
+//	public SessionsRestSvcRemote sessionsSvcRemote() {
+//		return LoadServices(SessionsRestSvcRemote.class);
+//	}
 
 }

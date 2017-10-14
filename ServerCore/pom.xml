@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--<parent>-->
+        <!--<groupId>com.dronedb</groupId>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>DroneServer</artifactId>-->
+        <!--<version>1.0</version>-->
+        <!--<relativePath>../pom.xml</relativePath>-->
+    <!--</parent>-->
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>RELEASE</version>
+        <!--<relativePath>../pom.xml</relativePath>-->
+    </parent>
+
+    <artifactId>ServerCore</artifactId>
+    <packaging>jar</packaging>
+    <name>Drone Server Core</name>
+
+
+    <!--Because of the inheritances of spring boot we cannot see the parent POM in our-->
+    <!--DroneServer directory, all properties should be duplicated-->
+
+    <properties>
+        <java.version>1.8</java.version>
+        <build.output>CMpub</build.output>
+        <spring-ver>4.3.3.RELEASE</spring-ver>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <!--<version>4.3.5.Final</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-ver}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring-ver}</version>
+        </dependency>
+
+        <!--Validation-->
+
+        <dependency>
+            <groupId>com.generic_tools</groupId>
+            <artifactId>Validations</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.dronedb</groupId>-->
+            <!--<artifactId>ServerScheme</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.dronedb</groupId>-->
+            <!--<artifactId>DronePlugin</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
+
+        <!--Logging-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+        <!--Exporter-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.generic_tools</groupId>-->
+            <!--<artifactId>JavaWS</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.cxf</groupId>-->
+            <!--<artifactId>cxf-tools-java2ws</artifactId>-->
+            <!--<version>3.0.1</version>-->
+        <!--</dependency>-->
+
+        <!--For extenders-->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <!--<version>3.16.1-GA</version>-->
+            <version>RELEASE</version>
+        </dependency>
+
+        <!--REST-->
+        <dependency>
+            <groupId>com.dronedb</groupId>
+            <artifactId>ServerScheme</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dronedb</groupId>
+            <artifactId>DronePlugin</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <outputDirectory>../${build.output}/classes/</outputDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions><execution><phase>install</phase>
+                </execution></executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.db.server.DroneServer</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>../${build.output}/jars</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resource-one</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>../${build.output}/pkg_server</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../${build.output}/jars/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../${build.output}/pkg_server/</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>win</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly-win64.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>../ServerInstallation/Windows64/</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly-linux.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>../ServerInstallation/Linux/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--REST-->
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<source>1.7</source>-->
+                    <!--<target>1.7</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
+        </plugins>
+    </build>
+
+    <repositories>
+
+        <repository>
+            <id>taljmars-mvn-repo</id>
+            <name>taljmars-mvn-repo</name>
+            <url>https://raw.githubusercontent.com/taljmars/mvn-repo/master/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+
+        <!--REST-->
+        <!--<repository>-->
+            <!--<id>spring-releases</id>-->
+            <!--<url>https://repo.spring.io/libs-release</url>-->
+        <!--</repository>-->
+
+    </repositories>
+
+    <!--REST-->
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>spring-releases</id>-->
+            <!--<url>https://repo.spring.io/libs-release</url>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
+
+</project>

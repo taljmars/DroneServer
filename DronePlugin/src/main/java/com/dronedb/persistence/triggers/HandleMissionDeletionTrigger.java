@@ -1,0 +1,42 @@
+package com.dronedb.persistence.triggers;
+
+import com.db.persistence.scheme.BaseObject;
+import com.db.persistence.triggers.DeleteObjectTriggerImpl;
+import com.dronedb.persistence.scheme.Mission;
+import com.dronedb.persistence.scheme.MissionItem;
+import com.db.persistence.services.ObjectCrudSvc;
+import org.apache.log4j.Logger;
+
+import java.util.UUID;
+
+/**
+ * Created by taljmars on 3/23/17.
+ */
+public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
+
+    private final static Logger logger = Logger.getLogger(HandleMissionDeletionTrigger.class);
+
+    public HandleMissionDeletionTrigger() {
+        super();
+    }
+
+    @Override
+    public <T extends BaseObject> void handleDeleteObject(T inst) throws Exception {
+        if (!(inst instanceof Mission)){
+            logger.debug("Not a mission, trigger skipped");
+            return;
+        }
+
+        ObjectCrudSvc objectCrudSvc = applicationContext.getBean(ObjectCrudSvc.class);
+
+        for (UUID missionItemuid : ((Mission) inst).getMissionItemsUids()) {
+            MissionItem missionItem = objectCrudSvc.readByClass(missionItemuid, MissionItem.class);
+            if (missionItem == null) {
+                logger.debug(String.format("Mission Item %s wasn't found in the DB, skip it deletion", missionItemuid));
+                continue;
+            }
+
+            objectCrudSvc.delete(missionItem);
+        }
+    }
+}

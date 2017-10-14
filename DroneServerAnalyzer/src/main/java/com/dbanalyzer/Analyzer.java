@@ -1,101 +1,163 @@
 package com.dbanalyzer;
 
-import com.dronedb.persistence.scheme.*;
-import javafx.util.StringConverter;
+import com.dbanalyzer.commands.RunnablePayload;
 import javassist.tools.rmi.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.nio.Buffer;
 import java.util.*;
+import java.util.List;
 
-public class Analyzer {
+@Component
+public class Analyzer implements KeyListener{
 
-    class AnalyzerCmd {
-        public String cmd;
-        public String desc;
-        public Runnable op;
-        public AnalyzerCmd(String cmd, String desc, Runnable op) {
-            this.cmd = cmd; this.desc = desc; this.op = op;
-        }
+    @Autowired private AnalyzerCommands analyserCommands;
+    @Autowired private QuerySvcRemoteWrapper querySvcRemote;
+
+    private JTextArea component;
+    private JFrame frame;
+    private JScrollPane scrollPane;
+//    private StringBuilder builder;
+    private List<String> history;
+    private Integer pointer;
+
+    public Analyzer() {
+//        builder = new StringBuilder();
+        history = new ArrayList<>();
+        history.add("");
+        pointer = 0;
+
+        component = new JTextArea("Welcome\n> ");
+//        "monospaced", Font.PLAIN
+        component.setFont(new Font("monospaced",Font.BOLD,28));
+        component.addKeyListener(this);
+        component.setSize(5000, 1000);
+        component.setLineWrap(true);
+
+        scrollPane = new JScrollPane(component);
+        frame = new JFrame();
+
+        frame.add(scrollPane);
+        frame.setSize(5000, 1000);
     }
 
-    private Map<String, Runnable> handlers;
-    private Map<String, String> usages;
-
-    private DroneDbCrudSvcRemote droneDbCrudSvcRemote;
-    private MissionCrudSvcRemote missionCrudSvcRemote;
-    private QuerySvcRemote querySvcRemote;
-
-    private Analyzer() {
-        droneDbCrudSvcRemote = AppConfig.context.getBean(DroneDbCrudSvcRemote.class);
-        //missionCrudSvcRemote = AppConfig.context.getBean(MissionCrudSvcRemote.class);
-        querySvcRemote = AppConfig.context.getBean(QuerySvcRemote.class);
-
-        List<AnalyzerCmd> cmds = new ArrayList<AnalyzerCmd>();
-        cmds.add(new AnalyzerCmd("ms", "Show mission in DB", () -> showMission()));
-        cmds.add(new AnalyzerCmd("mission", "Show mission in DB", () -> showMission()));
-
-        handlers = new HashMap<>();
-        usages = new HashMap<>();
-        for (AnalyzerCmd analyzerCmd : cmds) {
-            handlers.put(analyzerCmd.cmd, analyzerCmd.op);
-            usages.put(analyzerCmd.cmd, analyzerCmd.desc);
-        }
+    private void run(String[] args) {
+        frame.setVisible(true);
     }
 
-    @Transactional
-    public static void main(String[] args) throws ObjectNotFoundException {
+    private void handleCommand(String cmd) {
+        component.append("Received '" + cmd + "' from user\n");
+
+        RunnablePayload runnable = analyserCommands.get(cmd);
+        if (runnable == null) {
+            component.append("Command '" + cmd + "' is not recognized\n");
+            component.append(analyserCommands.usage());
+            return;
+        }
+        component.append(runnable.run(cmd));
+    }
+
+    public static void main(String[] args) throws Exception {
         System.out.println("Start Drone Server Analyzer");
+        Analyzer analyzer = AppConfig.context.getBean(Analyzer.class);
+        analyzer.run(args);
+    }
 
-        Analyzer analyzer = new Analyzer();
+    @Override
+    public void keyTyped(KeyEvent e) {
+//        System.out.println(e);
+    }
 
-        byte[] buff = new byte[100];
-        Scanner reader = new Scanner(System.in);
-        while (reader.hasNext()) {
-            String s = reader.next();
-            System.out.println("Received '" + s + "' from user");
-
-            Runnable runnable = analyzer.handlers.get(s);
-            if (runnable == null) {
-                System.out.println("Command '" + s + "' is not recognized");
-                analyzer.usage();
-                continue;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            String command = getLastLine();
+            component.append("\n");
+            System.err.println(command);
+            if (command != null && !command.isEmpty()) {
+                handleCommand(command);
+                history.add(command);
+                pointer = history.size() - 1;
             }
-            runnable.run();
-            System.out.println();
+//            builder = new StringBuilder();
+            e.consume();
+            component.append("> ");
+            component.setCaretPosition(component.getDocument().getLength());
         }
+        else if (e.getKeyChar() == KeyEvent.CHAR_UNDEFINED) {
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                handleHistory(e.getKeyCode());
+                e.consume();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                handleHistory(e.getKeyCode());
+                e.consume();
+            }
+        }
+
+        JScrollBar vertical = scrollPane.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
     }
 
-    private void usage() {
-        System.out.println("Usage -- DB Analyzer command");
-        for (Map.Entry<String, String> entry : usages.entrySet()) {
-            System.out.println(String.format("%s20\t%s", entry.getKey(), entry.getValue()));
-        }
-        System.out.println();
-    }
-
-    private void showMission() {
+    private void handleHistory(int keyCode) {
         try {
-            QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
-            queryRequestRemote.setClz(Mission.class);
-            queryRequestRemote.setQuery("GetAllMissions");
-            QueryResponseRemote queryResponseRemote = querySvcRemote.query(queryRequestRemote);
-            List<BaseObject> missionList = queryResponseRemote.getResultList();
-            System.out.println("Total Mission: " + missionList.size() + "\n");
-            for (BaseObject msn : missionList) {
-                Mission mission = (Mission) msn;
-                System.out.println("Mission Name: " + mission.getName());
-                System.out.println("Default Alt: " + mission.getDefaultAlt() + "m");
-                List<UUID> uids = mission.getMissionItemsUids();
-                System.out.println("Mission Items (" + uids.size() + "):");
-                for (UUID uuid : uids) {
-                    MissionItem missionItem = (MissionItem) droneDbCrudSvcRemote.read(uuid);
-                    System.out.println(missionItem.toString());
-                }
-                System.out.println();
+            if (history.isEmpty())
+                return;
+
+            String content = component.getDocument().getText(0, component.getDocument().getLength() - 1);
+            int lastLineBreak = content.lastIndexOf('\n');
+            System.out.println(lastLineBreak + " " + component.getDocument().getLength());
+            component.getDocument().remove(lastLineBreak, component.getDocument().getLength() - lastLineBreak);
+            component.append("\n> ");
+
+            if (keyCode == KeyEvent.VK_UP) {
+                System.err.println("Up");
+                component.append(history.get(pointer));
+//                builder = new StringBuilder();
+//                builder.append(history.get(pointer));
+                if (pointer > 0)
+                    pointer--;
+            }
+
+            if (keyCode == KeyEvent.VK_DOWN) {
+                System.err.println("Down");
+                component.append(history.get(pointer));
+//                builder = new StringBuilder();
+//                builder.append(history.get(pointer));
+                if (pointer < history.size() - 1)
+                    pointer++;
             }
         }
-        catch (ObjectNotFoundException e) {
-
+        catch (BadLocationException e1) {
+            e1.printStackTrace();
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+//        System.out.println(e);
+    }
+
+    private String getLastLine() {
+        try {
+            String content = component.getDocument().getText(0, component.getDocument().getLength());
+            int lastLineBreak = content.lastIndexOf('\n');
+            System.out.println(lastLineBreak + " " + component.getDocument().getLength());
+            String res = component.getDocument().getText(lastLineBreak + 1, component.getDocument().getLength() - 1 - lastLineBreak);
+            if (res.startsWith("> "))
+                return res.substring("> ".length());
+            return res;
+        }
+        catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

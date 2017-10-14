@@ -10,17 +10,20 @@
     <version>1.0</version>
 
     <modules>
-        <module>Scheme</module>
-        <module>DroneServerCore</module>
+        <module>ServerCore</module>
         <module>DroneServerAnalyzer</module>
-        <module>DroneServerTester</module>
-        <module>DroneServerExportedServices</module>
+        <!--<module>DroneServerTester</module>-->
+        <module>ServerExportedServices</module>
+        <module>DronePlugin</module>
+        <module>ServerScheme</module>
+        <module>WSExported</module>
     </modules>
 
     <properties>
         <version>1.0</version>
         <build.output>CMpub</build.output>
         <github.global.server>github</github.global.server>
+        <spring-ver>4.3.3.RELEASE</spring-ver>
     </properties>
 
     <dependencies>
@@ -29,25 +32,25 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.3.RELEASE</version>
+            <version>${spring-ver}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.3.3.RELEASE</version>
+            <version>${spring-ver}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>4.3.3.RELEASE</version>
+            <version>${spring-ver}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>4.3.3.RELEASE</version>
+            <version>${spring-ver}</version>
         </dependency>
 
 
@@ -240,7 +243,8 @@
         <repository>
             <id>taljmars-mvn-repo</id>
             <name>taljmars-mvn-repo</name>
-            <url>https://raw.githubusercontent.com/taljmars/mvn-repo/master/</url>
+            <!--<url>https://raw.githubusercontent.com/taljmars/mvn-repo/master/</url>-->
+            <url>https://raw.github.com/taljmars/mvn-repo/master/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
