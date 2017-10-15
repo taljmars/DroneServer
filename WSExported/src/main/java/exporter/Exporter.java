@@ -32,11 +32,14 @@ public class Exporter {
         File mainDir = new File(target);
         System.out.println(target);
 
-        for (File f : mainDir.listFiles()) {
-            if (f.isDirectory())
-                FileUtils.deleteDirectory(f);
-            else
-                Files.delete(f.toPath());
+        File[] files = mainDir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory())
+                    FileUtils.deleteDirectory(f);
+                else
+                    Files.delete(f.toPath());
+            }
         }
 
         run(target, Plugins.servicesList);
