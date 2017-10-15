@@ -8,7 +8,7 @@ import java.util.List;
 public class DroneSchemeManifest implements PluginManifest {
 
     @Override
-    public List<String> getAnnotatedPackage() {
+    public List<String> getExceptionsPackage() {
         List<String> arr = new ArrayList<>();
         return arr;
     }

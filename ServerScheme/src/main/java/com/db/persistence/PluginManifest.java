@@ -12,7 +12,7 @@ public interface PluginManifest {
     @Retention(value = RetentionPolicy.RUNTIME)
     @interface WSImporter {}
 
-    List<String> getAnnotatedPackage();
+    List<String> getExceptionsPackage();
 
     List<String> getWebServicePackage();
 

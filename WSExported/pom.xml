@@ -11,22 +11,32 @@
 
     <artifactId>WSExported</artifactId>
 
+    <properties>
+        <javaassist.version>3.21.0-GA</javaassist.version>
+    </properties>
+
     <dependencies>
 
-        <dependency>
-            <groupId>com.generic_tools</groupId>
-            <artifactId>JavaWS</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.generic_tools</groupId>-->
+            <!--<artifactId>JavaWS</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-tools-java2ws</artifactId>
-            <!--<version>3.0.1</version>-->
-            <version>3.1.12</version>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javaassist.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.cxf</groupId>-->
+            <!--<artifactId>cxf-tools-java2ws</artifactId>-->
+            <!--&lt;!&ndash;<version>3.0.1</version>&ndash;&gt;-->
+            <!--<version>3.1.12</version>-->
+        <!--</dependency>-->
+
+        <!--Tools to work with file system - fileUtils.copy, etc..-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -34,11 +44,14 @@
         </dependency>
 
 
+        <!--Scheme / Pojos / Exceptions and services to be expeted should be added from here-->
+
         <dependency>
             <groupId>com.dronedb</groupId>
             <artifactId>ServerScheme</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.dronedb</groupId>
             <artifactId>DronePlugin</artifactId>
@@ -51,36 +64,62 @@
 
         <plugins>
 
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>process-classes</phase>-->
+                        <!--<configuration>-->
+                            <!--<target>-->
+                                <!--<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">-->
+                                    <!--<arg value="-impl" />-->
+                                    <!--<arg value="-b" />-->
+                                    <!--<arg value="bindings.xjb" />-->
+                                    <!--<arg value="-server" />-->
+                                    <!--<arg value="-d" />-->
+                                    <!--<arg value="gen" />-->
+                                    <!--<arg value="-wsdlLocation" />-->
+                                    <!--<arg value="/WEB-INF/wsdls/my.wsdl" />-->
+                                    <!--<arg value="my.wsdl" />-->
+                                    <!--<classpath>-->
+                                        <!--<path refid="maven.compile.classpath" />-->
+                                    <!--</classpath>-->
+                                <!--</java>-->
+                            <!--</target>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <target>
-                                <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
-                                    <arg value="-impl" />
-                                    <arg value="-b" />
-                                    <arg value="bindings.xjb" />
-                                    <arg value="-server" />
-                                    <arg value="-d" />
-                                    <arg value="gen" />
-                                    <arg value="-wsdlLocation" />
-                                    <arg value="/WEB-INF/wsdls/my.wsdl" />
-                                    <arg value="my.wsdl" />
-                                    <classpath>
-                                        <path refid="maven.compile.classpath" />
-                                    </classpath>
-                                </java>
-                            </target>
-                        </configuration>
+                        <phase >compile</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <!-- automatically creates the classpath using all project dependencies,
+                             also adding the project build directory -->
+                        <classpath/>
+                        <argument>exporter.Exporter</argument>
+                        <argument>ServerExportedServices\\src\\main\\java\\</argument>
+                    </arguments>
+                </configuration>
             </plugin>
+
 
         </plugins>
 
