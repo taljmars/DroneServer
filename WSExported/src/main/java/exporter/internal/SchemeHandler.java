@@ -3,6 +3,7 @@ package exporter.internal;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.bytecode.annotation.Annotation;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
@@ -15,6 +16,9 @@ public class SchemeHandler extends PluginHandler {
 
     @Override
     protected boolean shouldRemoveClass(Class clz) {
+        if (clz.getAnnotation(Component.class) != null)
+            return true;
+
         return false;
     }
 

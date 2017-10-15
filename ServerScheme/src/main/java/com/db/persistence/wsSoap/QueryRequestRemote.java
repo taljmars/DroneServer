@@ -1,7 +1,5 @@
 package com.db.persistence.wsSoap;
 
-import com.db.persistence.PluginManifest;
-import com.db.persistence.scheme.BaseObject;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -10,7 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.Map;
 
-@PluginManifest.WSImporter
 @XmlRootElement
 public class QueryRequestRemote {
 	

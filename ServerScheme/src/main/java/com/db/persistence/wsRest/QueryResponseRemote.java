@@ -1,15 +1,12 @@
 package com.db.persistence.wsRest;
 
-import com.db.persistence.PluginManifest;
 import com.db.persistence.scheme.BaseObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
-@PluginManifest.WSImporter
 @XmlRootElement
 public class QueryResponseRemote {
 

@@ -1,17 +1,13 @@
 package com.db.persistence.wsRest;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.db.persistence.PluginManifest;
-import com.db.persistence.scheme.BaseObject;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
-@PluginManifest.WSImporter
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashMap;
+import java.util.Map;
+
 @XmlRootElement
 public class QueryRequestRemote {
 	
