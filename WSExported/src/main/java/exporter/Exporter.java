@@ -18,13 +18,16 @@ import java.util.List;
 public class Exporter {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException, IOException, ClassNotFoundException {
-        String target = "ServerExportedServices\\src\\main\\java\\";
+        String target = "ServerExportedServices" + File.separator +
+                        "src" + File.separator +
+                        "main" + File.separator +
+                        "java" + File.separator;
         if (args.length == 1) {
             target = args[0];
             System.out.println("Received target directory as " + target);
         }
 
-        target = System.getProperty("user.dir") + "\\..\\" + target;
+        target = System.getProperty("user.dir") + File.separator + ".." + File.separator + target;
 
         File mainDir = new File(target);
         System.out.println(target);

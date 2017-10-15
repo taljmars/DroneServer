@@ -115,7 +115,7 @@
                              also adding the project build directory -->
                         <classpath/>
                         <argument>exporter.Exporter</argument>
-                        <argument>ServerExportedServices\\src\\main\\java\\</argument>
+                        <!--<argument>ServerExportedServices\\src\\main\\java\\</argument>-->
                     </arguments>
                 </configuration>
             </plugin>
