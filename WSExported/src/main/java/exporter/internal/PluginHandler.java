@@ -19,13 +19,15 @@ public abstract class PluginHandler implements Filter {
     @Override
     public boolean filter(Class c) {
         try {
-            ClassFile cf = Utils.getPool().get(c.getCanonicalName()).getClassFile();
             CtClass ctClass = Utils.getPool().getCtClass(c.getCanonicalName());
+            if (ctClass.isFrozen())
+                ctClass.defrost();
+            ClassFile cf = ctClass.getClassFile();
 
             // Clean class
-            if (shouldRemoveClass(c)) {
+            if (shouldRemoveClass(c))
                 return false;
-            }
+
             handleAnnotations((AnnotationsAttribute) cf.getAttribute(AnnotationsAttribute.visibleTag));
 
             // Clean Constructors
@@ -53,10 +55,8 @@ public abstract class PluginHandler implements Filter {
                 }
             }
 
-//            if (shouldHandlerClass(c, cf, ctClass)) {
-                ctClass.writeFile(targetDirectory);
-                return true;
-//            }
+            ctClass.writeFile(targetDirectory);
+            return true;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -75,9 +75,8 @@ public abstract class PluginHandler implements Filter {
 
     private void handleAnnotations(AnnotationsAttribute annotationsAttribute) {
         if (annotationsAttribute != null) {
-            javassist.bytecode.annotation.Annotation[] annotations = annotationsAttribute.getAnnotations();
-            for (javassist.bytecode.annotation.Annotation annotation : annotations) {
-                System.out.println(annotation.getTypeName());
+            Annotation[] annotations = annotationsAttribute.getAnnotations();
+            for (Annotation annotation : annotations) {
                 if (shouldRemoveAnnotation(annotation))
                     annotationsAttribute.removeAnnotation(annotation.getTypeName());
             }

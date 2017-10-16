@@ -16,7 +16,7 @@ public class WebServiceHandler extends PluginHandler {
 
     protected boolean shouldRemoveAnnotation(Annotation annotation) {
         if (annotation.getTypeName().equals(WebMethod.class.getName()) ||
-                annotation.getTypeName().equals(WebService.class.getName()))
+            annotation.getTypeName().equals(WebService.class.getName()))
             return false;
 
         return true;
@@ -33,12 +33,12 @@ public class WebServiceHandler extends PluginHandler {
     }
 
     protected boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws NotFoundException {
-        System.err.println("Checking " + ctConstructor.getName());
+//        System.err.println("Checking " + ctConstructor.getName());
         return true;
     }
 
     protected boolean shouldRemoveMethod(CtMethod ctMethod) throws ClassNotFoundException, NotFoundException {
-        System.err.println("Checking " + ctMethod.getName());
+//        System.err.println("Checking " + ctMethod.getName());
 
         if (ctMethod.getAnnotation(WebMethod.class) != null ||
             ctMethod.getAnnotation(WebService.class) != null)

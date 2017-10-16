@@ -22,6 +22,7 @@ public class Exporter {
                         "src" + File.separator +
                         "main" + File.separator +
                         "java" + File.separator;
+
         if (args.length == 1) {
             target = args[0];
             System.out.println("Received target directory as " + target);
@@ -30,8 +31,6 @@ public class Exporter {
         target = System.getProperty("user.dir") + File.separator + ".." + File.separator + target;
 
         File mainDir = new File(target);
-        System.out.println(target);
-
         File[] files = mainDir.listFiles();
         if (files != null) {
             for (File f : files) {
@@ -77,25 +76,20 @@ public class Exporter {
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            System.out.println("Searching path: " + resource.getFile());
             dirs.add(new File(resource.getFile()));
         }
 
         List<Class> classes = null;
-        for (File directory : dirs) {
+        for (File directory : dirs)
             classes = handleClassesInPackage(directory, packageName, filter);
-        }
+
         System.out.println("Built " + (classes == null ? 0 :classes.size()) + " classes");
     }
 
     private static List<Class> handleClassesInPackage(File directory, String packageName, Filter filter) throws ClassNotFoundException, IOException {
-        System.out.println("Handle " + packageName);
         List<Class> classes = new ArrayList<Class>();
-        if (!directory.exists()) {
+        if (!directory.exists())
             return classes;
-        }
-
-        String path = packageName.replace('.', '\\');
 
         File[] files = directory.listFiles();
         for (File source : files) {

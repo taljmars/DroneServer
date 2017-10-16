@@ -26,12 +26,12 @@ public class ExceptionHandler extends PluginHandler {
     }
 
     protected boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws NotFoundException {
-        System.err.println("Checking " + ctConstructor.getName());
+//        System.err.println("Checking " + ctConstructor.getName());
         return false;
     }
 
     protected boolean shouldRemoveMethod(CtMethod ctMethod) throws ClassNotFoundException, NotFoundException {
-        System.err.println("Checking " + ctMethod.getName());
+//        System.err.println("Checking " + ctMethod.getName());
         return false;
     }
 

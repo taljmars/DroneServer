@@ -30,7 +30,7 @@ public class SchemeHandler extends PluginHandler {
     }
 
     public boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws Exception {
-        System.err.println("Checking " + ctConstructor.getName());
+//        System.err.println("Checking " + ctConstructor.getName());
 
         if (ctConstructor.getParameterTypes().length == 0)
             return false;
@@ -39,7 +39,7 @@ public class SchemeHandler extends PluginHandler {
     }
 
     public boolean shouldRemoveMethod(CtMethod ctMethod) throws Exception {
-        System.err.println("Checking " + ctMethod.getName());
+//        System.err.println("Checking " + ctMethod.getName());
 
         if (ctMethod.getAnnotation(XmlTransient.class) != null)
             return true;
@@ -49,8 +49,8 @@ public class SchemeHandler extends PluginHandler {
 
         String mName = ctMethod.getName();
         if (!(mName.startsWith("set") && mName.length() > "set".length()) &&
-                !(mName.startsWith("get") && mName.length() > "get".length()) &&
-                !(mName.startsWith("is") && mName.length() > "is".length()))
+            !(mName.startsWith("get") && mName.length() > "get".length()) &&
+            !(mName.startsWith("is") && mName.length() > "is".length()))
             return true;
 
         return false;

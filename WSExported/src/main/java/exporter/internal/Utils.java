@@ -9,12 +9,6 @@ public class Utils {
 
     static {
         pool = ClassPool.getDefault();
-//        try {
-//            pool.insertClassPath("C:\\Users\\taljmars\\Workspace\\DroneServer\\WSExported\\gen\\");
-//        }
-//        catch (NotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public static ClassPool getPool() {return pool;}
