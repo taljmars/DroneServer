@@ -22,6 +22,7 @@ public class WebServiceHandler extends PluginHandler {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean shouldRemoveClass(Class clz) {
         if (clz.getAnnotation(WebService.class) == null)
             return true;

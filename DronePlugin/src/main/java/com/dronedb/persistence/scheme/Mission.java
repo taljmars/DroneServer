@@ -3,9 +3,7 @@ package com.dronedb.persistence.scheme;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
 import com.db.persistence.triggers.DeleteTrigger;
-import com.db.persistence.triggers.DeleteTriggers;
 import com.db.persistence.triggers.UpdateTrigger;
-import com.db.persistence.triggers.UpdateTriggers;
 import com.dronedb.persistence.validations.NameNotEmptyValidation;
 import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
 import jdk.nashorn.internal.objects.annotations.Getter;
@@ -60,7 +58,7 @@ public class Mission extends BaseObject implements Serializable
 	
 	public Mission() {
 		super();
-		missionItemsUids = new ArrayList();
+		missionItemsUids = new ArrayList<UUID>();
 	}
 
 	public Mission(Mission mission) {

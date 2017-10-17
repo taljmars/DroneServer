@@ -33,6 +33,7 @@ public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemot
     @Override
     @RequestMapping(value = "/clonePerimeter", method = RequestMethod.POST)
     @ResponseBody
+    @SuppressWarnings("unchecked")
     public <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
         try {
             logger.debug("cloning perimeter");

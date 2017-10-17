@@ -15,6 +15,7 @@ public class SchemeHandler extends PluginHandler {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected boolean shouldRemoveClass(Class clz) {
         if (clz.getAnnotation(Component.class) != null)
             return true;

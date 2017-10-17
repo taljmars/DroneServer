@@ -26,6 +26,7 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
     private ObjectCrudSvc objectCrudSvc;
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
         if (perimeter instanceof PolygonPerimeter)
             return (T) clonePolygon((PolygonPerimeter) perimeter);

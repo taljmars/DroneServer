@@ -30,6 +30,7 @@ public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
     private PerimeterCrudSvc perimeterCrudSvc;
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
         try {
             logger.debug("cloning perimeter");

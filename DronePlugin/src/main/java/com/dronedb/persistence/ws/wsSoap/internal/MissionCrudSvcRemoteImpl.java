@@ -55,6 +55,7 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends MissionItem> T createMissionItem(String clz) throws ObjectInstanceRemoteException {
         try {
             return (T) missionCrudSvc.createMissionItem(clz).copy();

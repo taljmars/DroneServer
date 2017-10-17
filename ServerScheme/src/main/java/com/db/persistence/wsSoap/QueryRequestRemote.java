@@ -18,7 +18,7 @@ public class QueryRequestRemote {
 	private Map<String, String> params;
 
 	public QueryRequestRemote() {
-		params = new HashMap();
+		params = new HashMap<String, String>();
 	}
 	
 	@Setter

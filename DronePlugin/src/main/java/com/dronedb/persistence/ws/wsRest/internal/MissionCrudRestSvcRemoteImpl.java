@@ -62,6 +62,7 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
     @Override
     @RequestMapping(value = "/createMissionItem", method = RequestMethod.GET)
     @ResponseBody
+    @SuppressWarnings("unchecked")
 //    public <T extends MissionItem> T createMissionItem(@RequestParam String clz) throws ObjectInstanceRemoteException {
     public <T extends MissionItem> ResponseEntity<T> createMissionItem(@RequestParam String clz) {
 //        try {

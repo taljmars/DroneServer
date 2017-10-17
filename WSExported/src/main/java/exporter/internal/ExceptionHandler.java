@@ -18,6 +18,7 @@ public class ExceptionHandler extends PluginHandler {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean shouldRemoveClass(Class clz) {
         if (!clz.isAssignableFrom(Exception.class))
             return false;

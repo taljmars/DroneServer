@@ -13,7 +13,7 @@ public class QueryResponseRemote {
 	private List<BaseObject> resultListBase;
 	
 	public QueryResponseRemote() {
-		resultListBase = new ArrayList();
+		resultListBase = new ArrayList<BaseObject>();
 	}
 	
 	public void setResult(List<? extends BaseObject> lst) {

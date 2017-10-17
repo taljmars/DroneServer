@@ -15,7 +15,7 @@ public class QueryResponseRemote implements Serializable {
 	private List<BaseObject> resultList;
 	
 	public QueryResponseRemote() {
-		resultList = new ArrayList();
+		resultList = new ArrayList<BaseObject>();
 	}
 
 	@Setter

@@ -4,14 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--<parent>-->
-        <!--<groupId>com.dronedb</groupId>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>DroneServer</artifactId>-->
-        <!--<version>1.0</version>-->
-        <!--<relativePath>../pom.xml</relativePath>-->
-    <!--</parent>-->
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -31,6 +23,11 @@
         <java.version>1.8</java.version>
         <build.output>CMpub</build.output>
         <spring-ver>4.3.3.RELEASE</spring-ver>
+        <encoding>UTF-8</encoding>
+
+        <!--MAven Build Plugin-->
+        <maven.site.plugin>3.6</maven.site.plugin>
+        <maven.deploy.plugin>2.8.1</maven.deploy.plugin>
     </properties>
 
     <dependencies>
@@ -73,45 +70,11 @@
             <version>1.0</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.dronedb</groupId>-->
-            <!--<artifactId>ServerScheme</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.dronedb</groupId>-->
-            <!--<artifactId>DronePlugin</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-
         <!--Logging-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-        </dependency>
-
-        <!--Exporter-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.generic_tools</groupId>-->
-            <!--<artifactId>JavaWS</artifactId>-->
-            <!--<version>1.0</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.apache.cxf</groupId>-->
-            <!--<artifactId>cxf-tools-java2ws</artifactId>-->
-            <!--<version>3.0.1</version>-->
-        <!--</dependency>-->
-
-        <!--For extenders-->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <!--<version>3.16.1-GA</version>-->
-            <version>RELEASE</version>
         </dependency>
 
         <!--REST-->
@@ -120,14 +83,17 @@
             <artifactId>ServerScheme</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.dronedb</groupId>
             <artifactId>DronePlugin</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
     </dependencies>
@@ -176,7 +142,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
+                <version>${maven.deploy.plugin}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -236,50 +202,7 @@
                 </executions>
             </plugin>
 
-            <!--REST-->
-            <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<source>1.7</source>-->
-                    <!--<target>1.7</target>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-
         </plugins>
     </build>
-
-    <repositories>
-
-        <repository>
-            <id>taljmars-mvn-repo</id>
-            <name>taljmars-mvn-repo</name>
-            <url>https://raw.githubusercontent.com/taljmars/mvn-repo/master/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-
-
-        <!--REST-->
-        <!--<repository>-->
-            <!--<id>spring-releases</id>-->
-            <!--<url>https://repo.spring.io/libs-release</url>-->
-        <!--</repository>-->
-
-    </repositories>
-
-    <!--REST-->
-    <!--<pluginRepositories>-->
-        <!--<pluginRepository>-->
-            <!--<id>spring-releases</id>-->
-            <!--<url>https://repo.spring.io/libs-release</url>-->
-        <!--</pluginRepository>-->
-    <!--</pluginRepositories>-->
 
 </project>

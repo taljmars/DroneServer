@@ -30,7 +30,7 @@ public enum MissionItemType {
 	
 	// DB VALUE -> ENUM CONVERSION
     // static reverse resolving:
-    public static final Map<String, MissionItemType> dbValues = new HashMap();
+    public static final Map<String, MissionItemType> dbValues = new HashMap<String, MissionItemType>();
  
     static {
         for (MissionItemType value : values()) {

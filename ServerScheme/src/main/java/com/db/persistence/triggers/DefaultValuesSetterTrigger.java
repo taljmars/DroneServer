@@ -14,6 +14,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
     private final static Logger logger = Logger.getLogger(DefaultValuesSetterTrigger.class);
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) throws Exception {
         if (!phase.equals(UpdateTrigger.PHASE.PRE_PERSIST))
             return;

@@ -53,6 +53,7 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends MissionItem> T createMissionItem(String clz) throws ObjectInstanceException {
         return (T) objectCrudSvc.create(clz);
     }

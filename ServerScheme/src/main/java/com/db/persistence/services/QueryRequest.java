@@ -19,7 +19,7 @@ public class QueryRequest {
 
 	// Ctor
 	public QueryRequest() {
-		params = new HashMap();
+		params = new HashMap<String, String>();
 	}
 
 	/**
@@ -74,6 +74,6 @@ public class QueryRequest {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [ Query=" + query + ", Clz=" + clz + ", Parameters=" + params.toString() + " ]";
+		return getClass().getSimpleName() + " [ Query=" + query + ", Clz=" + clz.getCanonicalName() + ", Parameters=" + params.toString() + " ]";
 	}
 }

@@ -101,7 +101,7 @@ public class QuerySvcImpl implements QuerySvc {
 		Map<String, String> params = queryRequest.getParameters();
 
 
-		System.err.println("Running named query");
+		System.err.println("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
 		TypedQuery<? extends BaseObject> query = entityManager.createNamedQuery(queryStr, clz);
 
 //		for (int i = 1; i <= params.size(); i++) {
