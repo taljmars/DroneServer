@@ -14,6 +14,12 @@
     <packaging>jar</packaging>
     <name>Server Core - Drone Plugin</name>
 
+    <properties>
+        <jar.path>../${build.output}/jars/</jar.path>
+        <class.path>../${build.output}/classes/</class.path>
+        <pkg_server.path>../${build.output}/pkg_server</pkg_server.path>
+    </properties>
+
     <dependencies>
 
         <dependency>

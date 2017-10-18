@@ -30,10 +30,16 @@
         <encoding>UTF-8</encoding>
         <maven.debug>false</maven.debug>
 
-        <!--MAven Build Plugin-->
+        <!--Maven Build Plugin-->
         <maven.site.plugin>3.6</maven.site.plugin>
         <maven.deploy.plugin>2.8.1</maven.deploy.plugin>
         <site.maven.plugin>0.11</site.maven.plugin>
+        <!--<jar.path>../${build.output}/jars/</jar.path>-->
+        <!--<class.path>../${build.output}/classes/</class.path>-->
+        <!--<pkg_server.path>../${build.output}/pkg_server</pkg_server.path>-->
+        <jar.path>${build.output}/jars/</jar.path>
+        <class.path>${build.output}/classes/</class.path>
+        <pkg_server.path>${build.output}/pkg_server</pkg_server.path>
     </properties>
 
     <dependencies>
@@ -74,7 +80,7 @@
     </distributionManagement>
 
     <build>
-        <outputDirectory>../${build.output}/classes/</outputDirectory>
+        <outputDirectory>${class.path}</outputDirectory>
         <plugins>
 
             <plugin>
@@ -89,7 +95,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>../${build.output}/jars</outputDirectory>
+                            <outputDirectory>${jar.path}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -107,47 +113,47 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>../${build.output}/pkg_server</outputDirectory>
+                            <outputDirectory>${pkg_server.path}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../${build.output}/jars/</directory>
+                                    <directory>${jar.path}</directory>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
 
-                    <execution>
-                        <id>WA for pkg</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${build.output}/pkg_server</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>../${build.output}/pkg_server/</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                        <inherited>false</inherited>
-                    </execution>
-                    <execution>
-                        <id>WA for jars</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${build.output}/jars</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>../${build.output}/jars/</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                        <inherited>false</inherited>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>WA for pkg</id>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${build.output}/pkg_server</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>../${build.output}/pkg_server/</directory>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                        <!--<inherited>false</inherited>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>WA for jars</id>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${build.output}/jars</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>../${build.output}/jars/</directory>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                        <!--<inherited>false</inherited>-->
+                    <!--</execution>-->
                 </executions>
             </plugin>
 
@@ -190,7 +196,7 @@
                                 <exec dir="/usr/bin/"
                                       executable="scp"
                                       failonerror="true">
-                                    <arg line="-r ${basedir}/CMpub/pkg_server root@178.62.1.156:~/" />
+                                    <arg line="-r ${basedir}/${pkg_server.path} root@178.62.1.156:~/" />
                                 </exec>
                             </tasks>
                         </configuration>
@@ -254,10 +260,10 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>CMpub/pkg_server</outputDirectory>
+                            <outputDirectory>${pkg_server.path}</outputDirectory>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeGroupIds>
-                                DroneServerTester, DroneServerAnalyzer,DroneServerExportedServices,DroneServerClientPlugin
+                                DroneServerTester, DroneServerAnalyzer,DroneServerExportedServices
                             </excludeGroupIds>
                         </configuration>
                         <inherited>false</inherited>

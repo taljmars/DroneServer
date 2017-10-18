@@ -28,6 +28,9 @@
         <!--MAven Build Plugin-->
         <maven.site.plugin>3.6</maven.site.plugin>
         <maven.deploy.plugin>2.8.1</maven.deploy.plugin>
+        <jar.path>../${build.output}/jars/</jar.path>
+        <class.path>../${build.output}/classes/</class.path>
+        <pkg_server.path>../${build.output}/pkg_server</pkg_server.path>
     </properties>
 
     <dependencies>
@@ -99,7 +102,7 @@
     </dependencies>
 
     <build>
-        <outputDirectory>../${build.output}/classes/</outputDirectory>
+        <outputDirectory>${class.path}</outputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,7 +117,7 @@
                             <mainClass>com.db.server.DroneServer</mainClass>
                         </manifest>
                     </archive>
-                    <outputDirectory>../${build.output}/jars</outputDirectory>
+                    <outputDirectory>${jar.path}</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -129,10 +132,10 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>../${build.output}/pkg_server</outputDirectory>
+                            <outputDirectory>${pkg_server.path}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../${build.output}/jars/</directory>
+                                    <directory>${jar.path}</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -161,7 +164,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>../${build.output}/pkg_server/</outputDirectory>
+                            <outputDirectory>${pkg_server.path}</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
