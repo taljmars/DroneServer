@@ -1,6 +1,7 @@
 package exporter;
 
-import com.db.persistence.PluginManifest;
+import com.plugins_manager.PluginManifest;
+import com.plugins_manager.PluginsManager;
 import exporter.internal.ExceptionHandler;
 import exporter.internal.Filter;
 import exporter.internal.SchemeHandler;
@@ -41,26 +42,25 @@ public class Exporter {
             }
         }
 
-        run(target, Plugins.servicesList);
+        PluginsManager pluginsManager = PluginsManager.getInstance();
+
+        run(target, pluginsManager.getPlugins());
     }
 
-    public static void run(String targetDir, List<Class<? extends PluginManifest>> servicesList) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        for (Class clz : servicesList) {
-            PluginManifest pluginDef = (PluginManifest) clz.newInstance();
+    public static void run(String targetDir, List<? extends PluginManifest> servicesList) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        for (PluginManifest pluginDef : servicesList) {
             List<String> webServices = pluginDef.getWebServicePackage();
             for (String ws : webServices)
                 handlePackage(ws, new WebServiceHandler(targetDir));
         }
 
-        for (Class clz : servicesList) {
-            PluginManifest pluginDef = (PluginManifest) clz.newInstance();
+        for (PluginManifest pluginDef : servicesList) {
             List<String> schemes = pluginDef.getSchemePackage();
             for (String scheme : schemes)
                 handlePackage(scheme, new SchemeHandler(targetDir));
         }
 
-        for (Class clz : servicesList) {
-            PluginManifest pluginDef = (PluginManifest) clz.newInstance();
+        for (PluginManifest pluginDef : servicesList) {
             List<String> exceptions = pluginDef.getExceptionsPackage();
             for (String exception : exceptions)
                 handlePackage(exception, new ExceptionHandler(targetDir));

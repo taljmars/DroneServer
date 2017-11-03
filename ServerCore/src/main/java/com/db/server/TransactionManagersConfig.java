@@ -1,5 +1,6 @@
 package com.db.server;
 
+import com.db.persistence.objectStore.MyJpaTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +20,10 @@ public class TransactionManagersConfig {
 
     @Autowired
     EntityManagerFactory emf;
-    @Autowired
-    private DataSource dataSource;
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager tm = new JpaTransactionManager();
+    public PlatformTransactionManager transactionManager(@Autowired DataSource dataSource) {
+        JpaTransactionManager tm = new MyJpaTransactionManager();
         tm.setEntityManagerFactory(emf);
         tm.setDataSource(dataSource);
         return tm;

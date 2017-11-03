@@ -17,25 +17,33 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity
 @Table
-public class Revision implements Serializable {
+public class Revision extends BaseObject implements Serializable {
 
     public Revision() {
-        keyId = new KeyId();
+        super();
     }
 
-    private KeyId keyId;
-
-    @EmbeddedId
-    @Basic(optional = false)
-    @Column(nullable = false)
-    @Getter
-    public KeyId getKeyId() {
-        return keyId;
+    public Revision(Revision revision) {
+        super(revision);
+        this.currentRevision = revision.currentRevision;
     }
 
-    @Setter
-    public void setKeyId(KeyId keyId) {
-        this.keyId = keyId;
+    @Override
+    public Revision clone() {
+        return new Revision(this);
+    }
+
+    @Override
+    public void set(BaseObject baseObject) {
+        System.out.println("Setting revision");
+        Revision revision = (Revision) baseObject;
+        this.setCurrentRevision(revision.getCurrentRevision());
+    }
+
+    @Override
+    public Revision copy() {
+        Revision revision = (Revision) super.copy();
+        return revision;
     }
 
     private int currentRevision;
@@ -55,16 +63,16 @@ public class Revision implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Revision revision = (Revision) o;
 
-        if (currentRevision != revision.currentRevision) return false;
-        return keyId != null ? keyId.equals(revision.keyId) : revision.keyId == null;
+        return currentRevision == revision.currentRevision;
     }
 
     @Override
     public int hashCode() {
-        int result = keyId != null ? keyId.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + currentRevision;
         return result;
     }
@@ -72,8 +80,10 @@ public class Revision implements Serializable {
     @Override
     public String toString() {
         return "Revision{" +
-                "keyId=" + keyId +
-                ", currentRevision=" + currentRevision +
+                "currentRevision=" + currentRevision +
+                ", deleted=" + deleted +
+                ", fromRevision=" + fromRevision +
+                ", clz=" + clz +
                 '}';
     }
 }

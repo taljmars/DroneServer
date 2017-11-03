@@ -1,5 +1,7 @@
 package com.db.persistence;
 
+import com.plugins_manager.PluginManifest;
+
 import java.util.ArrayList;
 import java.util.List;
 

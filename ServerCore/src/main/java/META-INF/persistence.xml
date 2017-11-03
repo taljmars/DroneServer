@@ -29,12 +29,12 @@
 			<property name="javax.com.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.com.persistence.jdbc.password" value="postgres"/>
 			<property name="javax.com.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-			<!-- 
+
 			<property name="eclipselink.logging.level" value="FINE"/>
-			<property name="eclipselink.ddl-generation" value="create-tables"/>
-			 -->
+			<!--<property name="eclipselink.ddl-generation" value="create-tables"/>-->
+
 			<property name="javax.com.persistence.logging.level" value="INFO"/>
-        	<property name="hibernate.show_sql" value = "true" />
+        		<property name="hibernate.show_sql" value = "true" />
 		</properties>
 	
 	</persistence-unit>

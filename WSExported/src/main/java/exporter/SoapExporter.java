@@ -1,19 +1,5 @@
 package exporter;
 
-import com.db.persistence.PluginManifest;
-import com.javaws.JavaWsdlCodeGenerator;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-
 
 //Dead code for soap exporter, should be supported in the future
 

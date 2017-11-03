@@ -8,6 +8,7 @@ import com.dronedb.persistence.ws.wsSoap.PerimeterCrudSvcRemote;
 //import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -15,20 +16,39 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.xml.ws.Endpoint;
 import org.apache.log4j.Logger;
 
 //@Component
-@Import(DroneDBServerAppConfig.class)
+@Import({DroneDBServerAppConfig.class, DroneWeb.class})
 //@ComponentScan({ "com.db.persistence.wsRest.internal" })
 @SpringBootApplication
-public class DroneServer extends SpringBootServletInitializer {
-
+public class DroneServer extends SpringBootServletInitializer
+{
 	final static Logger logger = Logger.getLogger(DroneServer.class);
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(DroneServer.class);
+	}
+
+	@Bean
+	protected ServletContextListener listener() {
+		return new ServletContextListener() {
+
+			@Override
+			public void contextInitialized(ServletContextEvent sce) {
+				logger.info("ServletContext initialized - TALMA");
+			}
+
+			@Override
+			public void contextDestroyed(ServletContextEvent sce) {
+				logger.info("ServletContext destroyed - TALMA");
+			}
+
+		};
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -39,16 +59,34 @@ public class DroneServer extends SpringBootServletInitializer {
 @Bean
 public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 	return args -> {
-		System.err.println("TALMA TALMA" + args[0] + " " + args[1]);
+		String logPath = "Logs";
+		String confPath = "ServerCore/addon/conf/";
+		if (args != null && args.length == 2) {
+			logPath = args[0];
+			confPath = args[1];
+		}
+		else {
+			System.err.println("MISSING PARAMETERS");
+		}
+		System.err.println("TALMA TALMA " + logPath + " " + confPath);
 		// Debugs
 		System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
 		System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
 		System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
 		System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
 
+		// Temporary solution
+		System.setProperty("jdbc.driverClassName", "org.postgresql.Driver");
+		System.setProperty("jdbc.url", "jdbc:postgresql://localhost:5432/dronedb");
+		System.setProperty("jdbc.user", "postgres");
+		System.setProperty("jdbc.pass", "postgres");
+		System.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+//		System.setProperty("hibernate.show_sql", "true");
+		System.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 
-		System.setProperty("LOGS.DIR", args[0]);
-		System.setProperty("CONF.DIR", args[1]);
+		// External Settings
+		System.setProperty("LOGS.DIR", logPath);
+		System.setProperty("CONF.DIR", confPath);
 
 		DroneDBServerAppConfig.context = ctx;
 //		DroneServer droneServer = DroneDBServerAppConfig.context.getBean(DroneServer.class);

@@ -2,6 +2,7 @@ package com.dronedb.persistence.triggers;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
+import com.db.persistence.triggers.UpdateObjectTrigger;
 import com.db.persistence.triggers.UpdateObjectTriggerImpl;
 import com.db.persistence.triggers.UpdateTrigger;
 import com.dronedb.persistence.scheme.CirclePerimeter;
@@ -23,6 +24,7 @@ public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
         super();
     }
 
+
     @Override
     public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) throws Exception{
         if ((!(oldInst instanceof Perimeter)) || (!(newInst instanceof Perimeter))) {
@@ -36,6 +38,9 @@ public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
         }
 
         ObjectCrudSvc objectCrudSvc = applicationContext.getBean(ObjectCrudSvc.class);
+        logger.debug("Old: " + oldInst);
+        logger.debug("New: " + newInst);
+        logger.debug("Phase: " + phase);
 
         if (oldInst instanceof PolygonPerimeter) {
             logger.debug("Handle polyline perimeter update");

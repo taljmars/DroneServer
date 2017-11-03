@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
+	@RequestMapping(value = "/createForUser", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<T> createForUser(@RequestParam String clz, @RequestParam String userName)  throws ObjectInstanceRemoteException {
+		logger.debug("Crud REMOTE CREATE called '" + clz + "'");
+		objectCrudSvc.setForUser(userName);
+		return create(clz);
+	}
+
+	@Override
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz)  throws ObjectInstanceRemoteException {
@@ -49,6 +60,18 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 			logger.error("Failed to create object", e);
 			throw new ObjectInstanceRemoteException("Failed to create object");
 		}
+	}
+
+	@Override
+	@RequestMapping(value = "/updateForUser", method = RequestMethod.POST
+			,consumes={MediaType.APPLICATION_JSON_VALUE})
+	@ResponseBody
+//	@Transactional
+	public <T extends BaseObject> ResponseEntity<T> updateForUser(@RequestBody T object, @RequestParam String userName) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+
+		logger.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
+		objectCrudSvc.setForUser(userName);
+		return update(object);
 	}
 
 	@Override
@@ -90,6 +113,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
+	@RequestMapping(value = "/deleteForUser", method = RequestMethod.POST)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity deleteForUser(@RequestBody T object, @RequestParam String userName) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
+		objectCrudSvc.setForUser(userName);
+		return delete(object);
+	}
+
+
+	@Override
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity delete(@RequestBody T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
@@ -112,6 +144,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
+	@RequestMapping(value = "/readForUser", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam UUID objId, @RequestParam String userName) throws ObjectNotFoundRemoteException {
+		objectCrudSvc.setForUser(userName);
+		return read(objId);
+	}
+
+
+		@Override
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam UUID objId) throws ObjectNotFoundRemoteException {
@@ -127,6 +168,14 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 		catch (ObjectNotFoundException e) {
 			throw new ObjectNotFoundRemoteException(e.getMessage());
 		}
+	}
+
+	@Override
+	@RequestMapping(value = "/readByClassForUser", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam UUID objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException {
+		objectCrudSvc.setForUser(userName);
+		return readByClass(objId, clz);
 	}
 
 	@Override

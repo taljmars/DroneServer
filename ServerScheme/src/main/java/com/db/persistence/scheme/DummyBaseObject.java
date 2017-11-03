@@ -14,16 +14,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 public class DummyBaseObject extends BaseObject {
 
-    String name;
-
     public DummyBaseObject() {
         super();
     }
 
     public DummyBaseObject(DummyBaseObject objectDeref) {
         super(objectDeref);
-        this.name = objectDeref.toString();
+        this.name = objectDeref.getName();
     }
+
+    private String name;
 
     @Getter
     public String getName() {

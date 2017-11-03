@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,6 +25,14 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	
 	@Autowired
 	private QuerySvc querySvc;
+
+	@Override
+	@RequestMapping(value = "/runNativeQueryWithClassForName", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException {
+		querySvc.setForUser(userName);
+		return runNativeQueryWithClass(queryString, clz);
+	}
 
 	@Override
 	@RequestMapping(value = "/runNativeQueryWithClass", method = RequestMethod.GET)
@@ -44,6 +53,14 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			logger.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
+	}
+
+	@Override
+	@RequestMapping(value = "/runNativeQueryForUser", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryForUser(@RequestParam String queryString, @RequestParam String userName) throws QueryRemoteException {
+		querySvc.setForUser(userName);
+		return runNativeQuery(queryString);
 	}
 
 	@Override
@@ -68,6 +85,14 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	}
 
 	@Override
+	@RequestMapping(value = "/runNamedQueryForUser", method = RequestMethod.GET)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQueryForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException {
+		querySvc.setForUser(userName);
+		return runNamedQuery(queryString, clz);
+	}
+
+	@Override
 	@RequestMapping(value = "/runNamedQuery", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(@RequestParam String queryString, @RequestParam String clz) throws QueryRemoteException{
@@ -87,6 +112,14 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			logger.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
+	}
+
+	@Override
+	@RequestMapping(value = "/queryForUser", method = RequestMethod.POST)
+	@ResponseBody
+	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> queryForUser(@RequestBody QueryRequestRemote queryRequestRemote, @RequestParam String userName) throws QueryRemoteException {
+		querySvc.setForUser(userName);
+		return query(queryRequestRemote);
 	}
 
 	@Override

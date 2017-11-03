@@ -1,12 +1,11 @@
 package com.db.persistence.services.internal;
 
+import com.db.persistence.workSessions.WorkSession;
+import com.db.persistence.workSessions.WorkSessionManager;
+import com.db.persistence.scheme.*;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
-import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.scheme.Constants;
-import com.db.persistence.scheme.KeyId;
-import com.db.persistence.scheme.ObjectDeref;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
 import com.db.server.DroneDBServerAppConfig;
@@ -18,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,14 +29,35 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 {
 	final static Logger logger = Logger.getLogger(ObjectCrudSvcImpl.class);
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	@Autowired
 	private RuntimeValidator runtimeValidator;
 
 	@Autowired
 	private RevisionManager revisionManager;
+
+	private WorkSession workSession;
+
+	@Autowired
+	private WorkSessionManager workSessionManager;
+
+	@PostConstruct
+	public void init() {
+		setForUser("PUBLIC");
+	}
+
+	static List<EntityManager> hash = new ArrayList<>();
+
+	String currentUserName = "";
+	@Override
+	@Transactional
+	public void setForUser(String userName) {
+		if (currentUserName.equals(userName))
+			return;
+
+		currentUserName = userName;
+		logger.debug("Context was changed for user : " + userName);
+		workSession = workSessionManager.createSession(userName);
+	}
 
 	@Override
 	@Transactional
@@ -61,97 +81,32 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	public <T extends BaseObject> T update(T object) throws DatabaseValidationException, ObjectInstanceException {
 		logger.debug("Crud UPDATE called " + object);
 		PHASE phase;
-		T oldVersion = null;
 
-		// Handling a case where it is the first update of a public object
-		T existingObject = findInPrivate((Class<T>) object.getClass(), object.getKeyId());
-		if (existingObject == null) {
-			// Search in public
-			existingObject = findInPublic((Class<T>) object.getClass(), object.getKeyId());
-			if (existingObject != null) {
-				logger.debug("Found in public DB, make a private copy");
-				existingObject = movePublicToPrivate(existingObject);
-				// Later in this function we will treat it as private session
-			}
+		logger.debug("Search for the current object");
+		T oldVersion = (T) read(object.getKeyId().getObjId());
+		if (oldVersion != null) {
+			logger.debug("Found existing object, clone it");
+			oldVersion = (T) oldVersion.clone();
 		}
 
-		// Handling a case were the object doesn't exist in the private nor publish db.
-		// This is the creation time of this object
-		if (existingObject == null) {
-			// Nothing exist at all, creating it in private db
-			logger.debug("Object will be written to the database for the first time, validating object");
-			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
-			if (validatorResponse.isFailed()) {
-				logger.error("Validation failed: " + validatorResponse);
-				throw new DatabaseValidationException(validatorResponse.getMessage());
-			}
-
-			// Setting toVersion field to represent the last version
-			object.getKeyId().setToRevision(Constants.TIP_REVISION);
-			object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
-			entityManager.persist(object);
-			existingObject = object;
-			phase = PHASE.CREATE;
-
-			// Update ObjectDeref table for future search
-			CreateObjectDeref(object);
+		logger.debug("Run validation on the object");
+		ValidatorResponse validatorResponse = runtimeValidator.validate(object);
+		if (validatorResponse.isFailed()) {
+			logger.error("Validation failed: " + validatorResponse);
+			throw new DatabaseValidationException(validatorResponse.getMessage());
 		}
 
-		// Handling a case where we've found an object in the private session.
-		else {
-			// found in private or public, existingObject is a private copy exist in DB
-			ValidatorResponse validatorResponse = runtimeValidator.validate(object);
-			if (validatorResponse.isFailed()) {
-				logger.error("Validation failed: " + validatorResponse);
-				throw new DatabaseValidationException(validatorResponse.getMessage());
-			}
-			oldVersion = (T) existingObject.clone();
-			existingObject.set(object);
-			phase = PHASE.UPDATE;
-		}
+		logger.debug("Going to update object");
+		T existingObject = workSession.update(object);
 
-		// Persisting changes
-		entityManager.flush();
-
-		// Search for object in private DB, there must be an object at this point
-		existingObject = findInPrivate((Class<T>) object.getClass(),existingObject.getKeyId());
-
-		// Invoking triggers
-		handleUpdateTriggers(oldVersion, existingObject, phase);
+		logger.debug("Handling triggers");
+		handleUpdateTriggers(oldVersion, existingObject, oldVersion == null ? PHASE.CREATE : PHASE.UPDATE );
 
 		T mergedObject = existingObject;
 		logger.debug("Updated " + mergedObject);
 		return mergedObject;
 	}
 
-	private <T extends BaseObject> void CreateObjectDeref(T object) throws DatabaseValidationException, ObjectInstanceException {
-		if (object instanceof ObjectDeref) {
-			return;
-		}
-
-		ObjectDeref objectDeref = new ObjectDeref();
-		objectDeref.setKeyId(object.getKeyId());
-		objectDeref.setClzType(object.getClass());
-		objectDeref.setFromRevision(revisionManager.getNextRevision());
-		update(objectDeref);
-	}
-
-	private <T extends BaseObject> void DeleteObjectDeref(T object) throws ObjectNotFoundException, DatabaseValidationException, ObjectInstanceException {
-		logger.debug("Deleting ObjectDeref for " + object);
-		ObjectDeref objectDeref = readByClass(object.getKeyId().getObjId(), ObjectDeref.class);
-		entityManager.remove(objectDeref);
-	}
-
-	private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
-		T privateObject = (T) existingObject.copy();
-		privateObject.getKeyId().setPrivatelyModified(true);
-		entityManager.persist(privateObject);
-
-		logger.debug("Create object in private db");
-		logger.debug("Public " + existingObject);
-		logger.debug("Private " + privateObject);
-		return privateObject;
-	}
 
 	@Override
 	@Transactional
@@ -165,81 +120,24 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	public <T extends BaseObject> T delete(T object) throws DatabaseValidationException, ObjectInstanceException, ObjectNotFoundException {
 		logger.debug("Crud DELETE called " + object);
 
-		// We first start by getting the deletion candidate from the public/private
-		T existingPrivateObject = findInPrivate((Class<T>) object.getClass(),object.getKeyId());
-		T existingPublicObject = findInPublic((Class<T>) object.getClass(),object.getKeyId());
-
-		// Object doesn't exist at all
-		if (existingPublicObject == null && existingPrivateObject == null) {
-			logger.warn("No object found");
-			throw new ObjectNotFoundException("No object found");
+		T existingPrivateObject = workSession.delete(object);
+		if (existingPrivateObject == null) {
+			throw new ObjectInstanceException("Object wasn't found");
 		}
-
-		// Check for already deleted object
-		if (existingPrivateObject != null && existingPrivateObject.isDeleted()) {
-			logger.error("Object is already marked as deleted, nothing to do");
-			return existingPrivateObject;
-		}
-
-		// The object was just created in the private session
-		if (existingPublicObject == null && existingPrivateObject != null) {
-			logger.debug("Object was created in private db only");
-			if (existingPrivateObject.isDeleted()) {
-				logger.debug("Object is already marked as deleted");
-				return existingPrivateObject;
-			}
-			handleDeleteTriggers(existingPrivateObject);
-
-			logger.debug("Remove ObjectDeref");
-			DeleteObjectDeref(existingPrivateObject);
-
-			entityManager.remove(existingPrivateObject);
-			return existingPrivateObject;
-		}
-
-		// Object exist in public db only
-		if (existingPublicObject != null && existingPrivateObject == null) {
-			logger.debug("Object exits in public db only");
-			if (existingPublicObject.isDeleted()) {
-				logger.debug("Object is already marked as deleted");
-				return existingPublicObject;
-			}
-			existingPrivateObject = movePublicToPrivate(existingPublicObject);
-			handleDeleteTriggers(existingPrivateObject);
-			existingPrivateObject.setDeleted(true);
-//			logger.debug("TALMA: " + existingPrivateObject);
-			entityManager.flush();
-			existingPrivateObject= entityManager.find((Class<T>) existingPrivateObject.getClass(), existingPrivateObject.getKeyId());
-			logger.debug("TALMA: " + existingPrivateObject);
-//			entityManager.merge(existingPrivateObject);
-			return existingPrivateObject;
-		}
-
-		logger.debug("Object exist in both private and public db");
 
 		// Calling deletion trigger
 		logger.debug("Calling delete triggers");
 		handleDeleteTriggers(existingPrivateObject);
 
-		// Mark object as deleted
-		logger.debug("deleted mark");
-		existingPrivateObject.setDeleted(true);
-
-		// Delete ObjectDeref
-//		logger.debug("Remove ObjectDeref");
-//		DeleteObjectDeref(object);
-
-		entityManager.flush();
+		workSession.flush();
 
 		return existingPrivateObject;
 	}
 
 	@Override
 	@Transactional
-	public BaseObject read(final UUID uid) throws ObjectNotFoundException {
-		ObjectDeref objectDeref = readByClass(uid, ObjectDeref.class);
-		Class<? extends BaseObject> clz = objectDeref.getClzType();
-		return readByClass(uid, clz);
+	public BaseObject read(final UUID uid) {
+		return workSession.find(uid);
 	}
 
 	@Override
@@ -247,27 +145,11 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	public <T extends BaseObject> T readByClass(UUID objId, Class<T> clz) throws ObjectNotFoundException {
 		logger.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
-		// Build a key for searches
-		KeyId keyId = new KeyId();
-		keyId.setObjId(objId);
-		keyId.setPrivatelyModified(true);
-
 		// First search in the private db
-		T object = entityManager.find(clz ,keyId);
-		if (object == null) {
-			// We haven't found the object in the private db, going to search in public db
-			keyId.setPrivatelyModified(false);
-			object = entityManager.find(clz ,keyId);
-		}
-
-		// Check if we've found any object
-		if (object == null) {
-			throw new ObjectNotFoundException("Failed to get object " + objId + " of type " + clz);
-		}
-
+		T object = workSession.find(clz ,objId);
 		return object;
 	}
-	
+
 	/***********************************************************************************/
 	/******************************** Handling triggers ********************************/
 	/***********************************************************************************/
@@ -302,10 +184,10 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 
 				// Prepare update trigger
 				String triggerClasspath = updateTrigger.trigger();
-				Class<UpdateObjectTrigger> trigger = (Class<UpdateObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
+				Class<? extends UpdateObjectTrigger> trigger = (Class<? extends UpdateObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
+				logger.debug("Trigger executed: " + trigger.getSimpleName());
 				UpdateObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(DroneDBServerAppConfig.context);
-				logger.debug("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
@@ -335,7 +217,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			
 			for (DeleteTrigger deleteTrigger : deleteTriggerList) {
 				String triggerClasspath = deleteTrigger.trigger();
-				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) ClassLoader.getSystemClassLoader().loadClass(triggerClasspath);
+				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(DroneDBServerAppConfig.context);
 				logger.debug("Trigger executed: " + t.getClass().getSimpleName());
@@ -346,22 +228,5 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			logger.error("Failed to handle delete trigger", e);
 			throw new ObjectInstanceException(e);
 		}
-	}
-
-	private <T extends BaseObject> T findInPrivate(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
-		KeyId key = keyId.copy();
-		key.setPrivatelyModified(true);
-		key.setToRevision(Constants.TIP_REVISION);
-		T obj = entityManager.find(clz, key);
-		return obj;
-	}
-
-	private <T extends BaseObject> T findInPublic(Class<T> clz, KeyId keyId) throws DatabaseValidationException {
-		KeyId key = keyId.copy();
-		key.setPrivatelyModified(false);
-		key.setToRevision(Constants.TIP_REVISION);
-		T obj = entityManager.find(clz, key);
-		return obj;
-
 	}
 }

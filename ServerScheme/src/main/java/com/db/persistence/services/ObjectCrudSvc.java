@@ -84,4 +84,6 @@ public interface ObjectCrudSvc {
 	 * @throws ObjectNotFoundException In case the object not found in the database
 	 */
 	<T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundException;
+
+	void setForUser(String userName);
 }

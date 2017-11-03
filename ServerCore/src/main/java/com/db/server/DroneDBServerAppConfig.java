@@ -23,9 +23,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 @Configuration
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@Import(PersistenceJPAConfigXml.class)
-@Import(PersistenceJPAConfig.class)
+@Import({PersistenceJPAConfig.class, TransactionManagersConfig.class})
 public class DroneDBServerAppConfig {
 	
 	public static ApplicationContext context ;//= new AnnotationConfigApplicationContext(DroneDBServerAppConfig.class);
@@ -45,12 +45,14 @@ public class DroneDBServerAppConfig {
 			return br.readLine();
 		}
 		catch (FileNotFoundException e) {
-			logger.error("IP file doesn't exist", e);
+			logger.error("IP file doesn't exist");
 		}
 		catch (IOException e) {
-			logger.error("Failed to read IP file", e);
+			logger.error("Failed to read IP file");
 		}
-		return null;
+		//TODO: TALMA WA
+		return "127.0.0.1";
+		//return null;
 	}
 
 	@Bean
@@ -61,12 +63,14 @@ public class DroneDBServerAppConfig {
 			return br.readLine();
 		}
 		catch (FileNotFoundException e) {
-			logger.error("Port file doesn't exist", e);
+			logger.error("Port file doesn't exist");
 		}
 		catch (IOException e) {
-			logger.error("Failed to read port file", e);
+			logger.error("Failed to read port file");
 		}
-		return null;
+		//TODO: TALMA WA
+		return "1234";
+//		return null;
 	}
 
 	@Bean

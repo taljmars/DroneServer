@@ -59,6 +59,12 @@
 
         <dependency>
             <groupId>com.dronedb</groupId>
+            <artifactId>PluginsManager</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dronedb</groupId>
             <artifactId>DronePlugin</artifactId>
             <version>1.0</version>
         </dependency>
@@ -151,7 +157,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven.deploy.plugin}</version>
+                <version>${maven.deploy.plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -160,7 +166,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>${site.maven.plugin}</version>
+                <version>${site.maven.plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                     <message>WSExporter should not be extract</message>
@@ -171,7 +177,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>${maven.site.plugin}</version>
+                <version>${maven.site.plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

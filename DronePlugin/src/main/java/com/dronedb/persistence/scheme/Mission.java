@@ -22,17 +22,20 @@ import static com.db.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRI
 @NamedNativeQueries({
 	@NamedNativeQuery(
 		name = "GetAllMissions",
-		query = "SELECT * FROM mission WHERE " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+//		query = "SELECT * FROM mission WHERE " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+		query = "SELECT * FROM mission",
 		resultClass = Mission.class
 	),
     @NamedNativeQuery(
     	name = "GetMissionById",
-    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+//    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+	query = "SELECT * FROM mission WHERE objid=:OBJID",
     	resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 		name = "GetMissionByName",
-		query = "SELECT * FROM mission WHERE name ilike =:NAME AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+		//query = "SELECT * FROM mission WHERE name ilike =:NAME AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
+		query = "SELECT * FROM mission WHERE name ilike =:NAME",
 		resultClass = Mission.class
     ),
 	@NamedNativeQuery(

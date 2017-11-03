@@ -8,11 +8,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>RELEASE</version>
+        <!--<version>1.3.3.RELEASE</version>-->
         <!--<relativePath>../pom.xml</relativePath>-->
     </parent>
 
     <artifactId>ServerCore</artifactId>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
+    <packaging>war</packaging>
     <name>Drone Server Core</name>
 
 
@@ -80,6 +82,13 @@
             <version>1.2.17</version>
         </dependency>
 
+        <!--Plugin manager-->
+        <dependency>
+            <groupId>com.dronedb</groupId>
+            <artifactId>PluginsManager</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!--REST-->
         <dependency>
             <groupId>com.dronedb</groupId>
@@ -99,11 +108,45 @@
             <!--<version>RELEASE</version>-->
         </dependency>
 
+        <!-- Tomcat -->
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>1.5.2.RELEASE</version>
+            <!--<version>RELEASE</version>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-devtools</artifactId>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <build>
         <outputDirectory>${class.path}</outputDirectory>
         <plugins>
+            <!-- Package as an executable jar/war -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

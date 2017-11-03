@@ -7,7 +7,9 @@ import com.db.persistence.scheme.BaseObject;
 
 public interface QuerySvc {
 
-	/**
+    void setForUser(String userName);
+
+    /**
 	 * The following enable the user to run any queries he wish to run by writing the query syntax
 	 * and send it to this API.
 	 *

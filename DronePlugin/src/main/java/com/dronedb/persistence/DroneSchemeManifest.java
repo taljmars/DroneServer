@@ -1,6 +1,6 @@
 package com.dronedb.persistence;
 
-import com.db.persistence.PluginManifest;
+import com.plugins_manager.PluginManifest;
 
 import java.util.ArrayList;
 import java.util.List;

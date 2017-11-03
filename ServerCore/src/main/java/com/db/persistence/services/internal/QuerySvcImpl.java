@@ -1,37 +1,53 @@
 package com.db.persistence.services.internal;
 
-import java.util.*;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import com.db.persistence.exception.QueryException;
+import com.db.persistence.workSessions.WorkSession;
+import com.db.persistence.workSessions.WorkSessionManager;
+import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.QueryRequest;
 import com.db.persistence.services.QuerySvc;
-import org.hibernate.hql.internal.ast.QuerySyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.db.persistence.scheme.BaseObject;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class QuerySvcImpl implements QuerySvc {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(QuerySvcImpl.class);
+	final static Logger logger = Logger.getLogger(QuerySvcImpl.class);
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	private WorkSession workSession;
+
+	@Autowired
+	private WorkSessionManager workSessionManager;
+
+	@PostConstruct
+	public void init() {
+		setForUser("PUBLIC");
+	}
+
+	String currentUserName = "";
+	@Override
+	@Transactional
+	public void setForUser(String userName) {
+		if (currentUserName.equals(userName))
+			return;
+
+		logger.debug("Context was changed for user : " + userName);
+		workSession = workSessionManager.createSession(userName);
+	}
 
 	@Override
 	@Transactional
 	public <T extends BaseObject> List<T> runNativeQueryWithClass(String queryString, Class<T> clz)
 	{
-		Query query = entityManager.createNativeQuery(queryString, clz);
-		List<?> lst = query.getResultList();
+		List<?> lst = workSession.getQueryExecutor().createNativeQuery(queryString, clz);
 		System.err.println("Service " + lst);
 		List<T> arr = new ArrayList();
 
@@ -50,21 +66,20 @@ public class QuerySvcImpl implements QuerySvc {
 	public <T extends BaseObject> List<? extends BaseObject> runNativeQuery(String queryString) throws QueryException
 	{
 		try {
-		Query query = entityManager.createQuery(queryString);
-		List<?> lst = query.getResultList();
-		System.err.println("Service " + lst);
-		List<T> arr = new ArrayList();
+			List<?> lst = workSession.getQueryExecutor().createQuery(queryString);
+			System.err.println("Service " + lst);
+			List<T> arr = new ArrayList();
 
-		Iterator<?> it = lst.iterator();
-		while (it.hasNext()) {
-			Object o = it.next();
-			arr.add((T) o);
-		}
+			Iterator<?> it = lst.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				arr.add((T) o);
+			}
 
-		return arr;
+			return arr;
 		}
 		catch (Exception e) {
-			LOGGER.error("Failed to run query", e);
+			logger.error("Failed to run query", e);
 			throw new QueryException(e);
 		}
 	}
@@ -73,12 +88,9 @@ public class QuerySvcImpl implements QuerySvc {
 	@Transactional
 	public <T extends BaseObject> List<T> runNamedQuery(String queryString, Class<T> clz)
 	{
-		System.err.println("Running named query");
-		TypedQuery<T> query = entityManager.createNamedQuery(queryString, clz);
-		System.out.println(query.toString());
-//		query = query.setParameter(1, "9c0ee519-c4eb-420b-ac05-613bce92a1c0");
-		List<T> lst = query.getResultList();
-		System.err.println("Service " + lst);
+		logger.debug("Running named query");
+		List<T> lst = workSession.getQueryExecutor().createNamedQuery(queryString, clz);
+		logger.debug("Service " + lst);
 		List<T> arr = new ArrayList();
 
 		Iterator<?> it = lst.iterator();
@@ -101,18 +113,9 @@ public class QuerySvcImpl implements QuerySvc {
 		Map<String, String> params = queryRequest.getParameters();
 
 
-		System.err.println("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
-		TypedQuery<? extends BaseObject> query = entityManager.createNamedQuery(queryStr, clz);
-
-//		for (int i = 1; i <= params.size(); i++) {
-//			query = query.setParameter(i, params.get(i-1));
-//		}
-		for (String key : params.keySet()) {
-			query = query.setParameter(key, params.get(key));
-		}
-
-		List<? extends BaseObject> lst = query.getResultList();
-		System.err.println("Service " + lst);
+		logger.debug("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
+		List<? extends BaseObject> lst = workSession.getQueryExecutor().createNamedQuery(queryStr, clz);
+		logger.debug("Service " + lst);
 		List<T> arr = new ArrayList();
 
 		Iterator<?> it = lst.iterator();

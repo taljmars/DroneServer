@@ -1,4 +1,4 @@
-package com.db.persistence;
+package com.plugins_manager;
 
 import java.util.List;
 

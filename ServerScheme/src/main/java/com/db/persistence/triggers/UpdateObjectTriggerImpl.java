@@ -6,6 +6,9 @@ public abstract class UpdateObjectTriggerImpl implements UpdateObjectTrigger {
 
 	protected ApplicationContext applicationContext;
 
+	public UpdateObjectTriggerImpl() {
+	}
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
