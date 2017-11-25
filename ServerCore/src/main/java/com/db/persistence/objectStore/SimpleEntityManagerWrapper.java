@@ -9,11 +9,11 @@ import javax.persistence.metamodel.Metamodel;
 import java.util.List;
 import java.util.Map;
 
-public class EntityManagerWrapper implements EntityManager {
+public class SimpleEntityManagerWrapper implements EntityManager {
 
     private EntityManager entityManager;
 
-    public EntityManagerWrapper(EntityManager entityManager) {
+    public SimpleEntityManagerWrapper(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

@@ -1,6 +1,6 @@
 package com.db.persistence.workSessions;
 
-import com.db.persistence.objectStore.VirtualizedEntityManager;
+import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.scheme.BaseObject;
 import org.apache.log4j.Logger;
 
@@ -13,9 +13,9 @@ public class QueryExecutor {
 
     private final static Logger logger = Logger.getLogger(QueryExecutor.class);
 
-    private VirtualizedEntityManager entityManager;
+    private EntityManagerBase entityManager;
 
-    public QueryExecutor(VirtualizedEntityManager entityManager) {
+    public QueryExecutor(EntityManagerBase entityManager) {
         this.entityManager = entityManager;
     }
 

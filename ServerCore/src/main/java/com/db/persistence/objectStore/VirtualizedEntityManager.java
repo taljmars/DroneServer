@@ -4,40 +4,42 @@ import com.db.persistence.scheme.*;
 import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.UUID;
 
+@Scope(scopeName = "prototype")
 @Component
-public class VirtualizedEntityManager {
+public class VirtualizedEntityManager extends EntityManagerBase {
 
     private final static Logger LOGGER = Logger.getLogger(VirtualizedEntityManager.class);
-    private boolean permission;
 
     @Autowired
-    private RevisionManager revisionManager;
+    public void setRevisionManager(RevisionManager revisionManager) {
+        this.revisionManager = revisionManager;
+    }
 
-    private EntityManagerWrapper entityManagerWrapper;
+    protected SimpleEntityManagerWrapper entityManagerWrapper;
+    protected Integer entityManagerCtx;
 
-    public <T extends BaseObject> VirtualizedEntityManager(EntityManager entityManager, boolean permission) {
-        entityManagerWrapper = new EntityManagerWrapper(entityManager);
-        this.permission = permission;
+    public VirtualizedEntityManager(EntityManager entityManager, Integer entityManagerCtx) {
+        this.entityManagerWrapper = new SimpleEntityManagerWrapper(entityManager);
+        this.entityManagerCtx = entityManagerCtx;
+        LOGGER.debug("Create a new VEM for id " + this.entityManagerCtx);
     }
 
     @Autowired
     private WorkSessionPrivateCache workSessionCache;
 
-//    @Autowired
-//    private EntityInformation entityInformation;
-
+    @Override
     public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
 
@@ -46,49 +48,14 @@ public class VirtualizedEntityManager {
         keyId.setPrivatelyModified(true);
         keyId.setObjId(uuid);
         T found =  entityManagerWrapper.find(clz, keyId);
-        if (found != null)
+        if (found != null && found.getEntityManagerCtx().equals(entityManagerCtx))
             return found;
 
         keyId.setPrivatelyModified(false);
         return entityManagerWrapper.find(clz, keyId);
-//
-//
-//        LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
-//        if (workSessionCache.isDeleted(clz, uuid))
-//            return null;
-//
-//        T res;
-//        KeyId keyId;
-//        if (workSessionCache.has(clz, uuid)) {
-//            LOGGER.debug("Object found as private");
-//            keyId = workSessionCache.get(clz, uuid);
-//            res = entityManagerWrapper.find(clz, keyId);
-//            if (res.isDeleted()) {
-//                throw new javax.persistence.EntityNotFoundException("Found deleted , unexpected");
-//            }
-//        }
-//        else {
-//            keyId = new KeyId();
-//            keyId.setToRevision(Integer.MAX_VALUE);
-//            keyId.setPrivatelyModified(false);
-//            keyId.setObjId(uuid);
-//            res = entityManagerWrapper.find(clz, keyId);
-//            if (res == null) {
-//                LOGGER.debug("Object not found as public");
-//                return null;
-//            }
-//            if (res.isDeleted()) {
-//                throw new javax.persistence.EntityNotFoundException("Found deleted , unexpected");
-//            }
-//            LOGGER.debug("Object found as public");
-////            if (!readonly)
-////                res = movePublicToPrivate(res);
-//        }
-//
-////        logger.debug("In work session, find " + clz + " ,key=" + uuid);
-//        return res;
     }
 
+    @Override
     public <T extends BaseObject> T delete(T object) {
         LOGGER.debug("Removing: " + object);
 
@@ -131,8 +98,7 @@ public class VirtualizedEntityManager {
         }
         existingObject = movePublicToPrivate(existingObject);
         existingObject.setDeleted(true);
-//        entityManagerWrapper.flush();
-//        existingObject = entityManagerWrapper.find((Class<T>) existingObject.getClass(), existingObject.getKeyId());
+//        existingObject.setEntityManagerCtx(-1);
         return existingObject;
     }
 
@@ -141,6 +107,7 @@ public class VirtualizedEntityManager {
         object.getKeyId().setToRevision(Constants.TIP_REVISION);
         object.getKeyId().setPrivatelyModified(true);
         object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
+        object.setEntityManagerCtx(entityManagerCtx);
 //        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
 //        if (entityInformation.isNew(object)) {
         entityManagerWrapper.persist(object);
@@ -148,6 +115,7 @@ public class VirtualizedEntityManager {
 //            entityManagerWrapper.merge(object);
     }
 
+    @Override
     public <T extends BaseObject> T update(T object) {
         LOGGER.debug("VEM UPDATE called " + object);
 
@@ -164,15 +132,11 @@ public class VirtualizedEntityManager {
         if (existingObject == null) {
             // Nothing exist at all, creating it in private db
             LOGGER.debug("Object will be written to the database for the first time, validating object");
-//            ValidatorResponse validatorResponse = runtimeValidator.validate(object);
-//            if (validatorResponse.isFailed()) {
-//                logger.error("Validation failed: " + validatorResponse);
-//                throw new DatabaseValidationException(validatorResponse.getMessage());
-//            }
 
             // Setting toVersion field to represent the last version
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
             object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
+            object.setEntityManagerCtx(entityManagerCtx);
             entityManagerWrapper.persist(object);
             existingObject = object;
 
@@ -182,103 +146,19 @@ public class VirtualizedEntityManager {
 
         // Handling a case where we've found an object in the private session.
         else {
-            // found in private or public, existingObject is a private copy exist in DB
-//            ValidatorResponse validatorResponse = runtimeValidator.validate(object);
-//            if (validatorResponse.isFailed()) {
-//                logger.error("Validation failed: " + validatorResponse);
-//                throw new DatabaseValidationException(validatorResponse.getMessage());
-//            }
             existingObject.set(object);
         }
 
-        // Persisting changes
-//        entityManagerWrapper.flush(); //TODO: TALMA :comment for test
-
-        // Search for object in private DB, there must be an object at this point
-//        existingObject = find((Class<T>) object.getClass(),existingObject.getKeyId().getObjId());//TODO: TALMA :comment for test
-
-        // Invoking triggers
-//        handleUpdateTriggers(oldVersion, existingObject, phase);
-
-        T mergedObject = existingObject;
-        LOGGER.debug("Updated " + mergedObject);
-        return mergedObject;
+        LOGGER.debug("Updated " + existingObject);
+        return existingObject;
     }
 
-    private <T extends BaseObject> void DeleteObjectDeref(T object) {
-        LOGGER.debug("Deleting ObjectDeref for " + object);
-        ObjectDeref objectDeref = find(ObjectDeref.class, object.getKeyId().getObjId());
-//        if (objectDeref == null)
-//            throw new EntityNotFoundException("ObjectDeref wasn't found");
-        entityManagerWrapper.remove(objectDeref);
+    @Override
+    protected SimpleEntityManagerWrapper getEntityManager() {
+        return entityManagerWrapper;
     }
 
-    private <T extends BaseObject> void CreateObjectDeref(T object) {
-        if (object instanceof ObjectDeref) {
-            return;
-        }
-
-        ObjectDeref objectDeref = new ObjectDeref();
-        objectDeref.setKeyId(object.getKeyId());
-        objectDeref.setClzType(object.getClass());
-        objectDeref.setFromRevision(revisionManager.getNextRevision());
-        update(objectDeref);
-    }
-
-    public <T extends BaseObject> T pull(T obj) {
-        if (obj.isDeleted())
-            return null;
-
-        if (obj.getKeyId().getToRevision() != Integer.MAX_VALUE)
-            return null;
-
-        if (obj.getKeyId().getPrivatelyModified())
-            return obj;
-
-        T updatedObject = find((Class<T>) obj.getClass(), obj.getKeyId().getObjId());
-        if (updatedObject.isDeleted())
-            return null;
-
-        return updatedObject;
-    }
-
-    public void flush() {
-        entityManagerWrapper.flush();
-    }
-
-    private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
-        T privateObject = (T) existingObject.copy();
-        privateObject.getKeyId().setPrivatelyModified(true);
-        persist(privateObject);
-
-//        logger.debug("Create object in private db");
-//        logger.debug("Public " + existingObject);
-//        logger.debug("Private " + privateObject);
-        return privateObject;
-    }
-
-    public Metamodel getMetamodel() {
-        return entityManagerWrapper.getMetamodel();
-    }
-
-    public <T extends BaseObject> TypedQuery<T> createNamedQuery(String queryString, Class<T> clz) {
-        return entityManagerWrapper.createNamedQuery(queryString, clz);
-    }
-
-    public Query createQuery(String queryString) {
-        return entityManagerWrapper.createQuery(queryString);
-    }
-
-    public <T extends BaseObject> Query createNativeQuery(String queryString, Class<T> clz) {
-        return entityManagerWrapper.createNativeQuery(queryString, clz);
-    }
-
-    /*****************************************************************************/
-    /*****************************************************************************/
-    /*****************************************************************************/
-    /*****************************************************************************/
-
-
+    @Override
     public void discard() {
         Metamodel mm = getMetamodel();
         for (final ManagedType<?> managedType : mm.getManagedTypes()) {
@@ -295,7 +175,56 @@ public class VirtualizedEntityManager {
         workSessionCache.flush();
     }
 
-    public <T extends BaseObject> void handleDiscardForType(Class<T> clz) {
+    @Override
+    public void publish() {
+        int nextRevision = revisionManager.getNextRevision();
+        Metamodel mm = getMetamodel();
+        for (final ManagedType<?> managedType : mm.getManagedTypes()) {
+            Class clz = managedType.getJavaType();
+            LOGGER.error("Found managed class '" + clz.getCanonicalName() + "'");
+            if (Modifier.isAbstract(clz.getModifiers()))
+                continue;
+
+            if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
+                continue;
+
+            if (!clz.isAnnotationPresent(Sessionable.class))
+                continue;
+
+            LOGGER.debug("going to handle '" + clz.getCanonicalName() + "' publishing");
+            handlePublishForType(clz, nextRevision);
+        }
+        workSessionCache.flush();
+        revisionManager.advance();
+    }
+
+    @Override
+    public Integer getId() {
+        return entityManagerCtx;
+    }
+
+    /*****************************************************************************/
+    /*****************************************************************************/
+    /*****************************************************************************/
+    /*****************************************************************************/
+
+    private Metamodel getMetamodel() {
+        return entityManagerWrapper.getMetamodel();
+    }
+
+    private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
+        T privateObject = (T) existingObject.copy();
+        privateObject.getKeyId().setPrivatelyModified(true);
+        privateObject.setEntityManagerCtx(entityManagerCtx);
+        persist(privateObject);
+
+//        logger.debug("Create object in private db");
+//        logger.debug("Public " + existingObject);
+//        logger.debug("Private " + privateObject);
+        return privateObject;
+    }
+
+    private  <T extends BaseObject> void handleDiscardForType(Class<T> clz) {
         Query query = createNativeQuery(buildGetPrivateQuery(clz), clz);
         List<T> objs = query.getResultList();
         for (T item : objs) {
@@ -313,32 +242,6 @@ public class VirtualizedEntityManager {
 //            BaseObject object = find(clazz, item);
 //            delete(object);
 //        }
-    }
-
-
-    /*****************************************************************************/
-    /*****************************************************************************/
-    /*****************************************************************************/
-    /*****************************************************************************/
-
-    public void publish(int nextRevision) {
-        Metamodel mm = getMetamodel();
-        for (final ManagedType<?> managedType : mm.getManagedTypes()) {
-            Class clz = managedType.getJavaType();
-            LOGGER.error("Found managed class '" + clz.getCanonicalName() + "'");
-            if (Modifier.isAbstract(clz.getModifiers()))
-                continue;
-
-            if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
-                continue;
-
-            if (!clz.isAnnotationPresent(Sessionable.class))
-                continue;
-
-            LOGGER.error("going to handle '" + clz.getCanonicalName() + "' publishing");
-            handlePublishForType(clz, nextRevision);
-        }
-        workSessionCache.flush();
     }
 
     private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
@@ -379,6 +282,7 @@ public class VirtualizedEntityManager {
         publicItemDup.setFromRevision(publicItem.getFromRevision());
         publicItemDup.getKeyId().setToRevision(nextRevision);
         publicItemDup.getKeyId().setPrivatelyModified(false);
+//        publicItemDup.setEntityManagerCtx(privateItem.isDeleted() ? -1 : entityManagerCtx);
         entityManagerWrapper.persist(publicItemDup);
 
         // Updating the tip to be align to the private
@@ -412,11 +316,12 @@ public class VirtualizedEntityManager {
             if (item.isDeleted())
                 objectDerefDup.getKeyId().setToRevision(nextRevision);
             objectDerefDup.setDeleted(item.isDeleted());
-//			logger.debug("TALMA DBG " + objectDerefDup);
+            objectDerefDup.setEntityManagerCtx(0);
+//			logger.debug("DBG " + objectDerefDup);
             entityManagerWrapper.persist(objectDerefDup);
             entityManagerWrapper.remove(objectDeref);
 //			objectDeref = objectCrudSvc.readByClass(objectDeref.getKeyId().getObjId(), ObjectDeref.class);
-//			logger.debug("TALMA DBG " + objectDeref);
+//			logger.debug("DBG " + objectDeref);
 
     }
 
@@ -430,6 +335,7 @@ public class VirtualizedEntityManager {
         privateItemDup.setFromRevision(nextRevision);
         privateItemDup.getKeyId().setPrivatelyModified(false);
         privateItemDup.getKeyId().setToRevision(Constants.TIP_REVISION);
+        privateItemDup.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         entityManagerWrapper.persist(privateItemDup);
 
         // Clean private
@@ -438,7 +344,7 @@ public class VirtualizedEntityManager {
 
         LOGGER.debug("Object writing to public " + privateItemDup);
 
-        // Test
+        // Test - that objects are find
         KeyId keyId = new KeyId();
         keyId.setPrivatelyModified(true);
         keyId.setObjId(privateItem.getKeyId().getObjId());
@@ -457,7 +363,7 @@ public class VirtualizedEntityManager {
 
     private String buildGetPrivateQuery(Class<? extends BaseObject> objClass) {
 		LOGGER.debug("Build query to get object of " + objClass.getSimpleName());
-		return String.format("SELECT * FROM %s WHERE privatelyModified = true", objClass.getSimpleName().toLowerCase());
+		return String.format("SELECT * FROM %s WHERE privatelyModified = true AND entityManagerCtx = %d", objClass.getSimpleName().toLowerCase(), entityManagerCtx);
 	}
 
     private <T extends BaseObject> T getPublishedByPrivateObject(Class<T> clz, T item) {
@@ -466,13 +372,5 @@ public class VirtualizedEntityManager {
 		key.setPrivatelyModified(false);
 //		logger.debug("Search for publish object of key " + key);
         return entityManagerWrapper.find(clz, key);
-    }
-
-    public BaseObject find(UUID uid) {
-        ObjectDeref objectDeref = find(ObjectDeref.class, uid);
-        if (objectDeref == null)
-            return null;
-        Class<? extends BaseObject> clz = objectDeref.getClzType();
-        return find(clz, uid);
     }
 }

@@ -5,6 +5,8 @@ package com.db.persistence.services;
  */
 public interface SessionsSvc {
 
+    void setForUser(String userName);
+
     /**
      * The following publish all the private changes to the public database.
      * After this action no object should exist under the private session of the user.

@@ -27,7 +27,7 @@ import java.util.UUID;
 @Component
 public class ObjectCrudSvcImpl implements ObjectCrudSvc
 {
-	final static Logger logger = Logger.getLogger(ObjectCrudSvcImpl.class);
+	private final static Logger logger = Logger.getLogger(ObjectCrudSvcImpl.class);
 
 	@Autowired
 	private RuntimeValidator runtimeValidator;
@@ -45,9 +45,9 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 		setForUser("PUBLIC");
 	}
 
-	static List<EntityManager> hash = new ArrayList<>();
+	private static List<EntityManager> hash = new ArrayList<>();
 
-	String currentUserName = "";
+	private String currentUserName = "";
 	@Override
 	@Transactional
 	public void setForUser(String userName) {

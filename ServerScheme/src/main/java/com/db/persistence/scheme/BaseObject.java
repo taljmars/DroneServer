@@ -30,6 +30,7 @@ public abstract class BaseObject implements Serializable
 		// New values for cloning
 		this.deleted = baseObject.deleted;
 		this.fromRevision = baseObject.fromRevision;
+		this.entityManagerCtx = baseObject.entityManagerCtx;
 	}
 
 	/**
@@ -139,33 +140,48 @@ public abstract class BaseObject implements Serializable
 
 	public abstract void set(BaseObject baseObject);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	private Integer entityManagerCtx;
 
-        BaseObject that = (BaseObject) o;
+	public Integer getEntityManagerCtx() {
+		return entityManagerCtx;
+	}
 
-        if (deleted != that.deleted) return false;
-        if (fromRevision != that.fromRevision) return false;
-        if (keyId != null ? !keyId.equals(that.keyId) : that.keyId != null) return false;
-        if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
-        if (updatedAt != null ? !updatedAt.equals(that.updatedAt) : that.updatedAt != null) return false;
-        return clz != null ? clz.equals(that.clz) : that.clz == null;
-    }
+	@XmlTransient
+	@Transient
+	@Setter
+	public void setEntityManagerCtx(Integer entityManagerCtx) {
+		this.entityManagerCtx = entityManagerCtx;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = keyId != null ? keyId.hashCode() : 0;
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
-        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
-        result = 31 * result + (deleted ? 1 : 0);
-        result = 31 * result + fromRevision;
-        result = 31 * result + (clz != null ? clz.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
+		BaseObject that = (BaseObject) o;
+
+		if (deleted != that.deleted) return false;
+		if (fromRevision != that.fromRevision) return false;
+		if (keyId != null ? !keyId.equals(that.keyId) : that.keyId != null) return false;
+		if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
+		if (updatedAt != null ? !updatedAt.equals(that.updatedAt) : that.updatedAt != null) return false;
+		if (clz != null ? !clz.equals(that.clz) : that.clz != null) return false;
+		return entityManagerCtx != null ? entityManagerCtx.equals(that.entityManagerCtx) : that.entityManagerCtx == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = keyId != null ? keyId.hashCode() : 0;
+		result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+		result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+		result = 31 * result + (deleted ? 1 : 0);
+		result = 31 * result + fromRevision;
+		result = 31 * result + (clz != null ? clz.hashCode() : 0);
+		result = 31 * result + (entityManagerCtx != null ? entityManagerCtx.hashCode() : 0);
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "BaseObject{" +
 				"keyId=" + keyId +
@@ -173,6 +189,8 @@ public abstract class BaseObject implements Serializable
 				", updatedAt=" + updatedAt +
 				", deleted=" + deleted +
 				", fromRevision=" + fromRevision +
+				", clz=" + clz +
+				", entityManagerCtx=" + entityManagerCtx +
 				'}';
 	}
 }

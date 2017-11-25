@@ -9,10 +9,9 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
 
 import java.util.Map;
 
-
 public class MyJpaTransactionManager extends JpaTransactionManager {
 
-    final static Logger logger = Logger.getLogger(MyJpaTransactionManager.class);
+    private final static Logger logger = Logger.getLogger(MyJpaTransactionManager.class);
     static int itr;
 
     public MyJpaTransactionManager() {

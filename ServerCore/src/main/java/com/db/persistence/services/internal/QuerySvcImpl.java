@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 public class QuerySvcImpl implements QuerySvc {
 
-	final static Logger logger = Logger.getLogger(QuerySvcImpl.class);
+	private final static Logger logger = Logger.getLogger(QuerySvcImpl.class);
 
 	private WorkSession workSession;
 
@@ -32,7 +32,7 @@ public class QuerySvcImpl implements QuerySvc {
 		setForUser("PUBLIC");
 	}
 
-	String currentUserName = "";
+	private String currentUserName = "";
 	@Override
 	@Transactional
 	public void setForUser(String userName) {
@@ -126,7 +126,5 @@ public class QuerySvcImpl implements QuerySvc {
 		}
 
 		return arr;
-
 	}
-
 }

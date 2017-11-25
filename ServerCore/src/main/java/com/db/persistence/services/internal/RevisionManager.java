@@ -1,9 +1,6 @@
 package com.db.persistence.services.internal;
 
 import com.db.persistence.objectStore.PersistencyManager;
-import com.db.persistence.objectStore.VirtualizedEntityManager;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
 import com.db.persistence.scheme.Revision;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,35 +21,17 @@ import java.util.List;
 @Component
 public class RevisionManager {
 
-    final static Logger logger = Logger.getLogger(RevisionManager.class);
-
-    //	@PersistenceContext
-//	@Autowired
-    WorkSession workSession;
+    private final static Logger logger = Logger.getLogger(RevisionManager.class);
 
     @Autowired
-    private WorkSessionManager workSessionManager;
+    private PersistencyManager persistencyManager;
 
-    @Autowired
-    PersistencyManager persistencyManager;
-
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @PostConstruct
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void init() {
-        setForUser("PUBLIC");
-    }
-
-    String currentUserName = "";
-    @Transactional
-    public void setForUser(String userName) {
-        if (currentUserName.equals(userName))
-            return;
-
-        logger.debug("Context was changed for user : " + userName);
-//        workSession = workSessionManager.createSession(userName);
-        //this.entityManager = objectStoreSession.getEntityManager();
+        logger.debug("Initialize revision manager");
         this.entityManager = persistencyManager.createEntityManager();
     }
 
@@ -83,7 +62,7 @@ public class RevisionManager {
     }
 
     @Transactional
-    public void advance() {
+    public synchronized void advance() {
         Revision revision = getRevisionObject();
         revision.setCurrentRevision(getNextRevision());
         entityManager.flush();
