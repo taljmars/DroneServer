@@ -6,6 +6,7 @@ import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.scheme.ReturnToHome;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -17,12 +18,14 @@ import java.util.UUID;
  */
 public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPostLandOrRTLItemsValidation, Mission> {
 
+    private final static Logger logger = Logger.getLogger(NoPostLandOrRTLItemsValidator.class);
+
     @Autowired
     private ObjectCrudSvc objectCrudSvc;
 
     @Override
     public void initialize(NoPostLandOrRTLItemsValidation constraintAnnotation) {
-        System.err.print("Initialize validator " + getClass().getSimpleName());
+        logger.debug("Initialize validator " + getClass().getSimpleName());
     }
 
     @Override
@@ -30,15 +33,14 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
         try {
             boolean foundLandOrRTL = false;
             if (objectCrudSvc == null) {
-                System.err.println("TALMA lose");
+                logger.debug("TALMA lose");
             }
             else {
-                System.err.println("TALMA win");
+                logger.debug("TALMA win");
             }
-//            objectCrudSvcRemote objectCrudSvcRemote = null; // TODO: Must be fixed to add this validation
             for (UUID missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
-                    System.out.print("Found illegal point"); // TODO: print normal
+                    logger.debug("Found illegal point"); // TODO: print normal
                     return false;
                 }
                 MissionItem item = objectCrudSvc.readByClass(missionItemUid, MissionItem.class);
@@ -53,7 +55,7 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
 //        }
         catch (Exception e) {
             e.printStackTrace();
-            System.err.print("Unexpected failure in validation");
+            logger.debug("Unexpected failure in validation");
             return false;
         }
 

@@ -30,6 +30,7 @@ public class SimpleEntityManagerWrapper implements EntityManager {
     @Override
     public void remove(Object o) {
         entityManager.remove(o);
+        entityManager.flush(); // TODO: This is a must to when working with EclipseLink as JPA
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.dronedb.persistence.scheme;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
+import com.db.persistence.scheme.TargetType;
 import com.db.persistence.triggers.DeleteTrigger;
 import com.db.persistence.triggers.DeleteTriggers;
 import com.db.persistence.triggers.UpdateTrigger;
@@ -22,12 +23,12 @@ import static com.db.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TI
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllCirclePerimeters",
-                query = "SELECT * FROM circleperimeter WHERE " + CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+                query = "SELECT * FROM CirclePerimeter WHERE " + CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
                 resultClass = CirclePerimeter.class
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedCirclePerimeters",
-                query = "SELECT * FROM circleperimeter WHERE privatelyModified = true",
+                query = "SELECT * FROM CirclePerimeter WHERE privatelyModified = true",
                 resultClass = CirclePerimeter.class
         )
 })
@@ -37,16 +38,9 @@ import static com.db.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TI
 @UpdateTriggers({
         @UpdateTrigger(trigger = "com.dronedb.persistence.triggers.HandleRedundantPointsTrigger", phase = UpdateTrigger.PHASE.UPDATE),
 })
-@Access(javax.persistence.AccessType.FIELD)
+//@Access(javax.persistence.AccessType.FIELD)
 @Sessionable
 public class CirclePerimeter extends Perimeter implements Serializable {
-
-    @Column(nullable = true)
-    @Basic(fetch=FetchType.EAGER)
-    protected UUID center;
-
-    @Column(nullable = true)
-    protected Double radius;
 
     public CirclePerimeter() {super();}
 
@@ -60,6 +54,14 @@ public class CirclePerimeter extends Perimeter implements Serializable {
     public CirclePerimeter clone() {
         return new CirclePerimeter(this);
     }
+
+    @Column(nullable = true)
+    @Basic(fetch=FetchType.EAGER)
+    @TargetType(clz = Point.class)
+    protected UUID center;
+
+    @Column(nullable = true)
+    protected Double radius;
 
     @Override
     public BaseObject copy() {

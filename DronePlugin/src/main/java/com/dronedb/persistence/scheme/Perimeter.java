@@ -10,12 +10,15 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import java.io.Serializable;
 
 /**
  * Created by taljmars on 3/19/17.
  */
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @XmlSeeAlso({PolygonPerimeter.class, CirclePerimeter.class})
 @Entity
 public abstract class Perimeter extends BaseObject implements Serializable {

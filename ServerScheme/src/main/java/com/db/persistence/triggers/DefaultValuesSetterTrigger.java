@@ -62,6 +62,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
 
     // TODO: Learn more about this one
     private Object convert(Class<?> targetType, String text) {
+        /* Getting the property editor of a type, than set it value via String */
         PropertyEditor editor = PropertyEditorManager.findEditor(targetType);
         editor.setAsText(text);
         return editor.getValue();

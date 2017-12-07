@@ -70,10 +70,11 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-	@Transient
+//	@Transient
+//	@org.springframework.data.annotation.Transient
 	@Temporal(TemporalType.TIMESTAMP)
 	@Getter
-	public Date getCreationDate() {  
+	public Date getCreationDate() {
 		return creationDate;
 	}
 
@@ -89,7 +90,8 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-	@Transient
+//	@Transient
+//	@org.springframework.data.annotation.Transient
 	@Temporal(TemporalType.TIMESTAMP)
 	@Getter
 	public Date getUpdatedAt() {
@@ -122,7 +124,8 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-	@Transient
+//	@Transient
+	@org.springframework.data.annotation.Transient
 	@Setter
 	public void setFromRevision(int fromRevision) {
 		this.fromRevision = fromRevision;
@@ -134,7 +137,8 @@ public abstract class BaseObject implements Serializable
 	public Class getClz() {return this.getClass();}
 
     @XmlTransient
-    @Transient
+//    @Transient
+	@org.springframework.data.annotation.Transient
     @Setter
 	public void setClz(Class clz) {this.clz = clz;}
 
@@ -147,7 +151,8 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-	@Transient
+//	@Transient
+	@org.springframework.data.annotation.Transient
 	@Setter
 	public void setEntityManagerCtx(Integer entityManagerCtx) {
 		this.entityManagerCtx = entityManagerCtx;

@@ -52,12 +52,12 @@ public class ReturnToHome extends MissionItem implements Altitudable, Serializab
 	}
 
 	@Override
-	@Column(nullable = true, name = "Alt")
 	public void setAltitude(Double altitude) {
 		this.altitude = altitude;
 	}
 
 	@Override
+	@Column(nullable = true, name = "Alt")
 	public Double getAltitude() {
 		return this.altitude;
 	}

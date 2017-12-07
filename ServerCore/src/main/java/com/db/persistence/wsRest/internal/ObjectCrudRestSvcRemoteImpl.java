@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.UUID;
+//import java.util.UUID;
 
 @RestController
 public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
@@ -152,7 +153,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 
-		@Override
+	@Override
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam UUID objId) throws ObjectNotFoundRemoteException {

@@ -16,7 +16,7 @@ public class WorkSessionPrivateCache {
 
     private static final Boolean ACTIVE = true;
 
-    class Bucket extends HashMap<UUID, Pair<KeyId, Boolean /*Deleted*/ >>{ }
+    class Bucket extends HashMap<String, Pair<KeyId, Boolean /*Deleted*/ >>{ }
 
     private Bucket cacheBucket;
     private Bucket cacheObjectDerefBucket;
@@ -35,7 +35,7 @@ public class WorkSessionPrivateCache {
         return cacheBucket;
     }
 
-    public KeyId get(Class clz, UUID key) {
+    public KeyId get(Class clz, String key) {
         if (!ACTIVE) return null;
         Bucket bucket = getBucket(clz);
 
@@ -45,20 +45,20 @@ public class WorkSessionPrivateCache {
         return pair.getFirst();
     }
 
-    public boolean has(Class clz, UUID key) {
+    public boolean has(Class clz, String key) {
         if (!ACTIVE) return false;
         Bucket bucket = getBucket(clz);
         return bucket.get(key) != null;
     }
 
-    public void remove(Class clz, UUID keyId) {
+    public void remove(Class clz, String keyId) {
         if (!ACTIVE) return;
         Bucket bucket = getBucket(clz);
         if (bucket != null)
             bucket.remove(keyId);
     }
 
-    public void put(Class clz, UUID objId, BaseObject res) {
+    public void put(Class clz, String objId, BaseObject res) {
         if (!ACTIVE) return;
         if (!res.getKeyId().getPrivatelyModified())
             return;
@@ -75,14 +75,14 @@ public class WorkSessionPrivateCache {
         bucket.put(objId, new Pair<>(res.getKeyId(), false));
     }
 
-    public boolean isDeleted(Class clz, UUID key) {
+    public boolean isDeleted(Class clz, String key) {
         if (!ACTIVE) return false;
         Bucket bucket = getBucket(clz);
         Pair pair = bucket.get(key);
         return (pair != null) && pair.getSecond().equals(true);
     }
 
-    public Set<UUID> getAllUuids() {
+    public Set<String> getAllUuids() {
         return cacheBucket.keySet();
     }
 

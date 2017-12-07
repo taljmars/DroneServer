@@ -2,6 +2,7 @@ package com.dronedb.persistence.scheme;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
+import com.db.persistence.scheme.TargetType;
 import com.db.persistence.triggers.DeleteTrigger;
 import com.db.persistence.triggers.DeleteTriggers;
 import com.db.persistence.triggers.UpdateTrigger;
@@ -23,12 +24,12 @@ import java.util.UUID;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllPolygonPerimeters",
-                query = "SELECT * FROM polygonperimeter WHERE " + Constants.POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+                query = "SELECT * FROM PolygonPerimeter WHERE " + Constants.POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
                 resultClass = PolygonPerimeter.class
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedPolygonPerimeters",
-                query = "SELECT * FROM polygonperimeter WHERE privatelyModified = true",
+                query = "SELECT * FROM PolygonPerimeter WHERE privatelyModified = true",
                 resultClass = PolygonPerimeter.class
         )
 })
@@ -78,6 +79,7 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @TargetType(clz = Point.class)
     protected List<UUID> points;
 
 
@@ -97,7 +99,7 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
         points.add(point);
     }
 
-    public void removePoint(UUID point) {
+    public void removePoint(String point) {
         if (points != null)
             points.remove(point);
     }

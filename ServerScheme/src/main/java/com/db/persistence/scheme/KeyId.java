@@ -27,7 +27,7 @@ public class KeyId implements Serializable{
     @Getter
     @Basic(optional = false)
     @XmlElement(required = true)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 16)
     public UUID getObjId() {
         return objId;
     }

@@ -55,7 +55,8 @@ public class Land extends MissionItem implements Altitudable, Serializable {
 	}
 
 	@Override
-	@Column(nullable = false, name = "Alt")
+//	@Column(nullable = false, name = "Alt")
+	@Column(nullable = true, name = "Alt")
 	public Double getAltitude() {
 		return this.altitude;
 	}

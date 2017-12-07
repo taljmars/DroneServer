@@ -12,13 +12,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 
+import com.db.server.JpaVendorAdapters.JpaVendorAdapterBase;
 import com.plugins_manager.PluginsManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.SharedEntityManagerCreator;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -37,7 +40,7 @@ public class PersistenceJPAConfig {
 
     private static final String FILENAME = "PASS_FILE";
 
-    final static Logger logger = Logger.getLogger(DroneServer.class);
+    private final static Logger logger = Logger.getLogger(DroneServer.class);
 
     @Autowired
     private Environment env;
@@ -65,26 +68,26 @@ public class PersistenceJPAConfig {
 
     // beans
 
-    @Bean
-    @Lazy
-    public EntityManager createEntityManager(@Autowired EntityManagerFactory entityManagerFactory) {
-        System.out.println("TALMA WIN!!!!!");
-        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
-    }
+//    @Bean
+//    @Lazy
+//    public EntityManager createEntityManager(@Autowired EntityManagerFactory entityManagerFactory) {
+//        System.out.println("TALMA WIN!!!!!");
+//        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
+//    }
 
 
 
     @Bean
     public DataSource dataSource() {
-    	DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    	dataSource.setDriverClassName("org.postgresql.Driver");
-    	dataSource.setUrl("jdbc:postgresql://localhost:5432/dronedb");
-    	dataSource.setUsername( "postgres" );
-    	String pass = getPassword();
-    	if (pass == null || pass.isEmpty())
-    	    dataSource.setPassword( "postgres" );
-    	else
-    	    dataSource.setPassword(pass);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/dronedb");
+        dataSource.setUsername( "postgres" );
+        String pass = getPassword();
+        if (pass == null || pass.isEmpty())
+            dataSource.setPassword( "postgres" );
+        else
+           dataSource.setPassword(pass);
         return dataSource;
     }
 
@@ -96,22 +99,33 @@ public class PersistenceJPAConfig {
 //    }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Autowired DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            @Autowired DataSource dataSource,
+            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+//            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+    {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
+        logger.debug("Set persistence data source: " + dataSource);
         em.setDataSource(dataSource);
-        PluginsManager pluginsManager = PluginsManager.getInstance();
-        List<String> schemesLocation = pluginsManager.getSchemes();
 
-        String[] schemes = new String[schemesLocation.size()];
+        logger.debug("Fetching plugins manager");
+        PluginsManager pluginsManager = PluginsManager.getInstance();
+
         logger.debug("Loading Scheme to DB");
-//        em.setPackagesToScan(new String[] { "com.db.persistence.scheme", "com.dronedb.persistence.scheme" });
+        List<String> schemesLocation = pluginsManager.getSchemes();
+        schemesLocation.stream().forEach((scmName) -> logger.debug("Scheme target name: " + scmName));
+        String[] schemes = new String[schemesLocation.size()];
         schemes = schemesLocation.toArray(schemes);
+
+        logger.debug("Scan for schemes");
         em.setPackagesToScan(schemes);
 
-        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+        // Setting JPA adapter and it properties
+        logger.debug("Setting JPA adapter: " + jpaVendorAdapter.getClass().getCanonicalName());
+        em.setJpaVendorAdapter(jpaVendorAdapter);
+        logger.debug("Setting JPA properties: " + jpaVendorAdapter.getProperties());
+        em.setJpaProperties(jpaVendorAdapter.getProperties());
 
         //TODO: Remove this limitation, we should enable auto-validate in the future
         // Prevent validation from automatic running during publish by hibernate
@@ -124,19 +138,4 @@ public class PersistenceJPAConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-
-    final Properties additionalProperties() {
-//    @Bean
-//    public final Properties additionalProperties() {
-        final Properties hibernateProperties = new Properties();
-        // Flush the DB at the end
-//        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-//        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        hibernateProperties.setProperty("hibernate.show_sql", "true");
-//        hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
-        return hibernateProperties;
-    }
-
 }

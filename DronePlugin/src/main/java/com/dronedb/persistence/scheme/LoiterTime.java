@@ -59,13 +59,15 @@ public class LoiterTime extends MissionItem implements Altitudable, Serializable
 
 	@Override
 	@Value(value = "10")
-	@Column(nullable = false, name = "Alt")
+//	@Column(nullable = false, name = "Alt")
+	@Column(nullable = true, name = "Alt")
 	public Double getAltitude() {
 		return this.altitude;
 	}
 
 	@Value(value = "5")
-	@Column(nullable = false, name = "Sec")
+//	@Column(nullable = false, name = "Sec")
+	@Column(nullable = true, name = "Sec")
 	public Integer getSeconds() {
 		return seconds;
 	}

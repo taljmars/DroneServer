@@ -4,6 +4,7 @@ import com.db.persistence.scheme.*;
 import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
-import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +26,9 @@ public class VirtualizedEntityManager extends EntityManagerBase {
     public void setRevisionManager(RevisionManager revisionManager) {
         this.revisionManager = revisionManager;
     }
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     protected SimpleEntityManagerWrapper entityManagerWrapper;
     protected Integer entityManagerCtx;
@@ -48,11 +51,17 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         keyId.setPrivatelyModified(true);
         keyId.setObjId(uuid);
         T found =  entityManagerWrapper.find(clz, keyId);
-        if (found != null && found.getEntityManagerCtx().equals(entityManagerCtx))
+        if (found != null && found.getEntityManagerCtx().equals(entityManagerCtx)) {
+            LOGGER.debug("Found object in private db");
             return found;
+        }
 
         keyId.setPrivatelyModified(false);
-        return entityManagerWrapper.find(clz, keyId);
+        found = entityManagerWrapper.find(clz, keyId);
+        if (found != null) LOGGER.debug("Found object in public db");
+        else LOGGER.debug("Object doesn't exist");
+
+        return found;
     }
 
     @Override
@@ -106,7 +115,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         LOGGER.debug("Persist object: " + object);
         object.getKeyId().setToRevision(Constants.TIP_REVISION);
         object.getKeyId().setPrivatelyModified(true);
-        object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
+        object.setDeleted(false);
         object.setEntityManagerCtx(entityManagerCtx);
 //        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
 //        if (entityInformation.isNew(object)) {
@@ -135,7 +144,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
             // Setting toVersion field to represent the last version
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
-            object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
+            object.setDeleted(false);
             object.setEntityManagerCtx(entityManagerCtx);
             entityManagerWrapper.persist(object);
             existingObject = object;
@@ -178,23 +187,21 @@ public class VirtualizedEntityManager extends EntityManagerBase {
     @Override
     public void publish() {
         int nextRevision = revisionManager.getNextRevision();
-        Metamodel mm = getMetamodel();
-        for (final ManagedType<?> managedType : mm.getManagedTypes()) {
-            Class clz = managedType.getJavaType();
-            LOGGER.error("Found managed class '" + clz.getCanonicalName() + "'");
-            if (Modifier.isAbstract(clz.getModifiers()))
-                continue;
 
-            if (!BaseObject.class.isAssignableFrom(clz) || clz == BaseObject.class)
-                continue;
-
-            if (!clz.isAnnotationPresent(Sessionable.class))
-                continue;
-
-            LOGGER.debug("going to handle '" + clz.getCanonicalName() + "' publishing");
+        LOGGER.debug("Start publish class types");
+        List<Class> lst = applicationContext.getBean(ManagedClassTopologicalSorter.class).getManagedClasses(entityManagerWrapper);
+        for (Class clz : lst) {
+            LOGGER.debug("Going to handle '" + clz.getCanonicalName() + "' publishing");
             handlePublishForType(clz, nextRevision);
         }
+
+        LOGGER.debug("Flush Cache");
         workSessionCache.flush();
+
+        LOGGER.debug("Flush Entity Manager");
+        entityManagerWrapper.flush();
+
+        LOGGER.debug("Set next revision");
         revisionManager.advance();
     }
 
@@ -233,8 +240,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
                 entityManagerWrapper.remove(objectDeref);
             entityManagerWrapper.remove(item);
         }
-//        Set<UUID> uuidList = workSessionCache.getAllUuids();
-//        for (UUID item : uuidList) {
+//        Set<String> uuidList = workSessionCache.getAllUuids();
+//        for (String item : uuidList) {
 //            ObjectDeref objectDeref = find(ObjectDeref.class, item);
 //            Class clazz = objectDeref.getClzType();
 //            if (objectDeref.getKeyId().getPrivatelyModified())
@@ -261,8 +268,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             }
         }
 
-//        Set<UUID> uuidList = workSessionCache.getAllUuids();
-//        for (UUID item : uuidList) {
+//        Set<String> uuidList = workSessionCache.getAllUuids();
+//        for (String item : uuidList) {
 //            ObjectDeref objectDeref = find(ObjectDeref.class, item);
 //            Class clazz = objectDeref.getClzType();
 //            if (objectDeref.getKeyId().getPrivatelyModified())
@@ -308,6 +315,12 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     private void MarkObjectDeref(BaseObject item, int nextRevision) {
             ObjectDeref objectDeref = find(ObjectDeref.class, item.getKeyId().getObjId());
+            if (objectDeref == null) {
+                String msg = "Critical Error: Failed to find object reference to '" + item.getKeyId().getObjId() + "' of type '" + item.getClass().getSimpleName() + "'";
+                LOGGER.error(msg);
+                throw new RuntimeException(msg);
+            }
+
             if (!item.isDeleted() && !objectDeref.getKeyId().getPrivatelyModified())
                 return;
 

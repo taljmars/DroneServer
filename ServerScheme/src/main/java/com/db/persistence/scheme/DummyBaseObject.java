@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity
+@Sessionable
 public class DummyBaseObject extends BaseObject {
 
     public DummyBaseObject() {
@@ -44,7 +45,7 @@ public class DummyBaseObject extends BaseObject {
     public void set(BaseObject baseObject) {
         System.out.println("Setting deref");
         DummyBaseObject dummyBaseObject = (DummyBaseObject) baseObject;
-        this.setName(baseObject.getCreationDate().toString());
+        this.setName(dummyBaseObject.getName());
     }
 
 

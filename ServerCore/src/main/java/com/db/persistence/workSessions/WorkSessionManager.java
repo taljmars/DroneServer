@@ -52,14 +52,19 @@ public class WorkSessionManager {
         if (workSessionMap.keySet().contains(userName))
             return workSessionMap.get(userName);
 
+        /*
+            In worksession design, the main entity manager of the persistence manager will
+            be the public session, while the virtualized ones will be called private
+        */
         WorkSessionType type = userName.toLowerCase().equals("public") ? WorkSessionType.PUBLIC : WorkSessionType.PRIVATE;
         EntityManagerType entityManagerType = type == WorkSessionType.PUBLIC ? EntityManagerType.MAIN_ENTITY_MANAGER : EntityManagerType.VIRTUALIZED_ENTITY_MANAGER;
         EntityManagerBase entityManager = persistencyManager.createEntityManager(entityManagerType);
-        //TODO: Add validation and exception here
 
         logger.debug("New session id was allocated: " + entityManager.getId());
         WorkSession session = applicationContext.getBean(WorkSession.class, userName, type, entityManager.getId(), entityManager);
 
+        /* Build an entity to represent the sesion in the database
+         * Every object create under this session will be related to this object */
         WorkSessionEntity workSessionEntity = new WorkSessionEntity();
         workSessionEntity.setEntityManagerCtx(session.getSessionId());
         workSessionEntity.setReferredEntityManagerCtx(session.getSessionId());

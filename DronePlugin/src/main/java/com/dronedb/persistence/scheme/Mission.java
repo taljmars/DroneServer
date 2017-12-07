@@ -2,6 +2,7 @@ package com.dronedb.persistence.scheme;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
+import com.db.persistence.scheme.TargetType;
 import com.db.persistence.triggers.DeleteTrigger;
 import com.db.persistence.triggers.UpdateTrigger;
 import com.dronedb.persistence.validations.NameNotEmptyValidation;
@@ -23,24 +24,24 @@ import static com.db.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRI
 	@NamedNativeQuery(
 		name = "GetAllMissions",
 //		query = "SELECT * FROM mission WHERE " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-		query = "SELECT * FROM mission",
+		query = "SELECT * FROM Mission",
 		resultClass = Mission.class
 	),
     @NamedNativeQuery(
     	name = "GetMissionById",
 //    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-	query = "SELECT * FROM mission WHERE objid=:OBJID",
+	query = "SELECT * FROM Mission WHERE objid=:OBJID",
     	resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 		name = "GetMissionByName",
 		//query = "SELECT * FROM mission WHERE name ilike =:NAME AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-		query = "SELECT * FROM mission WHERE name ilike =:NAME",
+		query = "SELECT * FROM Mission WHERE name ilike =:NAME",
 		resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 			name = "GetAllModifiedMissions",
-			query = "SELECT * FROM mission WHERE privatelyModified = true",
+			query = "SELECT * FROM Mission WHERE privatelyModified = true",
 			resultClass = Mission.class
 	)
 })
@@ -61,7 +62,7 @@ public class Mission extends BaseObject implements Serializable
 	
 	public Mission() {
 		super();
-		missionItemsUids = new ArrayList<UUID>();
+		missionItemsUids = new ArrayList<>();
 	}
 
 	public Mission(Mission mission) {
@@ -122,6 +123,7 @@ public class Mission extends BaseObject implements Serializable
 	//@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
 //	@JoinTable(name = "mission_missionitem", joinColumns = @JoinColumn(name = "mission_id", referencedColumnName = "objid"), inverseJoinColumns = @JoinColumn(name = "missionitem_id", referencedColumnName="objid"))
 	@ElementCollection(fetch = FetchType.EAGER)
+	@TargetType(clz = MissionItem.class)
 	private List<UUID> missionItemsUids;
 	
 	@Getter

@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 public class TransactionManagersConfig {
 
     @Autowired
-    EntityManagerFactory emf;
+    private EntityManagerFactory emf;
 
     @Bean
     public PlatformTransactionManager transactionManager(@Autowired DataSource dataSource) {
