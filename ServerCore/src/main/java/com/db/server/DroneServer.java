@@ -21,9 +21,7 @@ import javax.servlet.ServletContextListener;
 import javax.xml.ws.Endpoint;
 import org.apache.log4j.Logger;
 
-//@Component
 @Import({DroneDBServerAppConfig.class, DroneWeb.class})
-//@ComponentScan({ "com.db.persistence.wsRest.internal" })
 @SpringBootApplication
 public class DroneServer extends SpringBootServletInitializer
 {
@@ -56,43 +54,38 @@ public class DroneServer extends SpringBootServletInitializer
 	}
 
 //	public void run(String[] args) {
-@Bean
-public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-	return args -> {
-		String logPath = "Logs";
-		String confPath = "ServerCore/addon/conf/";
-		if (args != null && args.length == 2) {
-			logPath = args[0];
-			confPath = args[1];
-		}
-		else {
-			System.err.println("MISSING PARAMETERS");
-		}
-		System.err.println("TALMA TALMA " + logPath + " " + confPath);
-		// Debugs
-		System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
-		System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
-		System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
-		System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
+	@Bean
+	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+		return args -> {
+			String logPath = "Logs";
+			String confPath = "ServerCore/addon/conf/";
+			if (args != null && args.length == 2) {
+				logPath = args[0];
+				confPath = args[1];
+			}
+			else {
+				System.err.println("MISSING PARAMETERS");
+			}
 
-		// Temporary solution
-		System.setProperty("jdbc.driverClassName", "org.postgresql.Driver");
-		System.setProperty("jdbc.url", "jdbc:postgresql://localhost:5432/dronedb");
-		System.setProperty("jdbc.user", "postgres");
-		System.setProperty("jdbc.pass", "postgres");
-		System.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-//		System.setProperty("hibernate.show_sql", "true");
-		System.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+			// Debugs
+			System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+			System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
+			System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
+			System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
 
-		// External Settings
-		System.setProperty("LOGS.DIR", logPath);
-		System.setProperty("CONF.DIR", confPath);
+			// External Settings
+			System.setProperty("LOGS.DIR", logPath);
+			System.setProperty("CONF.DIR", confPath);
 
-		DroneDBServerAppConfig.context = ctx;
-//		DroneServer droneServer = DroneDBServerAppConfig.context.getBean(DroneServer.class);
-//		droneServer.go();
-	};
-}
+			DroneDBServerAppConfig.context = ctx;
+	//		DroneServer droneServer = DroneDBServerAppConfig.context.getBean(DroneServer.class);
+	//		droneServer.go();
+
+			logger.debug("Details: " + logPath + " " + confPath);
+			logger.debug("Server is up and running!");
+			System.err.println("Server is up and running!");
+		};
+	}
 
 	private void go() {
 //		System.setProperty("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");

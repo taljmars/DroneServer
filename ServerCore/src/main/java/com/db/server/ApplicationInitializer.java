@@ -13,7 +13,7 @@ import javax.servlet.ServletRegistration;
 public class ApplicationInitializer implements WebApplicationInitializer {
 
     public void onStartup(ServletContext container) throws ServletException {
-        System.out.println("TALMA !!!!!!!!");
+        System.out.println("Servlet Register");
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.setServletContext(container);
         ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(ctx));
