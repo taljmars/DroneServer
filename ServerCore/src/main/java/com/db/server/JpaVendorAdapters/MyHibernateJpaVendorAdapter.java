@@ -1,8 +1,10 @@
 package com.db.server.JpaVendorAdapters;
 
+import ch.qos.logback.core.db.dialect.PostgreSQLDialect;
 import org.apache.log4j.Logger;
+//import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +24,9 @@ public class MyHibernateJpaVendorAdapter extends HibernateJpaVendorAdapter imple
         // Flush the DB at the end
 //        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 //        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create-drop");
+        properties.setProperty(AvailableSettings.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty(AvailableSettings.SHOW_SQL, "true");
 //        hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
         return properties;
     }

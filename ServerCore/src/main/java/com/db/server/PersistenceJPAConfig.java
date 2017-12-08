@@ -28,14 +28,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-//@EnableTransactionManagement
 @ComponentScan({ "com.dronedb.persistence", "com.db.persistence" })
-@ComponentScan({ "com.db.persistence" })
-@ComponentScan({ "com.db.persistence.wsRest.internal" })
 @ComponentScan({ "com.db.server" })
 @ComponentScan({ "com.db.persistence.wsRest.internal" })
-//@EnableWebMvc
-//@PropertySource({ "/com/dronedb/persistence-mysql.properties" })
 public class PersistenceJPAConfig {
 
     private static final String FILENAME = "PASS_FILE";
@@ -66,16 +61,11 @@ public class PersistenceJPAConfig {
 //        return null;
     }
 
-    // beans
-
 //    @Bean
 //    @Lazy
 //    public EntityManager createEntityManager(@Autowired EntityManagerFactory entityManagerFactory) {
-//        System.out.println("TALMA WIN!!!!!");
 //        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
 //    }
-
-
 
     @Bean
     public DataSource dataSource() {
@@ -101,8 +91,8 @@ public class PersistenceJPAConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Autowired DataSource dataSource,
-            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
-//            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+//            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
     {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
