@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class SessionsSvcImpl implements SessionsSvc {
 
-	private final static Logger logger = Logger.getLogger(SessionsSvcImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(SessionsSvcImpl.class);
 
 	@Autowired
 	private WorkSessionManager objectStoreSessionManager;
@@ -34,7 +34,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 		if (currentUserName.equals(userName))
 			return;
 
-		logger.debug("Context was changed for user : " + userName);
+		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = objectStoreSessionManager.createSession(userName);
 	}
 
@@ -51,18 +51,18 @@ public class SessionsSvcImpl implements SessionsSvc {
 	@Transactional
 	public void publish() {
 		// In case we've modified Revision
-		logger.debug("PUBLISH START !!!");
-		logger.debug("Update revision value in revision manager");
+		LOGGER.debug("PUBLISH START !!!");
+		LOGGER.debug("Update revision value in revision manager");
 		workSession.publish();
 		workSession.flush();
-		logger.debug("PUBLISH END !!!");
+		LOGGER.debug("PUBLISH END !!!");
 	}
 
 	@Override
 	@Transactional
 	public void discard() {
-		logger.debug("DISCARD START !!!");
+		LOGGER.debug("DISCARD START !!!");
 		workSession.discard();
-		logger.debug("DISCARD END !!!");
+		LOGGER.debug("DISCARD END !!!");
 	}
 }

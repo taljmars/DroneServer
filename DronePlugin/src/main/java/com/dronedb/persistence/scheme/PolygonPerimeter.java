@@ -29,7 +29,7 @@ import java.util.UUID;
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedPolygonPerimeters",
-                query = "SELECT * FROM PolygonPerimeter WHERE privatelyModified = true",
+                query = "SELECT * FROM PolygonPerimeter WHERE entityManagerCtx != 0",
                 resultClass = PolygonPerimeter.class
         )
 })

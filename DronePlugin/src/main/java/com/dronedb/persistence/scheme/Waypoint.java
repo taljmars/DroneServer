@@ -3,26 +3,14 @@ package com.dronedb.persistence.scheme;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-//import org.hibernate.annotations.ColumnDefault;
-
+import java.io.Serializable;
 
 @Entity
-//@Table(name="missionitems")
-//@NamedNativeQueries({
-//    @NamedNativeQuery(
-//            name    =   "getAllWaypoints",
-//            query   =   "SELECT * FROM missionitems",
-//                        resultClass = Waypoint.class
-//    )
-//})
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @Sessionable

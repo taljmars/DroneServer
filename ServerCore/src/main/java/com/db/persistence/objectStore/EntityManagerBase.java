@@ -59,7 +59,7 @@ public abstract class EntityManagerBase {
         if (obj.getKeyId().getToRevision() != Integer.MAX_VALUE)
             return null;
 
-        if (obj.getKeyId().getPrivatelyModified())
+        if (obj.getKeyId().getEntityManagerCtx() != EntityManagerType.MAIN_ENTITY_MANAGER.id)
             return obj;
 
         T updatedObject = find((Class<T>) obj.getClass(), obj.getKeyId().getObjId());

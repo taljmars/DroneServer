@@ -1,5 +1,6 @@
 package com.db.persistence.web.internal;
 
+import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.QuerySvc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class ObjectizeTable {
                 values.put(fromRevision, obj.getFromRevision());
                 values.put(toRevision, obj.getKeyId().getToRevision());
                 values.put(Deleted, obj.isDeleted() ? "T" : "");
-                values.put(Private, obj.getKeyId().getPrivatelyModified() ? "T" : "");
+                values.put(Private, !obj.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id) ? "T" : "");
                 String clzName = obj.getClass().getTypeName();
 //                values.put(Clz, clzName.substring(clzName.lastIndexOf(".") + 1));
                 values.put(Clz, obj.getClass().getSimpleName());

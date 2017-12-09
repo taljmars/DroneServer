@@ -35,14 +35,14 @@ public class PersistenceJPAConfig {
 
     private static final String FILENAME = "PASS_FILE";
 
-    private final static Logger logger = Logger.getLogger(DroneServer.class);
+    private final static Logger LOGGER = Logger.getLogger(DroneServer.class);
 
     @Autowired
     private Environment env;
 
     public PersistenceJPAConfig() {
         super();
-        logger.debug("PersistenceJPAConfig Created");
+        LOGGER.debug("PersistenceJPAConfig Created");
     }
 
     private static String getPassword() {
@@ -51,10 +51,10 @@ public class PersistenceJPAConfig {
             return br.readLine();
         }
         catch (FileNotFoundException e) {
-            logger.error("Password file doesn't exist");
+            LOGGER.error("Password file doesn't exist");
         }
         catch (IOException e) {
-            logger.error("Failed to read password file");
+            LOGGER.error("Failed to read password file");
         }
         //TODO: TALMA WA
         return "postgres";
@@ -81,40 +81,33 @@ public class PersistenceJPAConfig {
         return dataSource;
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
-//        final JpaTransactionManager transactionManager = new JpaTransactionManager();
-//        transactionManager.setEntityManagerFactory(emf);
-//        return transactionManager;
-//    }
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Autowired DataSource dataSource,
-//            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
-            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+//            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
     {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
-        logger.debug("Set persistence data source: " + dataSource);
+        LOGGER.debug("Set persistence data source: " + dataSource);
         em.setDataSource(dataSource);
 
-        logger.debug("Fetching plugins manager");
+        LOGGER.debug("Fetching plugins manager");
         PluginsManager pluginsManager = PluginsManager.getInstance();
 
-        logger.debug("Loading Scheme to DB");
+        LOGGER.debug("Loading Scheme to DB");
         List<String> schemesLocation = pluginsManager.getSchemes();
-        schemesLocation.stream().forEach((scmName) -> logger.debug("Scheme target name: " + scmName));
+        schemesLocation.stream().forEach((scmName) -> LOGGER.debug("Scheme target name: " + scmName));
         String[] schemes = new String[schemesLocation.size()];
         schemes = schemesLocation.toArray(schemes);
 
-        logger.debug("Scan for schemes");
+        LOGGER.debug("Scan for schemes");
         em.setPackagesToScan(schemes);
 
         // Setting JPA adapter and it properties
-        logger.debug("Setting JPA adapter: " + jpaVendorAdapter.getClass().getCanonicalName());
+        LOGGER.debug("Setting JPA adapter: " + jpaVendorAdapter.getClass().getCanonicalName());
         em.setJpaVendorAdapter(jpaVendorAdapter);
-        logger.debug("Setting JPA properties: " + jpaVendorAdapter.getProperties());
+        LOGGER.debug("Setting JPA properties: " + jpaVendorAdapter.getProperties());
         em.setJpaProperties(jpaVendorAdapter.getProperties());
 
         //TODO: Remove this limitation, we should enable auto-validate in the future

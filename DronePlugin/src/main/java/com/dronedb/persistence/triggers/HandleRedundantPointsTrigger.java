@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(HandleRedundantPointsTrigger.class);
+    private final static Logger LOGGER = Logger.getLogger(HandleRedundantPointsTrigger.class);
 
     public HandleRedundantPointsTrigger() {
         super();
@@ -28,22 +28,22 @@ public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
     @Override
     public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) throws Exception{
         if ((!(oldInst instanceof Perimeter)) || (!(newInst instanceof Perimeter))) {
-            logger.debug("Not a perimeter, trigger skipped");
+            LOGGER.debug("Not a perimeter, trigger skipped");
             return;
         }
 
         if (!oldInst.getClass().equals(newInst.getClass())) {
-            logger.error("Perimeter are not of the same, old instance " + oldInst.getClass() + " new instance " + newInst.getClass());
+            LOGGER.error("Perimeter are not of the same, old instance " + oldInst.getClass() + " new instance " + newInst.getClass());
             return;
         }
 
         ObjectCrudSvc objectCrudSvc = applicationContext.getBean(ObjectCrudSvc.class);
-        logger.debug("Old: " + oldInst);
-        logger.debug("New: " + newInst);
-        logger.debug("Phase: " + phase);
+        LOGGER.debug("Old: " + oldInst);
+        LOGGER.debug("New: " + newInst);
+        LOGGER.debug("Phase: " + phase);
 
         if (oldInst instanceof PolygonPerimeter) {
-            logger.debug("Handle polyline perimeter update");
+            LOGGER.debug("Handle polyline perimeter update");
             for (UUID pointUuid : ((PolygonPerimeter) oldInst).getPoints()) {
                 if (((PolygonPerimeter) newInst).getPoints().contains(pointUuid))
                     continue;
@@ -56,11 +56,11 @@ public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
         }
 
         if (oldInst instanceof CirclePerimeter) {
-            logger.debug("Handle circle perimeter update");
+            LOGGER.debug("Handle circle perimeter update");
             if (((CirclePerimeter) oldInst).getCenter() == null)
                 return;
             if (!((CirclePerimeter) oldInst).getCenter().equals(((CirclePerimeter) newInst).getCenter())) {
-                logger.debug("Center was changed, remove item");
+                LOGGER.debug("Center was changed, remove item");
                 Point point = objectCrudSvc.readByClass(((CirclePerimeter) oldInst).getCenter(), Point.class);
                 objectCrudSvc.delete(point);
             }

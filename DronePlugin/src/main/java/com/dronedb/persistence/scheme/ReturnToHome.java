@@ -3,16 +3,11 @@ package com.dronedb.persistence.scheme;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
-//import org.hibernate.annotations.ColumnDefault;
-
+import java.io.Serializable;
 
 @Entity
-//@Table(name="missionitems")
 @Sessionable
 public class ReturnToHome extends MissionItem implements Altitudable, Serializable {
 		

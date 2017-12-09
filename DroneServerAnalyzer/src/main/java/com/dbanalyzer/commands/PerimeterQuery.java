@@ -71,7 +71,7 @@ public class PerimeterQuery implements RunnablePayload {
                 List<UUID> uids = polygonPerimeter.getPoints();
                 ans += String.format("%37s | %11d | %10d | %7s | %7s | %10s | %5d\n",
                         polygonPerimeter.getKeyId().getObjId(), polygonPerimeter.getFromRevision(), polygonPerimeter.getKeyId().getToRevision(),
-                        polygonPerimeter.isDeleted() ? "T" : "", polygonPerimeter.getKeyId().getPrivatelyModified() ? "PRIVATE" : "PUBLIC",
+                        polygonPerimeter.isDeleted() ? "T" : "", !polygonPerimeter.getKeyId().getEntityManagerCtx().equals(0) ? "PRIVATE" : "PUBLIC",
                         polygonPerimeter.getName(),
                         uids.size()
                 );

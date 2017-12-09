@@ -27,7 +27,7 @@ import java.util.UUID;
 @Component
 public class ObjectCrudSvcImpl implements ObjectCrudSvc
 {
-	private final static Logger logger = Logger.getLogger(ObjectCrudSvcImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(ObjectCrudSvcImpl.class);
 
 	@Autowired
 	private RuntimeValidator runtimeValidator;
@@ -55,7 +55,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			return;
 
 		currentUserName = userName;
-		logger.debug("Context was changed for user : " + userName);
+		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
 	}
 
@@ -63,7 +63,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	@Transactional
 	//public <T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceException {
 	public <T extends BaseObject> T create(String clz) throws ObjectInstanceException {
-		logger.debug("Crud CREATE called " + clz);
+		LOGGER.debug("Crud CREATE called " + clz);
 		try {
 			Class<T> c = (Class<T>) Class.forName(clz);
 			T inst = c.newInstance();
@@ -71,7 +71,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			return inst;
 		} 
 		catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			logger.error("Failed to create object of type " + clz, e);
+			LOGGER.error("Failed to create object of type " + clz, e);
 			throw new ObjectInstanceException(e);
 		}
 	}
@@ -79,31 +79,31 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	@Override
 	@Transactional
 	public <T extends BaseObject> T update(T object) throws DatabaseValidationException, ObjectInstanceException {
-		logger.debug("Crud UPDATE called " + object);
+		LOGGER.debug("Crud UPDATE called " + object);
 		PHASE phase;
 
-		logger.debug("Search for the current object");
+		LOGGER.debug("Search for the current object");
 		T oldVersion = (T) read(object.getKeyId().getObjId());
 		if (oldVersion != null) {
-			logger.debug("Found existing object, clone it");
+			LOGGER.debug("Found existing object, clone it");
 			oldVersion = (T) oldVersion.clone();
 		}
 
-		logger.debug("Run validation on the object");
+		LOGGER.debug("Run validation on the object");
 		ValidatorResponse validatorResponse = runtimeValidator.validate(object);
 		if (validatorResponse.isFailed()) {
-			logger.error("Validation failed: " + validatorResponse);
+			LOGGER.error("Validation failed: " + validatorResponse);
 			throw new DatabaseValidationException(validatorResponse.getMessage());
 		}
 
-		logger.debug("Going to update object");
+		LOGGER.debug("Going to update object");
 		T existingObject = workSession.update(object);
 
-		logger.debug("Handling triggers");
+		LOGGER.debug("Handling triggers");
 		handleUpdateTriggers(oldVersion, existingObject, oldVersion == null ? PHASE.CREATE : PHASE.UPDATE );
 
 		T mergedObject = existingObject;
-		logger.debug("Updated " + mergedObject);
+		LOGGER.debug("Updated " + mergedObject);
 		return mergedObject;
 	}
 
@@ -118,7 +118,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	@Override
 	@Transactional
 	public <T extends BaseObject> T delete(T object) throws DatabaseValidationException, ObjectInstanceException, ObjectNotFoundException {
-		logger.debug("Crud DELETE called " + object);
+		LOGGER.debug("Crud DELETE called " + object);
 
 		T existingPrivateObject = workSession.delete(object);
 		if (existingPrivateObject == null) {
@@ -126,7 +126,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 		}
 
 		// Calling deletion trigger
-		logger.debug("Calling delete triggers");
+		LOGGER.debug("Calling delete triggers");
 		handleDeleteTriggers(existingPrivateObject);
 
 		workSession.flush();
@@ -143,7 +143,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	@Override
 	@Transactional
 	public <T extends BaseObject> T readByClass(UUID objId, Class<T> clz) throws ObjectNotFoundException {
-		logger.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
+		LOGGER.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
 		// First search in the private db
 		T object = workSession.find(clz ,objId);
@@ -171,28 +171,28 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			if (updateTriggerList.isEmpty())
 				return;
 
-			logger.debug("Invoking Update Trigger for:  " + newInst.toString());
-			logger.debug("Triggers List: " + Arrays.asList(newInst.getClass().getAnnotations()).toString());
+			LOGGER.debug("Invoking Update Trigger for:  " + newInst.toString());
+			LOGGER.debug("Triggers List: " + Arrays.asList(newInst.getClass().getAnnotations()).toString());
 
 			for (UpdateTrigger updateTrigger : updateTriggerList) {
 
 				// Check if the required phase of the trigger matches the phase we've got
 				if (!updateTrigger.phase().equals(phase)) {
-					logger.debug("Not in relevant phase " + updateTrigger.phase());
+					LOGGER.debug("Not in relevant phase " + updateTrigger.phase());
 					continue;
 				}
 
 				// Prepare update trigger
 				String triggerClasspath = updateTrigger.trigger();
 				Class<? extends UpdateObjectTrigger> trigger = (Class<? extends UpdateObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
-				logger.debug("Trigger executed: " + trigger.getSimpleName());
+				LOGGER.debug("Trigger executed: " + trigger.getSimpleName());
 				UpdateObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(DroneDBServerAppConfig.context);
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
 		catch (Exception e) {
-			logger.error("Failed to update trigger", e);
+			LOGGER.error("Failed to update trigger", e);
 			throw new ObjectInstanceException(e);
 		}
 	}
@@ -212,20 +212,20 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			if (deleteTriggerList.isEmpty())
 				return;
 
-			logger.debug("Invoking Delete Trigger for:  " + inst.toString());
-			logger.debug("Triggers List: " + Arrays.asList(inst.getClass().getAnnotations()).toString());
+			LOGGER.debug("Invoking Delete Trigger for:  " + inst.toString());
+			LOGGER.debug("Triggers List: " + Arrays.asList(inst.getClass().getAnnotations()).toString());
 			
 			for (DeleteTrigger deleteTrigger : deleteTriggerList) {
 				String triggerClasspath = deleteTrigger.trigger();
 				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
 				t.setApplicationContext(DroneDBServerAppConfig.context);
-				logger.debug("Trigger executed: " + t.getClass().getSimpleName());
+				LOGGER.debug("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleDeleteObject(inst);	
 			}
 		} 
 		catch (Exception e) {
-			logger.error("Failed to handle delete trigger", e);
+			LOGGER.error("Failed to handle delete trigger", e);
 			throw new ObjectInstanceException(e);
 		}
 	}

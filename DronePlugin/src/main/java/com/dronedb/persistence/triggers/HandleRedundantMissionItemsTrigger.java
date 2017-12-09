@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class HandleRedundantMissionItemsTrigger extends UpdateObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(HandleRedundantMissionItemsTrigger.class);
+    private final static Logger LOGGER = Logger.getLogger(HandleRedundantMissionItemsTrigger.class);
 
     public HandleRedundantMissionItemsTrigger() {
         super();
@@ -24,7 +24,7 @@ public class HandleRedundantMissionItemsTrigger extends UpdateObjectTriggerImpl 
     @Override
     public <T extends BaseObject> void handleUpdateObject(T oldInst, T newInst, UpdateTrigger.PHASE phase) throws Exception{
         if ((!(oldInst instanceof Mission)) || (!(newInst instanceof Mission))) {
-            logger.debug("Not a mission, trigger skipped");
+            LOGGER.debug("Not a mission, trigger skipped");
             return;
         }
 

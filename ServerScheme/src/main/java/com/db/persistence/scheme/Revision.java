@@ -35,7 +35,6 @@ public class Revision extends BaseObject implements Serializable {
 
     @Override
     public void set(BaseObject baseObject) {
-        System.out.println("Setting revision");
         Revision revision = (Revision) baseObject;
         this.setCurrentRevision(revision.getCurrentRevision());
     }

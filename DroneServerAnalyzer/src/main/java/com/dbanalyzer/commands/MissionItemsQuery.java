@@ -70,7 +70,7 @@ public class MissionItemsQuery implements RunnablePayload {
                 MissionItem missionItem = (MissionItem) msn;
                 ans += String.format("%37s | %11d | %10d | %7s | %7s | %10s | %6dd | %6dd\n",
                         missionItem.getKeyId().getObjId(), missionItem.getFromRevision(), missionItem.getKeyId().getToRevision(),
-                        missionItem.isDeleted() ? "T" : "", missionItem.getKeyId().getPrivatelyModified() ? "PRIVATE" : "PUBLIC",
+                        missionItem.isDeleted() ? "T" : "", !missionItem.getKeyId().getEntityManagerCtx().equals(0) ? "PRIVATE" : "PUBLIC",
                         missionItem.getClz().getSimpleName(),
                         missionItem.getLat(),
                         missionItem.getLon()

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class QueryExecutor {
 
-    private final static Logger logger = Logger.getLogger(QueryExecutor.class);
+    private final static Logger LOGGER = Logger.getLogger(QueryExecutor.class);
 
     private EntityManagerBase entityManager;
 
@@ -38,7 +38,7 @@ public class QueryExecutor {
     }
 
     private <T extends BaseObject> List<T> translateResults(List<T> res) {
-        logger.debug("Going to translate " + res.size() + " objects");
+        LOGGER.debug("Going to translate " + res.size() + " objects");
         List<T> finalResults = new ArrayList<>();
         for (T obj : res) {
             T updatedObject = entityManager.pull(obj);

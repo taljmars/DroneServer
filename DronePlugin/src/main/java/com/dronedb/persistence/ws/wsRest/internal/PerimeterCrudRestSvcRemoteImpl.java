@@ -25,7 +25,7 @@ import javax.jws.WebService;
 @RestController
 public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemote {
 
-    final static Logger logger = Logger.getLogger(PerimeterCrudRestSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(PerimeterCrudRestSvcRemoteImpl.class);
 
     @Autowired
     private PerimeterCrudSvc perimeterCrudSvc;
@@ -36,20 +36,20 @@ public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemot
     @SuppressWarnings("unchecked")
     public <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
         try {
-            logger.debug("cloning perimeter");
+            LOGGER.debug("cloning perimeter");
             T clonedPerimeter = (T) perimeterCrudSvc.clonePerimeter(perimeter).copy();
             return new ResponseEntity<T>(clonedPerimeter, HttpStatus.OK);
         }
         catch (DatabaseValidationException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new DatabaseValidationRemoteException(e.getMessage());
         }
         catch (ObjectNotFoundException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new ObjectNotFoundRemoteException(e.getMessage());
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
@@ -62,7 +62,7 @@ public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemot
             Point point = (Point) perimeterCrudSvc.createPoint().copy();
             return new ResponseEntity<Point>(point, HttpStatus.OK);
         } catch (ObjectInstanceException e) {
-            logger.error("Failed to create point", e);
+            LOGGER.error("Failed to create point", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }

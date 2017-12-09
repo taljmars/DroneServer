@@ -12,11 +12,11 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class NameNotEmptyValidator implements ConstraintValidator<NameNotEmptyValidation, Mission> {
 
-    private final static Logger logger = Logger.getLogger(NameNotEmptyValidator.class);
+    private final static Logger LOGGER = Logger.getLogger(NameNotEmptyValidator.class);
 
     @Override
     public void initialize(NameNotEmptyValidation constraintAnnotation) {
-        logger.debug("Initialize validator " + getClass().getSimpleName());
+        LOGGER.debug("Initialize validator " + getClass().getSimpleName());
     }
 
     @Override

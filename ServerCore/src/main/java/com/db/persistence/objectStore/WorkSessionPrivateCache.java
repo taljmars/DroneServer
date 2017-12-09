@@ -60,7 +60,8 @@ public class WorkSessionPrivateCache {
 
     public void put(Class clz, String objId, BaseObject res) {
         if (!ACTIVE) return;
-        if (!res.getKeyId().getPrivatelyModified())
+
+        if (res.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id))
             return;
 
         Bucket bucket = getBucket(clz);

@@ -105,7 +105,7 @@ public class Query implements RunnablePayload {
                 values.put(fromRevision, obj.getFromRevision());
                 values.put(toRevision, obj.getKeyId().getToRevision());
                 values.put(Deleted, obj.isDeleted() ? "T" : "");
-                values.put(Private, obj.getKeyId().getPrivatelyModified() ? "T" : "");
+                values.put(Private, !obj.getKeyId().getEntityManagerCtx().equals(0) ? "T" : "");
                 String clzName = obj.getClass().getTypeName();
 //                values.put(Clz, clzName.substring(clzName.lastIndexOf(".") + 1));
                 values.put(Clz, obj.getClass().getSimpleName());

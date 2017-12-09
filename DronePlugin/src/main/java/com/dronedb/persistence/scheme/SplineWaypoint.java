@@ -7,18 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.io.Serializable;
 
-//import org.hibernate.annotations.ColumnDefault;
-
-
 @Entity
-//@Table(name="missionitems")
-//@NamedNativeQueries({
-//    @NamedNativeQuery(
-//            name    =   "getAllWaypoints",
-//            query   =   "SELECT * FROM missionitems",
-//                        resultClass = Waypoint.class
-//    )
-//})
 @Sessionable
 public class SplineWaypoint extends MissionItem implements Altitudable, Delayable, Serializable {
 

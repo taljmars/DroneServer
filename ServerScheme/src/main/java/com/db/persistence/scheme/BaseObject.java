@@ -1,13 +1,13 @@
 package com.db.persistence.scheme;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,7 +30,7 @@ public abstract class BaseObject implements Serializable
 		// New values for cloning
 		this.deleted = baseObject.deleted;
 		this.fromRevision = baseObject.fromRevision;
-		this.entityManagerCtx = baseObject.entityManagerCtx;
+//		this.entityManagerCtx = baseObject.entityManagerCtx;
 	}
 
 	/**
@@ -64,14 +64,13 @@ public abstract class BaseObject implements Serializable
 
 	private Date creationDate;
 
-	@PrePersist  
+	@PrePersist
 	public void onCreate() {  
 		this.creationDate = new Date();
 	}
 
 	@XmlTransient
-//	@Transient
-//	@org.springframework.data.annotation.Transient
+	@Transient
 	@Temporal(TemporalType.TIMESTAMP)
 	@Getter
 	public Date getCreationDate() {
@@ -90,8 +89,7 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-//	@Transient
-//	@org.springframework.data.annotation.Transient
+	@Transient
 	@Temporal(TemporalType.TIMESTAMP)
 	@Getter
 	public Date getUpdatedAt() {
@@ -124,8 +122,7 @@ public abstract class BaseObject implements Serializable
 	}
 
 	@XmlTransient
-//	@Transient
-	@org.springframework.data.annotation.Transient
+	@Transient
 	@Setter
 	public void setFromRevision(int fromRevision) {
 		this.fromRevision = fromRevision;
@@ -137,26 +134,11 @@ public abstract class BaseObject implements Serializable
 	public Class getClz() {return this.getClass();}
 
     @XmlTransient
-//    @Transient
-	@org.springframework.data.annotation.Transient
+    @Transient
     @Setter
 	public void setClz(Class clz) {this.clz = clz;}
 
 	public abstract void set(BaseObject baseObject);
-
-	private Integer entityManagerCtx;
-
-	public Integer getEntityManagerCtx() {
-		return entityManagerCtx;
-	}
-
-	@XmlTransient
-//	@Transient
-	@org.springframework.data.annotation.Transient
-	@Setter
-	public void setEntityManagerCtx(Integer entityManagerCtx) {
-		this.entityManagerCtx = entityManagerCtx;
-	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -170,8 +152,7 @@ public abstract class BaseObject implements Serializable
 		if (keyId != null ? !keyId.equals(that.keyId) : that.keyId != null) return false;
 		if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
 		if (updatedAt != null ? !updatedAt.equals(that.updatedAt) : that.updatedAt != null) return false;
-		if (clz != null ? !clz.equals(that.clz) : that.clz != null) return false;
-		return entityManagerCtx != null ? entityManagerCtx.equals(that.entityManagerCtx) : that.entityManagerCtx == null;
+		return clz != null ? clz.equals(that.clz) : that.clz == null;
 	}
 
 	@Override
@@ -182,7 +163,6 @@ public abstract class BaseObject implements Serializable
 		result = 31 * result + (deleted ? 1 : 0);
 		result = 31 * result + fromRevision;
 		result = 31 * result + (clz != null ? clz.hashCode() : 0);
-		result = 31 * result + (entityManagerCtx != null ? entityManagerCtx.hashCode() : 0);
 		return result;
 	}
 
@@ -195,7 +175,6 @@ public abstract class BaseObject implements Serializable
 				", deleted=" + deleted +
 				", fromRevision=" + fromRevision +
 				", clz=" + clz +
-				", entityManagerCtx=" + entityManagerCtx +
 				'}';
 	}
 }

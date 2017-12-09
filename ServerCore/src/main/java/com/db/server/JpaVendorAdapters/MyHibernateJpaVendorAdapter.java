@@ -14,11 +14,11 @@ import java.util.Properties;
 @Component(value = "hibernateJpaVendorAdapter")
 public class MyHibernateJpaVendorAdapter extends HibernateJpaVendorAdapter implements JpaVendorAdapterBase {
 
-    private final static Logger logger = Logger.getLogger(MyHibernateJpaVendorAdapter.class);
+    private final static Logger LOGGER = Logger.getLogger(MyHibernateJpaVendorAdapter.class);
 
     @Override
     public Properties getProperties() {
-        logger.debug("Generate Properties of Hibernate");
+        LOGGER.debug("Generate Properties of Hibernate");
 
         final Properties properties = new Properties();
         // Flush the DB at the end

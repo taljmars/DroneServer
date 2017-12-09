@@ -2,8 +2,11 @@ package com.db.persistence.scheme;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
+import org.springframework.data.annotation.Transient;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.UUID;
@@ -18,8 +21,8 @@ public class KeyId implements Serializable{
 
     public KeyId() {
         this.objId = UUID.randomUUID();
-        this.privatelyModified = true;
         this.toRevision = Integer.MAX_VALUE;
+        this.entityManagerCtx = Integer.MAX_VALUE;
     }
 
     protected UUID objId;
@@ -27,7 +30,7 @@ public class KeyId implements Serializable{
     @Getter
     @Basic(optional = false)
     @XmlElement(required = true)
-    @Column(nullable = false, length = 16)
+    @Column(nullable = false)
     public UUID getObjId() {
         return objId;
     }
@@ -37,20 +40,19 @@ public class KeyId implements Serializable{
         this.objId = objId;
     }
 
-    protected boolean privatelyModified;
+    private Integer entityManagerCtx;
 
-    @Getter
-//    @Basic(optional = false)
-//    @Column(nullable = false)
-    public boolean getPrivatelyModified() {
-        return privatelyModified;
+    public Integer getEntityManagerCtx() {
+        return entityManagerCtx;
     }
 
     @XmlTransient
+	@Transient
     @Setter
-    public void setPrivatelyModified(boolean isModified) {
-        this.privatelyModified = isModified;
+    public void setEntityManagerCtx(Integer entityManagerCtx) {
+        this.entityManagerCtx = entityManagerCtx;
     }
+
 
     protected int toRevision;
 
@@ -70,7 +72,7 @@ public class KeyId implements Serializable{
     public KeyId copy() {
         KeyId keyId = new KeyId();
         keyId.setObjId(this.getObjId());
-        keyId.setPrivatelyModified(this.getPrivatelyModified()); //Talma: not clitical, for test
+        keyId.setEntityManagerCtx(this.getEntityManagerCtx());
         keyId.setToRevision(this.getToRevision());
         return keyId;
     }
@@ -82,15 +84,15 @@ public class KeyId implements Serializable{
 
         KeyId keyId = (KeyId) o;
 
-        if (privatelyModified != keyId.privatelyModified) return false;
         if (toRevision != keyId.toRevision) return false;
-        return objId != null ? objId.equals(keyId.objId) : keyId.objId == null;
+        if (!objId.equals(keyId.objId)) return false;
+        return entityManagerCtx.equals(keyId.entityManagerCtx);
     }
 
     @Override
     public int hashCode() {
-        int result = objId != null ? objId.hashCode() : 0;
-        result = 31 * result + (privatelyModified ? 1 : 0);
+        int result = objId.hashCode();
+        result = 31 * result + entityManagerCtx.hashCode();
         result = 31 * result + toRevision;
         return result;
     }
@@ -99,7 +101,7 @@ public class KeyId implements Serializable{
     public String toString() {
         return "KeyId{" +
                 "objId=" + objId +
-                ", privatelyModified=" + privatelyModified +
+                ", entityManagerCtx=" + entityManagerCtx +
                 ", toRevision=" + toRevision +
                 '}';
     }

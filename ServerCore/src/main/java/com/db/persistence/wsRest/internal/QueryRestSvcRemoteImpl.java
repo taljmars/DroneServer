@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 
-	final static Logger logger = Logger.getLogger(QueryRestSvcRemoteImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(QueryRestSvcRemoteImpl.class);
 	
 	@Autowired
 	private QuerySvc querySvc;
@@ -50,7 +50,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
 		}
 		catch (ClassNotFoundException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -79,7 +79,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
 		}
 		catch (QueryException e) {
-			logger.error("Failed to run query", e);
+			LOGGER.error("Failed to run query", e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -109,7 +109,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		catch (ClassNotFoundException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -126,7 +126,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	@RequestMapping(value = "/query", method = RequestMethod.POST)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> query(@RequestBody QueryRequestRemote queryRequestRemote) throws QueryRemoteException{
-		logger.debug("Query request from client: " + queryRequestRemote);
+		LOGGER.debug("Query request from client: " + queryRequestRemote);
 		QueryRequest queryRequest = new QueryRequest();
 		QueryResponseRemote response = new QueryResponseRemote();
 		try {
@@ -145,7 +145,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
 		}
 		catch (ClassNotFoundException  | QueryException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}

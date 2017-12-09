@@ -10,7 +10,6 @@ import java.awt.*;
 import java.io.Serializable;
 
 @Entity
-//@Table(name="missionitems")
 @Sessionable
 public class Land extends MissionItem implements Altitudable, Serializable {
 

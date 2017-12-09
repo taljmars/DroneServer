@@ -16,7 +16,6 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 @Entity
-//@Table(name="missionitems")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @Sessionable

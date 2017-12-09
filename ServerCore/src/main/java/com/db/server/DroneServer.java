@@ -23,7 +23,7 @@ import javax.xml.ws.Endpoint;
 @SpringBootApplication
 public class DroneServer extends SpringBootServletInitializer
 {
-	final static Logger logger = Logger.getLogger(DroneServer.class);
+	private final static Logger LOGGER = Logger.getLogger(DroneServer.class);
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -36,12 +36,12 @@ public class DroneServer extends SpringBootServletInitializer
 
 			@Override
 			public void contextInitialized(ServletContextEvent sce) {
-				logger.info("ServletContext initialized - TALMA");
+				LOGGER.info("ServletContext initialized - TALMA");
 			}
 
 			@Override
 			public void contextDestroyed(ServletContextEvent sce) {
-				logger.info("ServletContext destroyed - TALMA");
+				LOGGER.info("ServletContext destroyed - TALMA");
 			}
 
 		};
@@ -79,8 +79,8 @@ public class DroneServer extends SpringBootServletInitializer
 	//		DroneServer droneServer = DroneDBServerAppConfig.context.getBean(DroneServer.class);
 	//		droneServer.go();
 
-			logger.debug("Details: " + logPath + " " + confPath);
-			logger.debug("Server is up and running!");
+			LOGGER.debug("Details: " + logPath + " " + confPath);
+			LOGGER.debug("Server is up and running!");
 			System.err.println("Server is up and running!");
 		};
 	}
@@ -101,27 +101,27 @@ public class DroneServer extends SpringBootServletInitializer
 		String url;
 
 		url = String.format(format, ip, port, ObjectCrudSvcRemote.class.getSimpleName());
-		logger.debug("Sign " + ObjectCrudSvcRemote.class.getSimpleName() + " " + url);
+		LOGGER.debug("Sign " + ObjectCrudSvcRemote.class.getSimpleName() + " " + url);
 		Endpoint.publish(url, objectCrudSvcRemote);
 
 //		url = String.format(format, ip, port, QuerySvcRemote.class.getSimpleName());
-//		logger.debug("Sign " + QuerySvcRemote.class.getSimpleName() + " " + url);
+//		LOGGER.debug("Sign " + QuerySvcRemote.class.getSimpleName() + " " + url);
 ////		endpoint = Endpoint.create(querySvcRemote);
 ////		endpoint.publish(String.format(format, ip, port, QuerySvcRemote.class.getSimpleName()));
 //		Endpoint.publish(url, querySvcRemote);
 //
 //		url = String.format(format, ip, port, MissionCrudSvcRemote.class.getSimpleName());
-//		logger.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName() + " " + url);
+//		LOGGER.debug("Sign " + MissionCrudSvcRemote.class.getSimpleName() + " " + url);
 //		Endpoint.publish(url, missionCrudSvcRemote);
 //
 //		url = String.format(format, ip, port, SessionsSvcRemote.class.getSimpleName());
-//		logger.debug("Sign " + SessionsSvcRemote.class.getSimpleName() + " " + url);
+//		LOGGER.debug("Sign " + SessionsSvcRemote.class.getSimpleName() + " " + url);
 //		Endpoint.publish(url, sessionsSvcRemote);
 //
 //		url = String.format(format, ip, port, PerimeterCrudSvcRemote.class.getSimpleName());
-//		logger.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName() + " " + url);
+//		LOGGER.debug("Sign " + PerimeterCrudSvcRemote.class.getSimpleName() + " " + url);
 //		Endpoint.publish(url, perimeterCrudSvcRemote);
 
-		logger.debug("Up and running!");
+		LOGGER.debug("Up and running!");
 	}
 }

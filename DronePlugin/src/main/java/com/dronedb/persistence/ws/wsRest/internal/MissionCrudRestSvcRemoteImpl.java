@@ -25,7 +25,7 @@ import javax.jws.WebService;
 @RestController
 public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
 {
-    final static Logger logger = Logger.getLogger(MissionCrudRestSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(MissionCrudRestSvcRemoteImpl.class);
 
     @Autowired
     private MissionCrudSvc missionCrudSvc;
@@ -46,15 +46,15 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
             return new ResponseEntity<Mission>(clonedMission, HttpStatus.OK);
         }
         catch (DatabaseValidationException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new DatabaseValidationRemoteException(e.getMessage());
         }
         catch (ObjectNotFoundException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new ObjectNotFoundRemoteException(e.getMessage());
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
@@ -66,21 +66,21 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
 //    public <T extends MissionItem> T createMissionItem(@RequestParam String clz) throws ObjectInstanceRemoteException {
     public <T extends MissionItem> ResponseEntity<T> createMissionItem(@RequestParam String clz) {
 //        try {
-            logger.debug("Crud REMOTE CREATE called '" + clz + "'");
+            LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
             try {
                 T t = (T) missionCrudSvc.createMissionItem(clz).copy();
-                logger.debug("TALMA Crud REMOTE CREATE called " + t);
+                LOGGER.debug("TALMA Crud REMOTE CREATE called " + t);
                 return new ResponseEntity<T>(t, HttpStatus.OK);
 //            return (T) missionCrudSvc.createMissionItem(clz).copy();
             }
             catch (ObjectInstanceException e) {
-                logger.error("Failed to create object", e);
+                LOGGER.error("Failed to create object", e);
 //			throw new ObjectInstanceRemoteException("Failed to create object");
                 throw new RuntimeException("Failed to create object");
             }
 //        }
 //        catch (ObjectInstanceException e) {
-//            logger.error("Failed to create mission item", e);
+//            LOGGER.error("Failed to create mission item", e);
 //            throw new ObjectInstanceRemoteException(e.getMessage());
 //        }
     }
@@ -94,7 +94,7 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
             return new ResponseEntity<Mission>(mission, HttpStatus.OK);
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to create mission", e);
+            LOGGER.error("Failed to create mission", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }

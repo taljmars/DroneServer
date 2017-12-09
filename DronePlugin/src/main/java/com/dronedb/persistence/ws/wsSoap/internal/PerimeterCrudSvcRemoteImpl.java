@@ -24,7 +24,7 @@ import javax.jws.WebService;
         targetNamespace = "http://scheme.persistence.dronedb.com/")
 public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
 
-    final static Logger logger = Logger.getLogger(PerimeterCrudSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(PerimeterCrudSvcRemoteImpl.class);
 
     @Autowired
     private PerimeterCrudSvc perimeterCrudSvc;
@@ -33,19 +33,19 @@ public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
     @SuppressWarnings("unchecked")
     public <T extends Perimeter> T clonePerimeter(T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
         try {
-            logger.debug("cloning perimeter");
+            LOGGER.debug("cloning perimeter");
             return (T) perimeterCrudSvc.clonePerimeter(perimeter).copy();
         }
         catch (DatabaseValidationException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new DatabaseValidationRemoteException(e.getMessage());
         }
         catch (ObjectNotFoundException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new ObjectNotFoundRemoteException(e.getMessage());
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to clone perimeter", e);
+            LOGGER.error("Failed to clone perimeter", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
@@ -55,7 +55,7 @@ public class PerimeterCrudSvcRemoteImpl implements PerimeterCrudSvcRemote {
         try {
             return perimeterCrudSvc.createPoint();
         } catch (ObjectInstanceException e) {
-            logger.error("Failed to create point", e);
+            LOGGER.error("Failed to create point", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }

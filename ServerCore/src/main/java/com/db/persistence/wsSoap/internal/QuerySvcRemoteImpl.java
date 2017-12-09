@@ -21,7 +21,7 @@ import java.util.List;
 //		,targetNamespace = "http://scheme.persistence.db.com/")
 public class QuerySvcRemoteImpl implements QuerySvcRemote {
 
-	final static Logger logger = Logger.getLogger(QuerySvcRemoteImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(QuerySvcRemoteImpl.class);
 	
 	@Autowired
 	private QuerySvc querySvc;
@@ -41,7 +41,7 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 			return response;
 		}
 		catch (ClassNotFoundException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -61,7 +61,7 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 			return response;
 		}
 		catch (QueryException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -81,7 +81,7 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 			return response;
 		}
 		catch (ClassNotFoundException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}
@@ -105,7 +105,7 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 			return response;
 		}
 		catch (ClassNotFoundException | QueryException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}
 	}

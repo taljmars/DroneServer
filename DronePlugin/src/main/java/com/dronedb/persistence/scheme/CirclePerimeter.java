@@ -13,7 +13,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
-import static com.db.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE;
+import static com.dronedb.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE;
 
 /**
  * Created by taljmars on 3/19/17.
@@ -28,7 +28,7 @@ import static com.db.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TI
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedCirclePerimeters",
-                query = "SELECT * FROM CirclePerimeter WHERE privatelyModified = true",
+                query = "SELECT * FROM CirclePerimeter WHERE entityManagerCtx != 0",
                 resultClass = CirclePerimeter.class
         )
 })

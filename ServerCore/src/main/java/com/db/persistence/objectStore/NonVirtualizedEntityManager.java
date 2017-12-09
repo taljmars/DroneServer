@@ -47,8 +47,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
 
         KeyId keyId = new KeyId();
         keyId.setToRevision(Integer.MAX_VALUE);
-        keyId.setPrivatelyModified(false);
         keyId.setObjId(uuid);
+        keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         return virtualizedEntityManager.entityManagerWrapper.find(clz, keyId);
     }
 
@@ -79,7 +79,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
     private  <T extends BaseObject> void persist(T object) {
         LOGGER.debug("Persist object: " + object);
         object.getKeyId().setToRevision(Constants.TIP_REVISION);
-        object.getKeyId().setPrivatelyModified(false);
+        object.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
 //        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
 //        if (entityInformation.isNew(object)) {
@@ -101,9 +101,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
 
             // Setting toVersion field to represent the last version
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
-            object.getKeyId().setPrivatelyModified(false);
+            object.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
             object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
-            object.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
             virtualizedEntityManager.entityManagerWrapper.persist(object);
             existingObject = object;
 

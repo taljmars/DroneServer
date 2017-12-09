@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class MyJpaTransactionManager extends JpaTransactionManager {
 
-    private final static Logger logger = Logger.getLogger(MyJpaTransactionManager.class);
+    private final static Logger LOGGER = Logger.getLogger(MyJpaTransactionManager.class);
     static int itr;
 
     public MyJpaTransactionManager() {
@@ -30,20 +30,20 @@ public class MyJpaTransactionManager extends JpaTransactionManager {
 
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
-        logger.debug("DoBegin " + transaction + " " + definition);
+        LOGGER.debug("DoBegin " + transaction + " " + definition);
         super.doBegin(transaction, definition);
     }
 
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
-        logger.debug("DoCommit " + status);
+        LOGGER.debug("DoCommit " + status);
 //        getJpaPropertyMap();
         super.doCommit(status);
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus status) {
-        logger.debug("DoRollback " + status);
+        LOGGER.debug("DoRollback " + status);
         super.doRollback(status);
     }
 }

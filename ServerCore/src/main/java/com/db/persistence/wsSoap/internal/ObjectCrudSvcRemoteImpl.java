@@ -23,7 +23,7 @@ import java.util.UUID;
 		,targetNamespace = "scheme.persistence.db.com")
 public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 {
-	final static Logger logger = Logger.getLogger(ObjectCrudSvcRemoteImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(ObjectCrudSvcRemoteImpl.class);
 
 	@Autowired
 	private ObjectCrudSvc objectCrudSvc;
@@ -37,32 +37,32 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 //	@WebResult(partName = "tal1", name = "tal2" ,targetNamespace = "http://scheme.persistence.dronedb.com/")
 //	public <T extends BaseObject> T create(Class<T> clz) throws ObjectInstanceRemoteException {
 	public <T extends BaseObject> T create(String clz) throws ObjectInstanceRemoteException {
-		logger.debug("Crud REMOTE CREATE called '" + clz + "'");
+		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
 		try {
 			T t = (T) objectCrudSvc.create(clz).copy();
-			logger.debug("TALMA Crud REMOTE CREATE called " + t);
+			LOGGER.debug("TALMA Crud REMOTE CREATE called " + t);
 			return t;
 			//return (T) objectCrudSvc.create(clz).copy();
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to create object", e);
+			LOGGER.error("Failed to create object", e);
 			throw new ObjectInstanceRemoteException("Failed to create object");
 		}
 	}
 	
 	@Override
 	public <T extends BaseObject> T update(T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
-		logger.debug("Crud REMOTE UPDATE called " + object);
+		LOGGER.debug("Crud REMOTE UPDATE called " + object);
 		try {
 			T obj = objectCrudSvc.update(object);
 			return (T) obj.copy();
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to update object, reason: " + e.getMessage());
+			LOGGER.error("Failed to update object, reason: " + e.getMessage());
 			throw new DatabaseValidationRemoteException("Failed to update object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to create object, reason: ", e);
+			LOGGER.error("Failed to create object, reason: ", e);
 			throw new ObjectInstanceRemoteException("Failed to create object, " + e.getMessage());
 		}
 	}
@@ -73,11 +73,11 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 			objectCrudSvc.updateArray(objects);
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to update object", e);
+			LOGGER.error("Failed to update object", e);
 			throw new DatabaseValidationRemoteException("Failed to update object");
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to update object", e);
+			LOGGER.error("Failed to update object", e);
 			throw new ObjectInstanceRemoteException("Failed to update object");
 		}
 	}
@@ -89,15 +89,15 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 			return (T) obj.copy();
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new DatabaseValidationRemoteException("Failed to delete object");
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new ObjectInstanceRemoteException("Failed to delete object");
 		}
 		catch (ObjectNotFoundException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new ObjectNotFoundRemoteException("Failed to delete object");
 		}
 	}
@@ -105,10 +105,10 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 	@Override
 	public BaseObject read(final UUID objId)  throws ObjectNotFoundRemoteException{
 		try {
-			logger.debug("Crud REMOTE READ called " + objId);
+			LOGGER.debug("Crud REMOTE READ called " + objId);
 			BaseObject object = objectCrudSvc.read(objId);
 			if (object == null) {
-				logger.error("Failed to find object '" + objId + "'");
+				LOGGER.error("Failed to find object '" + objId + "'");
 				throw new ObjectNotFoundRemoteException("Failed to find object '" + objId + "'");
 			}
 			return object.copy();
@@ -121,11 +121,11 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 	@Override
 	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundRemoteException {
 		try {
-			logger.debug("Crud REMOTE READ called " + objId + ", class " + clz);
+			LOGGER.debug("Crud REMOTE READ called " + objId + ", class " + clz);
 			T object = objectCrudSvc.readByClass(objId, clz);
 
 			if (object == null) {
-				logger.error("Failed to find object '" + objId + "'");
+				LOGGER.error("Failed to find object '" + objId + "'");
 				throw new ObjectNotFoundRemoteException("Failed to find object '" + objId + "'");
 			}
 			return (T) object.copy();

@@ -24,7 +24,7 @@ import javax.jws.WebService;
         targetNamespace = "http://scheme.persistence.dronedb.com/")
 public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
 {
-    final static Logger logger = Logger.getLogger(MissionCrudSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(MissionCrudSvcRemoteImpl.class);
 
     @Autowired MissionCrudSvc missionCrudSvc;
 
@@ -41,15 +41,15 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
             return (Mission) missionCrudSvc.cloneMission(mission).copy();
         }
         catch (DatabaseValidationException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new DatabaseValidationRemoteException(e.getMessage());
         }
         catch (ObjectNotFoundException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new ObjectNotFoundRemoteException(e.getMessage());
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to clone mission", e);
+            LOGGER.error("Failed to clone mission", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
@@ -61,7 +61,7 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
             return (T) missionCrudSvc.createMissionItem(clz).copy();
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to create mission item", e);
+            LOGGER.error("Failed to create mission item", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }
@@ -72,7 +72,7 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
             return (Mission) missionCrudSvc.createMission().copy();
         }
         catch (ObjectInstanceException e) {
-            logger.error("Failed to create mission", e);
+            LOGGER.error("Failed to create mission", e);
             throw new ObjectInstanceRemoteException(e.getMessage());
         }
     }

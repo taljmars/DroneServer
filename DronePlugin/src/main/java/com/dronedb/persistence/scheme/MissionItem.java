@@ -14,13 +14,10 @@ import java.io.Serializable;
 		RegionOfInterest.class, Land.class, SplineWaypoint.class, LoiterTime.class,
 		LoiterUnlimited.class
 })
-//@MappedSuperclass
 @Entity
 //@Inheritance(strategy=InheritanceType.JOINED)
 //@DiscriminatorColumn(name="type")
-//@Table(name="missionitems")
 @Table
-//
 public abstract class MissionItem extends BaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;

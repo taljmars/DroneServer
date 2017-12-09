@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.db.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRIVATE;
 
 @NamedNativeQueries({
 	@NamedNativeQuery(
@@ -41,7 +40,7 @@ import static com.db.persistence.scheme.Constants.MISSION_QUERY_FROM_TIP_AND_PRI
     ),
 	@NamedNativeQuery(
 			name = "GetAllModifiedMissions",
-			query = "SELECT * FROM Mission WHERE privatelyModified = true",
+			query = "SELECT * FROM Mission WHERE entityManagerCtx != 0",
 			resultClass = Mission.class
 	)
 })

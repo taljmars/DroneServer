@@ -6,7 +6,7 @@ public enum EntityManagerType {
     VIRTUALIZED_ENTITY_MANAGER(Integer.MAX_VALUE),
     UNKNOWN_ENTITY_MANAGER(-1);
 
-    Integer id;
+    public Integer id;
     EntityManagerType(Integer id) {
         this.id = id;
     }

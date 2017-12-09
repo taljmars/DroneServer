@@ -18,14 +18,14 @@ import java.util.UUID;
  */
 public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPostLandOrRTLItemsValidation, Mission> {
 
-    private final static Logger logger = Logger.getLogger(NoPostLandOrRTLItemsValidator.class);
+    private final static Logger LOGGER = Logger.getLogger(NoPostLandOrRTLItemsValidator.class);
 
     @Autowired
     private ObjectCrudSvc objectCrudSvc;
 
     @Override
     public void initialize(NoPostLandOrRTLItemsValidation constraintAnnotation) {
-        logger.debug("Initialize validator " + getClass().getSimpleName());
+        LOGGER.debug("Initialize validator " + getClass().getSimpleName());
     }
 
     @Override
@@ -33,14 +33,14 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
         try {
             boolean foundLandOrRTL = false;
             if (objectCrudSvc == null) {
-                logger.debug("TALMA lose");
+                LOGGER.debug("TALMA lose");
             }
             else {
-                logger.debug("TALMA win");
+                LOGGER.debug("TALMA win");
             }
             for (UUID missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
-                    logger.debug("Found illegal point"); // TODO: print normal
+                    LOGGER.debug("Found illegal point"); // TODO: print normal
                     return false;
                 }
                 MissionItem item = objectCrudSvc.readByClass(missionItemUid, MissionItem.class);
@@ -55,7 +55,7 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
 //        }
         catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Unexpected failure in validation");
+            LOGGER.debug("Unexpected failure in validation");
             return false;
         }
 

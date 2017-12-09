@@ -20,7 +20,7 @@ import java.util.UUID;
 @Component
 public class WorkSessionManager {
 
-    private final static Logger logger = Logger.getLogger(WorkSessionManager.class);
+    private final static Logger LOGGER = Logger.getLogger(WorkSessionManager.class);
 
     @Autowired
     private PersistencyManager persistencyManager;
@@ -60,19 +60,20 @@ public class WorkSessionManager {
         EntityManagerType entityManagerType = type == WorkSessionType.PUBLIC ? EntityManagerType.MAIN_ENTITY_MANAGER : EntityManagerType.VIRTUALIZED_ENTITY_MANAGER;
         EntityManagerBase entityManager = persistencyManager.createEntityManager(entityManagerType);
 
-        logger.debug("New session id was allocated: " + entityManager.getId());
+        LOGGER.debug("New session id was allocated: " + entityManager.getId());
         WorkSession session = applicationContext.getBean(WorkSession.class, userName, type, entityManager.getId(), entityManager);
 
         /* Build an entity to represent the sesion in the database
          * Every object create under this session will be related to this object */
         WorkSessionEntity workSessionEntity = new WorkSessionEntity();
-        workSessionEntity.setEntityManagerCtx(session.getSessionId());
+        workSessionEntity.getKeyId().setEntityManagerCtx(session.getSessionId());
+//        workSessionEntity.setEntityManagerCtx(session.getSessionId());
         workSessionEntity.setReferredEntityManagerCtx(session.getSessionId());
         workSessionEntity.setUserName(session.getUserName());
         workSessionEntity.setDirty(false);
 
         if (type.equals(WorkSessionType.PUBLIC))
-            workSessionEntity.getKeyId().setPrivatelyModified(false);
+            workSessionEntity.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
 
         workSessionEntity = publicWorkSession.update(workSessionEntity);
 
@@ -83,10 +84,10 @@ public class WorkSessionManager {
 
     @Transactional
     public void destroySession(WorkSession workSession) {
-        logger.debug("Destroying session '" + workSession.getSessionId());
+        LOGGER.debug("Destroying session '" + workSession.getSessionId());
         WorkSessionEntity workSessionEntity = getWorkSessionEntity(workSession);
         if (workSessionEntity != null) {
-            logger.debug("Found entity object for deletion: " + workSessionEntity);
+            LOGGER.debug("Found entity object for deletion: " + workSessionEntity);
 
             publicWorkSession.delete(workSessionEntity);
         }

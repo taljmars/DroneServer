@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 public class QuerySvcImpl implements QuerySvc {
 
-	private final static Logger logger = Logger.getLogger(QuerySvcImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(QuerySvcImpl.class);
 
 	private WorkSession workSession;
 
@@ -39,7 +39,7 @@ public class QuerySvcImpl implements QuerySvc {
 		if (currentUserName.equals(userName))
 			return;
 
-		logger.debug("Context was changed for user : " + userName);
+		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
 	}
 
@@ -79,7 +79,7 @@ public class QuerySvcImpl implements QuerySvc {
 			return arr;
 		}
 		catch (Exception e) {
-			logger.error("Failed to run query", e);
+			LOGGER.error("Failed to run query", e);
 			throw new QueryException(e);
 		}
 	}
@@ -88,9 +88,9 @@ public class QuerySvcImpl implements QuerySvc {
 	@Transactional
 	public <T extends BaseObject> List<T> runNamedQuery(String queryString, Class<T> clz)
 	{
-		logger.debug("Running named query");
+		LOGGER.debug("Running named query");
 		List<T> lst = workSession.getQueryExecutor().createNamedQuery(queryString, clz);
-		logger.debug("Service " + lst);
+		LOGGER.debug("Service " + lst);
 		List<T> arr = new ArrayList();
 
 		Iterator<?> it = lst.iterator();
@@ -113,9 +113,9 @@ public class QuerySvcImpl implements QuerySvc {
 		Map<String, String> params = queryRequest.getParameters();
 
 
-		logger.debug("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
+		LOGGER.debug("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
 		List<? extends BaseObject> lst = workSession.getQueryExecutor().createNamedQuery(queryStr, clz);
-		logger.debug("Service " + lst);
+		LOGGER.debug("Service " + lst);
 		List<T> arr = new ArrayList();
 
 		Iterator<?> it = lst.iterator();

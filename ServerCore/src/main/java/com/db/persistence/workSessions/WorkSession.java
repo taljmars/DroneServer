@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 public class WorkSession {
 
-    private final static Logger logger = Logger.getLogger(WorkSession.class);
+    private final static Logger LOGGER = Logger.getLogger(WorkSession.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -32,7 +32,7 @@ public class WorkSession {
     private QueryExecutor queryExecutor;
 
     public WorkSession(String userName, WorkSessionType type, Integer sessionId, EntityManagerBase entityManager) {
-        logger.debug("New WorkSession was allocation for user '" + userName + "'");
+        LOGGER.debug("New WorkSession was allocation for user '" + userName + "'");
         this.userName = userName;
         this.type = type;
         this.sessionId = sessionId;
@@ -66,7 +66,7 @@ public class WorkSession {
     // Basic CRUD operation
     @Transactional
     public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
-        logger.debug("In work session, find " + clz + " ,key=" + uuid);
+        LOGGER.debug("In work session, find " + clz + " ,key=" + uuid);
         T res = entityManager.find(clz, uuid);
         return res;
     }
@@ -106,14 +106,14 @@ public class WorkSession {
 
     @Transactional
     public void publish() {
-        logger.debug("Publishing session id '" + sessionId + "' of user '" + userName + "'");
+        LOGGER.debug("Publishing session id '" + sessionId + "' of user '" + userName + "'");
         entityManager.publish();
         workSessionManager.destroySession(this);
     }
 
     @Transactional
     public void discard() {
-        logger.debug("Discarding session id '" + sessionId + "' of user '" + userName + "'");
+        LOGGER.debug("Discarding session id '" + sessionId + "' of user '" + userName + "'");
         entityManager.discard();
         workSessionManager.destroySession(this);
 //        workSessionManager.destroySession(this, true);

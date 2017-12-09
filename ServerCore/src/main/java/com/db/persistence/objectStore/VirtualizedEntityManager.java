@@ -48,15 +48,15 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
         KeyId keyId = new KeyId();
         keyId.setToRevision(Integer.MAX_VALUE);
-        keyId.setPrivatelyModified(true);
         keyId.setObjId(uuid);
+        keyId.setEntityManagerCtx(entityManagerCtx);
         T found =  entityManagerWrapper.find(clz, keyId);
-        if (found != null && found.getEntityManagerCtx().equals(entityManagerCtx)) {
+        if (found != null) {
             LOGGER.debug("Found object in private db");
             return found;
         }
 
-        keyId.setPrivatelyModified(false);
+        keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         found = entityManagerWrapper.find(clz, keyId);
         if (found != null) LOGGER.debug("Found object in public db");
         else LOGGER.debug("Object doesn't exist");
@@ -84,7 +84,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         }
 
         // The object was just created in the private session
-        if (existingObject.getKeyId().getPrivatelyModified()) {
+        if (!existingObject.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id)) {
             LOGGER.debug("Object was created in private db only");
             if (existingObject.isDeleted()) {
                 LOGGER.debug("Object is already marked as deleted");
@@ -114,9 +114,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
     private  <T extends BaseObject> void persist(T object) {
         LOGGER.debug("Persist object: " + object);
         object.getKeyId().setToRevision(Constants.TIP_REVISION);
-        object.getKeyId().setPrivatelyModified(true);
+        object.getKeyId().setEntityManagerCtx(entityManagerCtx);
         object.setDeleted(false);
-        object.setEntityManagerCtx(entityManagerCtx);
 //        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
 //        if (entityInformation.isNew(object)) {
         entityManagerWrapper.persist(object);
@@ -130,7 +129,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
         // Handling a case where it is the first update of a public object
         T existingObject = find((Class<T>) object.getClass(), object.getKeyId().getObjId());
-        if (existingObject != null && !existingObject.getKeyId().getPrivatelyModified()) {
+        if (existingObject != null && existingObject.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id)) {
             LOGGER.debug("Found in public DB, make a private copy");
             existingObject = movePublicToPrivate(existingObject);
             // Later in this function we will treat it as private session
@@ -145,7 +144,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             // Setting toVersion field to represent the last version
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
             object.setDeleted(false);
-            object.setEntityManagerCtx(entityManagerCtx);
+            object.getKeyId().setEntityManagerCtx(entityManagerCtx);
+//            object.setEntityManagerCtx(entityManagerCtx);
             entityManagerWrapper.persist(object);
             existingObject = object;
 
@@ -221,13 +221,12 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     private <T extends BaseObject> T movePublicToPrivate(T existingObject) {
         T privateObject = (T) existingObject.copy();
-        privateObject.getKeyId().setPrivatelyModified(true);
-        privateObject.setEntityManagerCtx(entityManagerCtx);
+        privateObject.getKeyId().setEntityManagerCtx(entityManagerCtx);
         persist(privateObject);
 
-//        logger.debug("Create object in private db");
-//        logger.debug("Public " + existingObject);
-//        logger.debug("Private " + privateObject);
+//        LOGGER.debug("Create object in private db");
+//        LOGGER.debug("Public " + existingObject);
+//        LOGGER.debug("Private " + privateObject);
         return privateObject;
     }
 
@@ -236,7 +235,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         List<T> objs = query.getResultList();
         for (T item : objs) {
             ObjectDeref objectDeref = find(ObjectDeref.class, item.getKeyId().getObjId());
-            if (objectDeref.getKeyId().getPrivatelyModified())
+            if (objectDeref.getKeyId().getEntityManagerCtx() != EntityManagerType.MAIN_ENTITY_MANAGER.id)
                 entityManagerWrapper.remove(objectDeref);
             entityManagerWrapper.remove(item);
         }
@@ -288,7 +287,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         publicItemDup.setCreationDate(publicItem.getCreationDate());
         publicItemDup.setFromRevision(publicItem.getFromRevision());
         publicItemDup.getKeyId().setToRevision(nextRevision);
-        publicItemDup.getKeyId().setPrivatelyModified(false);
+        publicItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
 //        publicItemDup.setEntityManagerCtx(privateItem.isDeleted() ? -1 : entityManagerCtx);
         entityManagerWrapper.persist(publicItemDup);
 
@@ -321,20 +320,21 @@ public class VirtualizedEntityManager extends EntityManagerBase {
                 throw new RuntimeException(msg);
             }
 
-            if (!item.isDeleted() && !objectDeref.getKeyId().getPrivatelyModified())
+            if (!item.isDeleted() && objectDeref.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id))
                 return;
 
             ObjectDeref objectDerefDup = objectDeref.copy();
-            objectDerefDup.getKeyId().setPrivatelyModified(false);
+            objectDerefDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
             if (item.isDeleted())
                 objectDerefDup.getKeyId().setToRevision(nextRevision);
             objectDerefDup.setDeleted(item.isDeleted());
-            objectDerefDup.setEntityManagerCtx(0);
-//			logger.debug("DBG " + objectDerefDup);
+//            objectDerefDup.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+            objectDerefDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+//			LOGGER.debug("DBG " + objectDerefDup);
             entityManagerWrapper.persist(objectDerefDup);
             entityManagerWrapper.remove(objectDeref);
 //			objectDeref = objectCrudSvc.readByClass(objectDeref.getKeyId().getObjId(), ObjectDeref.class);
-//			logger.debug("DBG " + objectDeref);
+//			LOGGER.debug("DBG " + objectDeref);
 
     }
 
@@ -346,9 +346,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
         // Building a new tip
         privateItemDup.setFromRevision(nextRevision);
-        privateItemDup.getKeyId().setPrivatelyModified(false);
         privateItemDup.getKeyId().setToRevision(Constants.TIP_REVISION);
-        privateItemDup.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+        privateItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         entityManagerWrapper.persist(privateItemDup);
 
         // Clean private
@@ -359,13 +358,13 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
         // Test - that objects are find
         KeyId keyId = new KeyId();
-        keyId.setPrivatelyModified(true);
         keyId.setObjId(privateItem.getKeyId().getObjId());
+        keyId.setEntityManagerCtx(entityManagerCtx);
         keyId.setToRevision(Integer.MAX_VALUE);
         BaseObject obj;
         if ((obj = entityManagerWrapper.find(clz, keyId)) != null)
             throw new RuntimeException("Found unexpected private object: " + obj);
-        keyId.setPrivatelyModified(false);
+        keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         if ((obj = entityManagerWrapper.find(clz, keyId)) == null)
             throw new RuntimeException("Failed to find public object");
 
@@ -376,14 +375,14 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     private String buildGetPrivateQuery(Class<? extends BaseObject> objClass) {
 		LOGGER.debug("Build query to get object of " + objClass.getSimpleName());
-		return String.format("SELECT * FROM %s WHERE privatelyModified = true AND entityManagerCtx = %d", objClass.getSimpleName().toLowerCase(), entityManagerCtx);
+        return String.format("SELECT * FROM %s WHERE entityManagerCtx = %d", objClass.getSimpleName().toLowerCase(), entityManagerCtx);
 	}
 
     private <T extends BaseObject> T getPublishedByPrivateObject(Class<T> clz, T item) {
         LOGGER.debug("Search for published object of " + item.getKeyId());
         KeyId key = item.getKeyId().copy();
-		key.setPrivatelyModified(false);
-//		logger.debug("Search for publish object of key " + key);
+		key.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+//		LOGGER.debug("Search for publish object of key " + key);
         return entityManagerWrapper.find(clz, key);
     }
 }

@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 
 public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(DefaultValuesSetterTrigger.class);
+    private final static Logger LOGGER = Logger.getLogger(DefaultValuesSetterTrigger.class);
 
     @Override
     @SuppressWarnings("unchecked")
@@ -19,7 +19,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
         if (!phase.equals(UpdateTrigger.PHASE.PRE_PERSIST))
             return;
 
-        logger.debug("Setting default values for: " + newInst.getClass().getSimpleName());
+        LOGGER.debug("Setting default values for: " + newInst.getClass().getSimpleName());
 
         Class<T> clz = (Class<T>) newInst.getClass();
 
@@ -34,7 +34,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
 
             if (method.getName().startsWith("set")) {
                 method.invoke(newInst, convert(method.getParameterTypes()[0] ,value.value()));
-                logger.debug("Updating field by method named '" + method.getName() + "'");
+                LOGGER.debug("Updating field by method named '" + method.getName() + "'");
                 continue;
             }
 
@@ -44,7 +44,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
                 Field field = clz.getDeclaredField(paramName);
                 field.setAccessible(true);
                 field.set(newInst, convert(field.getType(), value.value()));
-                logger.debug("Updating field named '" + paramName + "'");
+                LOGGER.debug("Updating field named '" + paramName + "'");
                 continue;
             }
         }
@@ -54,7 +54,7 @@ public class DefaultValuesSetterTrigger extends UpdateObjectTriggerImpl {
             if (value == null || value.value() == null || value.value().isEmpty())
                 continue;
 
-            logger.debug("Updating field named '" + field.getName() + "'");
+            LOGGER.debug("Updating field named '" + field.getName() + "'");
             field.setAccessible(true);
             field.set(newInst, value.value());
         }

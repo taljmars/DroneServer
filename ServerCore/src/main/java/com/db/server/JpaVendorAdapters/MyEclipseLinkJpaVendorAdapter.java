@@ -18,11 +18,11 @@ import java.util.Properties;
 @Component(value = "eclipseLinkJpaVendorAdapter")
 public class MyEclipseLinkJpaVendorAdapter extends EclipseLinkJpaVendorAdapter implements JpaVendorAdapterBase {
 
-    private final static Logger logger = Logger.getLogger(MyEclipseLinkJpaVendorAdapter.class);
+    private final static Logger LOGGER = Logger.getLogger(MyEclipseLinkJpaVendorAdapter.class);
 
     @Override
     public Properties getProperties() {
-        logger.debug("Generate Properties of EclipseLink");
+        LOGGER.debug("Generate Properties of EclipseLink");
         final Properties properties = new Properties();
         properties.setProperty(PersistenceUnitProperties.WEAVING, Boolean.FALSE.toString() /*"false"*/);
 //        properties.setProperty(PersistenceUnitProperties.BATCH_WRITING, BatchWriting.JDBC);

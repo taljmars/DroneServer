@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PluginsManager {
 
-    Logger LOGGER = Logger.getLogger(PluginsManager.class);
+    private final static Logger LOGGER = Logger.getLogger(PluginsManager.class);
 
     private PluginsManager(){}
     private static PluginsManager instance = null;

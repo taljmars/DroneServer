@@ -30,7 +30,7 @@ public class DroneDBServerAppConfig {
 	
 	public static ApplicationContext context ;//= new AnnotationConfigApplicationContext(DroneDBServerAppConfig.class);
 
-	private static final Logger logger = Logger.getLogger(DroneDBServerAppConfig.class);
+	private final static Logger LOGGER = Logger.getLogger(DroneDBServerAppConfig.class);
 
 	private static final String portFile = "PORT";
 	private static final String ipFile = "IP";
@@ -45,10 +45,10 @@ public class DroneDBServerAppConfig {
 			return br.readLine();
 		}
 		catch (FileNotFoundException e) {
-			logger.error("IP file doesn't exist");
+			LOGGER.error("IP file doesn't exist");
 		}
 		catch (IOException e) {
-			logger.error("Failed to read IP file");
+			LOGGER.error("Failed to read IP file");
 		}
 		//TODO: TALMA WA
 		return "127.0.0.1";
@@ -63,10 +63,10 @@ public class DroneDBServerAppConfig {
 			return br.readLine();
 		}
 		catch (FileNotFoundException e) {
-			logger.error("Port file doesn't exist");
+			LOGGER.error("Port file doesn't exist");
 		}
 		catch (IOException e) {
-			logger.error("Failed to read port file");
+			LOGGER.error("Failed to read port file");
 		}
 		//TODO: TALMA WA
 		return "1234";

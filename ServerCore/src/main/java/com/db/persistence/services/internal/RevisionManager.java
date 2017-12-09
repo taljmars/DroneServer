@@ -1,5 +1,6 @@
 package com.db.persistence.services.internal;
 
+import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.objectStore.PersistencyManager;
 import com.db.persistence.scheme.Revision;
 import org.apache.log4j.Logger;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 public class RevisionManager {
 
-    private final static Logger logger = Logger.getLogger(RevisionManager.class);
+    private final static Logger LOGGER = Logger.getLogger(RevisionManager.class);
 
     @Autowired
     private PersistencyManager persistencyManager;
@@ -31,16 +32,16 @@ public class RevisionManager {
     @PostConstruct
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void init() {
-        logger.debug("Initialize revision manager");
+        LOGGER.debug("Initialize revision manager");
         this.entityManager = persistencyManager.createEntityManager();
     }
 
     private Revision initializeRevision() {
         Revision revision = new Revision();
         revision.setCurrentRevision(0);
-        revision.getKeyId().setPrivatelyModified(false);
+        revision.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         revision.getKeyId().setToRevision(0);
-        logger.debug("First time creating revision " + revision);
+        LOGGER.debug("First time creating revision " + revision);
         entityManager.persist(revision);
         entityManager.flush();
         revision = entityManager.find(Revision.class, revision.getKeyId());

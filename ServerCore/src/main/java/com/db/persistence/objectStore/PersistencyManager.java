@@ -15,8 +15,8 @@ import javax.persistence.EntityManagerFactory;
 @Component
 public class PersistencyManager {
 
-    private static final Logger logger = Logger.getLogger(PersistencyManager.class);
-    private static final Integer ENTITY_MANAGER_AMOUNT = 512;
+    private final static Logger LOGGER = Logger.getLogger(PersistencyManager.class);
+    private final static Integer ENTITY_MANAGER_AMOUNT = 512;
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
@@ -41,7 +41,7 @@ public class PersistencyManager {
     }
 
     public EntityManager createEntityManager() {
-        logger.debug("New Entity Manager was created");
+        LOGGER.debug("New Entity Manager was created");
         return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
 
@@ -63,12 +63,12 @@ public class PersistencyManager {
     @Transactional(propagation = Propagation.REQUIRED)
     public void destroyEntityManager(EntityManagerBase entityManager) {
         if (entityManager instanceof NonVirtualizedEntityManager) {
-            logger.debug("Free main entity manager");
+            LOGGER.debug("Free main entity manager");
             deallocateId(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         }
         else {
             Integer id = ((VirtualizedEntityManager) entityManager).entityManagerCtx;
-            logger.debug("Free entity manager id: " + id);
+            LOGGER.debug("Free entity manager id: " + id);
             deallocateId(id);
         }
     }

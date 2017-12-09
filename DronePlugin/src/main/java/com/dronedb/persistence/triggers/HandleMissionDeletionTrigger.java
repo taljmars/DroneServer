@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
 
-    private final static Logger logger = Logger.getLogger(HandleMissionDeletionTrigger.class);
+    private final static Logger LOGGER = Logger.getLogger(HandleMissionDeletionTrigger.class);
 
     public HandleMissionDeletionTrigger() {
         super();
@@ -23,7 +23,7 @@ public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
     @Override
     public <T extends BaseObject> void handleDeleteObject(T inst) throws Exception {
         if (!(inst instanceof Mission)){
-            logger.debug("Not a mission, trigger skipped");
+            LOGGER.debug("Not a mission, trigger skipped");
             return;
         }
 
@@ -32,7 +32,7 @@ public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
         for (UUID missionItemuid : ((Mission) inst).getMissionItemsUids()) {
             MissionItem missionItem = objectCrudSvc.readByClass(missionItemuid, MissionItem.class);
             if (missionItem == null) {
-                logger.debug(String.format("Mission Item %s wasn't found in the DB, skip it deletion", missionItemuid));
+                LOGGER.debug(String.format("Mission Item %s wasn't found in the DB, skip it deletion", missionItemuid));
                 continue;
             }
 

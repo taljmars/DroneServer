@@ -27,7 +27,7 @@ import java.util.UUID;
 @RestController
 public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 {
-	final static Logger logger = Logger.getLogger(ObjectCrudRestSvcRemoteImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(ObjectCrudRestSvcRemoteImpl.class);
 
 	@Autowired
 	private ObjectCrudSvc objectCrudSvc;
@@ -35,14 +35,14 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@PostConstruct
 	public void init() {
 		Assert.notNull(objectCrudSvc,"Failed to initiate 'objectCrudSvc'");
-		logger.debug("Remote Service is up !" + this.getClass().getSimpleName());
+		LOGGER.debug("Remote Service is up !" + this.getClass().getSimpleName());
 	}
 
 	@Override
 	@RequestMapping(value = "/createForUser", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> createForUser(@RequestParam String clz, @RequestParam String userName)  throws ObjectInstanceRemoteException {
-		logger.debug("Crud REMOTE CREATE called '" + clz + "'");
+		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
 		objectCrudSvc.setForUser(userName);
 		return create(clz);
 	}
@@ -51,14 +51,14 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz)  throws ObjectInstanceRemoteException {
-		logger.debug("Crud REMOTE CREATE called '" + clz + "'");
+		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
 		try {
 			T t = (T) objectCrudSvc.create(clz).copy();
-			logger.debug("TALMA Crud REMOTE CREATE called " + t);
+			LOGGER.debug("TALMA Crud REMOTE CREATE called " + t);
 			return new ResponseEntity<T>(t, HttpStatus.OK);
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to create object", e);
+			LOGGER.error("Failed to create object", e);
 			throw new ObjectInstanceRemoteException("Failed to create object");
 		}
 	}
@@ -70,7 +70,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 //	@Transactional
 	public <T extends BaseObject> ResponseEntity<T> updateForUser(@RequestBody T object, @RequestParam String userName) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
 
-		logger.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
+		LOGGER.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
 		objectCrudSvc.setForUser(userName);
 		return update(object);
 	}
@@ -81,17 +81,17 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException{
 
-		logger.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
+		LOGGER.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
 		try {
 			T obj = objectCrudSvc.update(object);
 			return new ResponseEntity<T>((T) obj.copy(), HttpStatus.OK);
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to update object, reason: ", e);
+			LOGGER.error("Failed to update object, reason: ", e);
 			throw new DatabaseValidationRemoteException("Failed to update object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to create object, reason: ", e);
+			LOGGER.error("Failed to create object, reason: ", e);
 			throw new ObjectInstanceRemoteException("Failed to create object, " + e.getMessage());
 		}
 	}
@@ -104,11 +104,11 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 			objectCrudSvc.updateArray(objects);
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to update object", e);
+			LOGGER.error("Failed to update object", e);
 			throw new DatabaseValidationRemoteException("Failed to update object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to update object", e);
+			LOGGER.error("Failed to update object", e);
 			throw new ObjectInstanceRemoteException("Failed to update object, " + e.getMessage());
 		}
 	}
@@ -131,15 +131,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 			return new ResponseEntity(obj.copy(), HttpStatus.OK);
 		}
 		catch (DatabaseValidationException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new DatabaseValidationRemoteException("Failed to delete object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new ObjectInstanceRemoteException("Failed to delete object, " + e.getMessage());
 		}
 		catch (ObjectNotFoundException e) {
-			logger.error("Failed to delete object", e);
+			LOGGER.error("Failed to delete object", e);
 			throw new ObjectNotFoundRemoteException("Failed to delete object, " + e.getMessage());
 		}
 	}
@@ -158,10 +158,10 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam UUID objId) throws ObjectNotFoundRemoteException {
 		try {
-			logger.debug("Crud REMOTE READ called " + objId);
+			LOGGER.debug("Crud REMOTE READ called " + objId);
 			BaseObject object = objectCrudSvc.read(objId);
 			if (object == null) {
-				logger.error("Failed to find object '" + objId + "'");
+				LOGGER.error("Failed to find object '" + objId + "'");
 				throw new ObjectNotFoundRemoteException("Failed to find object '" + objId + "'");
 			}
 			return new ResponseEntity<T>((T) object.copy(), HttpStatus.OK);
@@ -185,11 +185,11 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	public <T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam UUID objId, @RequestParam String clz) throws ObjectNotFoundRemoteException {
 
 		try {
-			logger.debug("Crud REMOTE READ called '" + objId + "', class '" + clz + "'");
+			LOGGER.debug("Crud REMOTE READ called '" + objId + "', class '" + clz + "'");
 			T object = objectCrudSvc.readByClass(objId, (Class<T>) Class.forName(clz));
 
 			if (object == null) {
-				logger.error("Failed to find object '" + objId + "'");
+				LOGGER.error("Failed to find object '" + objId + "'");
 				throw new ObjectNotFoundRemoteException("Failed to find object '" + objId + "'");
 			}
 			return new ResponseEntity<T>((T) object.copy(), HttpStatus.OK);
