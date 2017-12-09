@@ -61,11 +61,11 @@
             <version>${spring-ver}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-orm</artifactId>-->
-            <!--<version>${spring-ver}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring-ver}</version>
+        </dependency>
 
         <!--Validation-->
 
@@ -102,11 +102,11 @@
             <!--<version>1.0</version>-->
         <!--</dependency>-->
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-web</artifactId>-->
-            <!--&lt;!&ndash;<version>RELEASE</version>&ndash;&gt;-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!--<version>RELEASE</version>-->
+        </dependency>
 
         <!-- Tomcat -->
 
