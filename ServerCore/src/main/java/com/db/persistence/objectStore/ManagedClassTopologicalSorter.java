@@ -3,10 +3,7 @@ package com.db.persistence.objectStore;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
 import com.db.persistence.scheme.TargetType;
-import com.generic_tools.validations.RuntimeValidator;
-import com.generic_tools.validations.ValidatorResponse;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -27,9 +24,6 @@ public class ManagedClassTopologicalSorter {
     private List<Class> unsortedManagedClasses;
     private Map<Class, ClzTreeNode> map;
     private List<Class> sortedManagedClasses;
-
-    @Autowired
-    private RuntimeValidator runtimeValidator;
 
     public ManagedClassTopologicalSorter() {
         unsortedManagedClasses = new ArrayList<>();
