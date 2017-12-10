@@ -32,12 +32,8 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
     public boolean isValid(Mission value, ConstraintValidatorContext context) {
         try {
             boolean foundLandOrRTL = false;
-            if (objectCrudSvc == null) {
-                LOGGER.debug("TALMA lose");
-            }
-            else {
-                LOGGER.debug("TALMA win");
-            }
+            assert objectCrudSvc != null : "Critical Error, failed to initialized service";
+
             for (UUID missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
                     LOGGER.debug("Found illegal point"); // TODO: print normal
@@ -49,10 +45,6 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
                 }
             }
         }
-//        catch (ObjectNotFoundException e) {
-//            System.err.print("Failed to find item");
-//            return false;
-//        }
         catch (Exception e) {
             e.printStackTrace();
             LOGGER.debug("Unexpected failure in validation");

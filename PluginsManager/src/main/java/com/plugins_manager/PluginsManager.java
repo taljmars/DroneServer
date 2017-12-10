@@ -1,7 +1,6 @@
 package com.plugins_manager;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ public class PluginsManager {
     private final static Logger LOGGER = Logger.getLogger(PluginsManager.class);
 
     private PluginsManager(){}
+
     private static PluginsManager instance = null;
     static {
         instance = new PluginsManager();
@@ -32,9 +32,12 @@ public class PluginsManager {
         webServices = new ArrayList<>();
         try {
             for (String plugin : Plugins.servicesList) {
-                Class<? extends PluginManifest> clz = (Class<? extends PluginManifest>) getClass().getClassLoader().loadClass(plugin);
-                LOGGER.debug("New Plugin was loaded: " + clz.getCanonicalName());
-                PluginManifest pluginDef = clz.newInstance();
+                Class pluginClz = getClass().getClassLoader().loadClass(plugin);
+                LOGGER.debug("New Plugin was loaded: " + pluginClz.getCanonicalName());
+                Object pluginObject = pluginClz.newInstance();
+                assert pluginObject instanceof PluginManifest : "Object is not a plugin manifest";
+
+                PluginManifest pluginDef = (PluginManifest) pluginObject;
                 plugins.add(pluginDef);
                 schemes.addAll(pluginDef.getSchemePackage());
                 webServices.addAll(pluginDef.getWebServicePackage());
