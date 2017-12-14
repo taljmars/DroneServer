@@ -16,14 +16,14 @@ public class MyJpaTransactionManager extends JpaTransactionManager {
 
     public MyJpaTransactionManager() {
         itr++;
-        System.out.println("Creation " + itr);
+        LOGGER.debug("Creation " + itr);
     }
 
     @Override
     public Map<String, Object> getJpaPropertyMap() {
         Map<String, Object> mapper = super.getJpaPropertyMap();
         for (Map.Entry<String, Object> entry : mapper.entrySet()) {
-            System.out.println("-> " + entry.getKey() + " " + entry.getValue());
+            LOGGER.debug("-> " + entry.getKey() + " " + entry.getValue());
         }
         return mapper;
     }

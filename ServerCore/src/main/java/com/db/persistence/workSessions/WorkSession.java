@@ -50,7 +50,7 @@ public class WorkSession {
 
     @PostConstruct
     protected void init() {
-        this.queryExecutor = new QueryExecutor(this.entityManager);
+        this.queryExecutor = new QueryExecutor(this);
 //        workSessionCache = new WorkSessionPrivateCache();
     }
 

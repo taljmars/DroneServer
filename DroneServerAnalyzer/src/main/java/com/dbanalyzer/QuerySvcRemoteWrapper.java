@@ -31,7 +31,7 @@ public class QuerySvcRemoteWrapper {
 
     @PostConstruct
     public void init() {
-        System.out.println("Initializing QuerySvcRemoteWrapper");
+        LOGGER.debug("Initializing QuerySvcRemoteWrapper");
     }
 
 //    @Autowired

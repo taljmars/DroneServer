@@ -43,7 +43,6 @@ public class DummyBaseObject extends BaseObject {
 
     @Override
     public void set(BaseObject baseObject) {
-        System.out.println("Setting deref");
         DummyBaseObject dummyBaseObject = (DummyBaseObject) baseObject;
         this.setName(dummyBaseObject.getName());
     }

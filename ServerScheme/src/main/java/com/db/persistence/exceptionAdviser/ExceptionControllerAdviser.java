@@ -4,6 +4,7 @@ import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
 import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
 import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.db.persistence.remote_exception.QueryRemoteException;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,9 +15,11 @@ import javax.annotation.PostConstruct;
 @ControllerAdvice
 public class ExceptionControllerAdviser {
 
+    private final static Logger LOGGER = Logger.getLogger(ExceptionControllerAdviser.class);
+
     @PostConstruct
     public void init() {
-        System.out.println("Initializing Exception Control Adviser");
+        LOGGER.debug("Initializing Exception Control Adviser");
     }
 
     @ExceptionHandler(ObjectNotFoundRemoteException.class)

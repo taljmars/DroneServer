@@ -54,7 +54,6 @@ public class ObjectDeref extends BaseObject {
 
     @Override
     public void set(BaseObject baseObject) {
-        System.out.println("Setting deref");
         ObjectDeref objectDeref = (ObjectDeref) baseObject;
         this.clz = objectDeref.getClz();
     }

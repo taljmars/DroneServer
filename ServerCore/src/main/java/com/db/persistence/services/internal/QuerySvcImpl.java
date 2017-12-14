@@ -107,7 +107,7 @@ public class QuerySvcImpl implements QuerySvc {
 	@Transactional
 	public <T extends BaseObject> List<? extends BaseObject> query(QueryRequest queryRequest)
 	{
-		System.out.println(queryRequest.toString());
+		LOGGER.debug(queryRequest.toString());
 		Class<? extends BaseObject> clz = queryRequest.getClz();
 		String queryStr = queryRequest.getQuery();
 		Map<String, String> params = queryRequest.getParameters();
