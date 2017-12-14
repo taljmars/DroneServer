@@ -87,7 +87,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 			return new ResponseEntity<T>((T) obj.copy(), HttpStatus.OK);
 		}
 		catch (DatabaseValidationException e) {
-			LOGGER.error("Failed to update object, reason: ", e);
+			LOGGER.error("Failed to update object, reason: " + e.getMessage());
 			throw new DatabaseValidationRemoteException("Failed to update object, " + e.getMessage());
 		}
 		catch (ObjectInstanceException e) {
