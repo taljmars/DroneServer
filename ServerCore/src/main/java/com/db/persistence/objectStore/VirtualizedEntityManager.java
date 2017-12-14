@@ -39,9 +39,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         LOGGER.debug("Create a new VEM for id " + this.entityManagerCtx);
     }
 
-    @Autowired
-    private WorkSessionPrivateCache workSessionCache;
-
     @Override
     public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
@@ -180,8 +177,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             LOGGER.error("going to handle " + clz);
             handleDiscardForType(clz);
         }
-
-        workSessionCache.flush();
     }
 
     @Override
@@ -194,9 +189,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             LOGGER.debug("Going to handle '" + clz.getCanonicalName() + "' publishing");
             handlePublishForType(clz, nextRevision);
         }
-
-        LOGGER.debug("Flush Cache");
-        workSessionCache.flush();
 
         LOGGER.debug("Flush Entity Manager");
         entityManagerWrapper.flush();
@@ -239,15 +231,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
                 entityManagerWrapper.remove(objectDeref);
             entityManagerWrapper.remove(item);
         }
-//        Set<String> uuidList = workSessionCache.getAllUuids();
-//        for (String item : uuidList) {
-//            ObjectDeref objectDeref = find(ObjectDeref.class, item);
-//            Class clazz = objectDeref.getClzType();
-//            if (objectDeref.getKeyId().getPrivatelyModified())
-//                delete(objectDeref);
-//            BaseObject object = find(clazz, item);
-//            delete(object);
-//        }
     }
 
     private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
@@ -266,16 +249,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
                 movePrivateToPublic(item, clz, nextRevision);
             }
         }
-
-//        Set<String> uuidList = workSessionCache.getAllUuids();
-//        for (String item : uuidList) {
-//            ObjectDeref objectDeref = find(ObjectDeref.class, item);
-//            Class clazz = objectDeref.getClzType();
-//            if (objectDeref.getKeyId().getPrivatelyModified())
-//                delete(objectDeref);
-//            BaseObject object = find(clazz, item);
-//            delete(object);
-//        }
     }
 
     private <T extends BaseObject> void movePrivateToPublic(T privateItem, BaseObject publicItem, Class<T> clz, int nextRevision) {
@@ -304,7 +277,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             publicItem.setFromRevision(nextRevision);
             LOGGER.debug("Old " + publicItemDup);
             LOGGER.debug("New " + publicItem);
-//            entityManagerWrapper.flush(); //TODO: TALMA :comment for test
         }
 
         // Clean the private

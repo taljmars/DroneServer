@@ -38,9 +38,6 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
         this.virtualizedEntityManager = applicationContext.getBean(VirtualizedEntityManager.class, this.entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
     }
 
-    @Autowired
-    private WorkSessionPrivateCache workSessionCache;
-
     @Override
     public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
