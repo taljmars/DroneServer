@@ -1,31 +1,19 @@
 package com.db.server;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.ValidationMode;
-import javax.sql.DataSource;
-
-import com.db.server.JpaVendorAdapters.JpaVendorAdapterBase;
+import com.db.server.jpaVendorAdapters.JpaVendorAdapterBase;
 import com.plugins_manager.PluginsManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.SharedEntityManagerCreator;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.persistence.ValidationMode;
+import javax.sql.DataSource;
+import java.util.List;
 
 @Configuration
 @ComponentScan({ "com.dronedb.persistence", "com.db.persistence" })
@@ -33,32 +21,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan({ "com.db.persistence.wsRest.internal" })
 public class PersistenceJPAConfig {
 
-    private static final String FILENAME = "PASS_FILE";
-
-    private final static Logger LOGGER = Logger.getLogger(DroneServer.class);
-
-    @Autowired
-    private Environment env;
+    private final static Logger LOGGER = Logger.getLogger(PersistenceJPAConfig.class);
 
     public PersistenceJPAConfig() {
-        super();
         LOGGER.debug("PersistenceJPAConfig Created");
-    }
-
-    private static String getPassword() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(FILENAME));
-            return br.readLine();
-        }
-        catch (FileNotFoundException e) {
-            LOGGER.error("Password file doesn't exist");
-        }
-        catch (IOException e) {
-            LOGGER.error("Failed to read password file");
-        }
-        //TODO: TALMA WA
-        return "postgres";
-//        return null;
     }
 
 //    @Bean
@@ -66,20 +32,6 @@ public class PersistenceJPAConfig {
 //    public EntityManager createEntityManager(@Autowired EntityManagerFactory entityManagerFactory) {
 //        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
 //    }
-
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/dronedb");
-        dataSource.setUsername( "postgres" );
-        String pass = getPassword();
-        if (pass == null || pass.isEmpty())
-            dataSource.setPassword( "postgres" );
-        else
-           dataSource.setPassword(pass);
-        return dataSource;
-    }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(

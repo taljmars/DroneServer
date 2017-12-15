@@ -1,8 +1,6 @@
-package com.db.server.JpaVendorAdapters;
+package com.db.server.jpaVendorAdapters;
 
 import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 

@@ -1,16 +1,13 @@
-package com.db.server.JpaVendorAdapters;
+package com.db.server.jpaVendorAdapters;
 
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.BatchWriting;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.logging.SessionLog;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.FlushModeType;
 import java.util.Properties;
 
 @Primary

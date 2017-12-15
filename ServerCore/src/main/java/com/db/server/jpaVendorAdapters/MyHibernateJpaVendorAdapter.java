@@ -1,6 +1,5 @@
-package com.db.server.JpaVendorAdapters;
+package com.db.server.jpaVendorAdapters;
 
-import ch.qos.logback.core.db.dialect.PostgreSQLDialect;
 import org.apache.log4j.Logger;
 //import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.AvailableSettings;

@@ -23,7 +23,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 @Configuration
-//@EnableTransactionManagement
 //@Import(PersistenceJPAConfigXml.class)
 @Import({PersistenceJPAConfig.class, TransactionManagersConfig.class})
 public class DroneDBServerAppConfig {
