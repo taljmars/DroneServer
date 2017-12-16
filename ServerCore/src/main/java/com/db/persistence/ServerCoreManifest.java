@@ -1,4 +1,4 @@
-package com.db;
+package com.db.persistence;
 
 import com.plugins_manager.PluginManifest;
 import org.apache.log4j.Logger;
