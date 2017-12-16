@@ -31,7 +31,7 @@ public class Plugins {
 
 //        servicesList.add("com.db.ServerCoreManifest");
         servicesList.add("com.db.persistence.ServerSchemeManifest");
-        servicesList.add("com.db.persistence.ServerCoreManifest");
+//        servicesList.add("com.db.persistence.ServerCoreManifest");
         servicesList.add("com.dronedb.persistence.DroneSchemeManifest");
     }
 }
