@@ -23,14 +23,15 @@ import java.util.List;
 @Configuration
 public class Plugins {
 
-    public final static List<String> servicesList;
+    public static List<String> servicesList;
 
     static {
         servicesList = new ArrayList<>();
 
-        servicesList.add("com.db.persistence.ServerCoreManifest");
+
 //        servicesList.add("com.db.ServerCoreManifest");
         servicesList.add("com.db.persistence.ServerSchemeManifest");
+        servicesList.add("com.db.persistence.ServerCoreManifest");
         servicesList.add("com.dronedb.persistence.DroneSchemeManifest");
     }
 }
