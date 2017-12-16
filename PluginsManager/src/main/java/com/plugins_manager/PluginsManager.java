@@ -45,6 +45,7 @@ public class PluginsManager {
         }
         catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             LOGGER.error("Failed to read plugins", e);
+            System.err.println("Failed to read plugin, " + e.getMessage());
             System.exit(-1);
         }
     }
