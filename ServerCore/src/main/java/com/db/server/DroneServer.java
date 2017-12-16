@@ -12,6 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import javax.servlet.ServletContextEvent;
@@ -22,6 +23,11 @@ import javax.xml.ws.Endpoint;
 		DroneDBServerAppConfig.class,
 		DroneWeb.class,
 		Plugins.class
+})
+@ComponentScan({
+		"com.db.persistence.wsRest.internal",
+		"com.db.persistence",
+		"com.db.server"
 })
 @SpringBootApplication
 public class DroneServer extends SpringBootServletInitializer
