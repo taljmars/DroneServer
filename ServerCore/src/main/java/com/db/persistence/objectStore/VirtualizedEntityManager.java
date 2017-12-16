@@ -5,6 +5,7 @@ import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import javax.persistence.metamodel.Metamodel;
 import java.util.List;
 import java.util.UUID;
 
+@Lazy
 @Scope(scopeName = "prototype")
 @Component
 public class VirtualizedEntityManager extends EntityManagerBase {

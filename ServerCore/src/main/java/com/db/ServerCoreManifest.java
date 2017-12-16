@@ -1,42 +1,44 @@
-package com.db.persistence;
+package com.db;
 
 import com.plugins_manager.PluginManifest;
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+@ComponentScan({
+        "com.db.persistence.wsRest.internal",
+        "com.db.persistence",
+        "com.db.server"
+})
 @Configuration
-public class ServerSchemeManifest implements PluginManifest {
+public class ServerCoreManifest implements PluginManifest {
 
-    private final static Logger LOGGER = Logger.getLogger(ServerSchemeManifest.class);
+    private final static Logger LOGGER = Logger.getLogger(ServerCoreManifest.class);
 
     @PostConstruct
     public void init() {
-        LOGGER.debug("Loading ServerSchemeManifest");
+        LOGGER.debug("Loading ServerCoreManifest");
     }
 
     @Override
     public List<String> getExceptionsPackage() {
         List<String> arr = new ArrayList<>();
-        arr.add("com.db.persistence.remote_exception");
         return arr;
     }
 
     @Override
     public List<String> getWebServicePackage() {
         List<String> arr = new ArrayList<>();
-        arr.add("com.db.persistence.wsSoap");
         return arr;
     }
 
     @Override
     public List<String> getSchemePackage() {
         List<String> arr = new ArrayList<>();
-        arr.add("com.db.persistence.scheme");
-        arr.add("com.db.persistence.wsSoap");
         return arr;
     }
 

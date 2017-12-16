@@ -33,7 +33,7 @@ public class PluginsManager {
         try {
             for (String plugin : Plugins.servicesList) {
                 Class pluginClz = getClass().getClassLoader().loadClass(plugin);
-                LOGGER.debug("New Plugin was loaded: " + pluginClz.getCanonicalName());
+                LOGGER.debug("New Plugin was found: " + pluginClz.getCanonicalName());
                 Object pluginObject = pluginClz.newInstance();
                 assert pluginObject instanceof PluginManifest : "Object is not a plugin manifest";
 
@@ -44,7 +44,8 @@ public class PluginsManager {
             }
         }
         catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            LOGGER.error("Failed to load plugins", e);
+            LOGGER.error("Failed to read plugins", e);
+            System.exit(-1);
         }
     }
 

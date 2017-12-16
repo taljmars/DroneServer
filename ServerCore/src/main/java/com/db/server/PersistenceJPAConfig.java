@@ -1,10 +1,13 @@
 package com.db.server;
 
 import com.db.server.jpaVendorAdapters.JpaVendorAdapterBase;
+import com.plugins_manager.Plugins;
 import com.plugins_manager.PluginsManager;
+import org.apache.catalina.core.ApplicationContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +19,6 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Configuration
-@ComponentScan({ "com.dronedb.persistence", "com.db.persistence" })
-@ComponentScan({ "com.db.server" })
-@ComponentScan({ "com.db.persistence.wsRest.internal" })
 public class PersistenceJPAConfig {
 
     private final static Logger LOGGER = Logger.getLogger(PersistenceJPAConfig.class);
@@ -26,12 +26,6 @@ public class PersistenceJPAConfig {
     public PersistenceJPAConfig() {
         LOGGER.debug("PersistenceJPAConfig Created");
     }
-
-//    @Bean
-//    @Lazy
-//    public EntityManager createEntityManager(@Autowired EntityManagerFactory entityManagerFactory) {
-//        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
-//    }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(

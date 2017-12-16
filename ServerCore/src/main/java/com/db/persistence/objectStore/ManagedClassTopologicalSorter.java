@@ -4,6 +4,7 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
 import com.db.persistence.scheme.TargetType;
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -16,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+@Lazy
 @Component
 public class ManagedClassTopologicalSorter {
 
@@ -58,7 +60,7 @@ public class ManagedClassTopologicalSorter {
 
     /**
      * The following function build a class tree. each node-child it placed
-     * has a parant if the parent class have one (or more) field(s) of the type.
+     * has a parent if the parent class have one (or more) field(s) of the type.
      */
     private void buildGraph() {
         for (Class clz : unsortedManagedClasses) {

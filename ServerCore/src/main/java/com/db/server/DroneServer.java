@@ -3,6 +3,7 @@ package com.db.server;
 import com.db.persistence.wsSoap.ObjectCrudSvcRemote;
 import com.db.persistence.wsSoap.QuerySvcRemote;
 import com.db.persistence.wsSoap.SessionsSvcRemote;
+import com.plugins_manager.Plugins;
 import org.apache.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,13 +18,17 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.xml.ws.Endpoint;
 
-//import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@Import({DroneDBServerAppConfig.class, DroneWeb.class})
+@Import({
+		DroneDBServerAppConfig.class,
+		DroneWeb.class,
+		Plugins.class
+})
 @SpringBootApplication
 public class DroneServer extends SpringBootServletInitializer
 {
 	private final static Logger LOGGER = Logger.getLogger(DroneServer.class);
+
+	public static ApplicationContext context ;//= new AnnotationConfigApplicationContext(DroneDBServerAppConfig.class);
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -75,9 +80,7 @@ public class DroneServer extends SpringBootServletInitializer
 			System.setProperty("LOGS.DIR", logPath);
 			System.setProperty("CONF.DIR", confPath);
 
-			DroneDBServerAppConfig.context = ctx;
-	//		DroneServer droneServer = DroneDBServerAppConfig.context.getBean(DroneServer.class);
-	//		droneServer.go();
+			context = ctx;
 
 			LOGGER.debug("Details: " + logPath + " " + confPath);
 			LOGGER.debug("Server is up and running!");
@@ -88,14 +91,14 @@ public class DroneServer extends SpringBootServletInitializer
 	private void go() {
 //		System.setProperty("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");
 
-		ObjectCrudSvcRemote objectCrudSvcRemote 		= DroneDBServerAppConfig.context.getBean(ObjectCrudSvcRemote.class);
-		QuerySvcRemote querySvcRemote 				= DroneDBServerAppConfig.context.getBean(QuerySvcRemote.class);
+		ObjectCrudSvcRemote objectCrudSvcRemote 		= context.getBean(ObjectCrudSvcRemote.class);
+		QuerySvcRemote querySvcRemote 				= context.getBean(QuerySvcRemote.class);
 //		MissionCrudSvcRemote missionCrudSvcRemote 		= DroneDBServerAppConfig.context.getBean(MissionCrudSvcRemote.class);
-		SessionsSvcRemote sessionsSvcRemote 			= DroneDBServerAppConfig.context.getBean(SessionsSvcRemote.class);
+		SessionsSvcRemote sessionsSvcRemote 			= context.getBean(SessionsSvcRemote.class);
 //		PerimeterCrudSvcRemote perimeterCrudSvcRemote 	= DroneDBServerAppConfig.context.getBean(PerimeterCrudSvcRemote.class);
 
-		String ip = DroneDBServerAppConfig.context.getBean("serverIp", String.class);
-		String port = DroneDBServerAppConfig.context.getBean("serverPort", String.class);
+		String ip = context.getBean("serverIp", String.class);
+		String port = context.getBean("serverPort", String.class);
 
 		String format = "http://%s:%s/wsSoap/%s";
 		String url;

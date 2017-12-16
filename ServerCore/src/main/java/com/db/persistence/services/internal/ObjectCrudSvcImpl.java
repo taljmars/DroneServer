@@ -9,6 +9,7 @@ import com.db.persistence.exception.ObjectInstanceException;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
 import com.db.server.DroneDBServerAppConfig;
+import com.db.server.DroneServer;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -187,7 +188,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 				Class<? extends UpdateObjectTrigger> trigger = (Class<? extends UpdateObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				LOGGER.debug("Trigger executed: " + trigger.getSimpleName());
 				UpdateObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(DroneDBServerAppConfig.context);
+				t.setApplicationContext(DroneServer.context);
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
@@ -219,7 +220,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 				String triggerClasspath = deleteTrigger.trigger();
 				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(DroneDBServerAppConfig.context);
+				t.setApplicationContext(DroneServer.context);
 				LOGGER.debug("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleDeleteObject(inst);	
 			}

@@ -26,8 +26,6 @@ import java.io.IOException;
 //@Import(PersistenceJPAConfigXml.class)
 @Import({PersistenceJPAConfig.class, TransactionManagersConfig.class})
 public class DroneDBServerAppConfig {
-	
-	public static ApplicationContext context ;//= new AnnotationConfigApplicationContext(DroneDBServerAppConfig.class);
 
 	private final static Logger LOGGER = Logger.getLogger(DroneDBServerAppConfig.class);
 
