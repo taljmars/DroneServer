@@ -27,7 +27,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	private QuerySvc querySvc;
 
 	@Override
-	@RequestMapping(value = "/runNativeQueryWithClassForName", method = RequestMethod.GET)
+	@RequestMapping(value = "/runNativeQueryWithClassForUser", method = RequestMethod.GET)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException {
 		querySvc.setForUser(userName);
