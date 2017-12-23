@@ -9,8 +9,8 @@ addons:
     packages:
     - oracle-java8-installer
 script:
-- rm -rf $HOME/.m2/repository
-- mvn clean package -B -V
+#- rm -rf $HOME/.m2/repository
+#- mvn clean package -B -V
 - ls -lh $HOME/
 #jobs:
 #  include:
