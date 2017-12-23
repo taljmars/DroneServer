@@ -12,7 +12,10 @@ script:
 #- rm -rf $HOME/.m2/repository
 #- mvn clean package -B -V
 - ls -lh $HOME/*
-- ls -lh $HOME/build/
+- ls -lh $HOME/build/taljmars/
+- ls -lh $HOME/build/taljmars/DroneServer/
+- ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/
+- ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
 #jobs:
 #  include:
 #  - stage: test
