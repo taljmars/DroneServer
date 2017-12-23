@@ -11,7 +11,8 @@ addons:
 script:
 #- rm -rf $HOME/.m2/repository
 #- mvn clean package -B -V
-- ls -lh $HOME/
+- ls -lh $HOME/*
+- ls -lh $HOME/build/
 #jobs:
 #  include:
 #  - stage: test
