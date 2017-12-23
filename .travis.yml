@@ -1,11 +1,6 @@
 language: java
 dist: trusty
 sudo: false
-
-script:
-- rm -rf $HOME/.m2/repository
-- mvn clean package -B -V
-
 install: true
 jdk:
 - oraclejdk8
@@ -14,14 +9,15 @@ addons:
     packages:
     - oracle-java8-installer
 script:
-#- rm -rf $HOME/.m2/repository
-#- mvn clean package -B -V
+- rm -rf $HOME/.m2/repository
+- mvn clean package -B -V
 - ls -lh $HOME/*
 - ls -lh $HOME/build/taljmars/
 - ls -lh $HOME/build/taljmars/DroneServer/
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
-- echo tal > $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
+- $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
+- touch $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
 #jobs:
 #  include:
 #  - stage: test
