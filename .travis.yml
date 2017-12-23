@@ -15,6 +15,21 @@ script:
   - rm -rf $HOME/.m2/repository
   - mvn clean package -B -V
 
+jobs:
+  include:
+    - stage: test
+      script: ./test 1
+    - # stage name not required, will continue to use `test`
+      script: ./test 2
+    - stage: deploy
+      script: ./deploy
+
+stages:
+  - compile
+  - test
+  - name: deploy
+    if: branch = master
+
 after_success:
   - sh set_tags.sh
 
