@@ -16,7 +16,6 @@ script:
 - ls -lh $HOME/build/taljmars/DroneServer/
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
-- $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
 - touch $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
 #jobs:
 #  include:
