@@ -1,6 +1,11 @@
 language: java
 dist: trusty
 sudo: false
+
+script:
+- rm -rf $HOME/.m2/repository
+- mvn clean package -B -V
+
 install: true
 jdk:
 - oraclejdk8
