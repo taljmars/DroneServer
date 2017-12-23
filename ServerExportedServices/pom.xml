@@ -128,7 +128,8 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <phase>clean</phase>
+                        <phase>none</phase>
+                        <!--<phase>clean</phase>-->
                         <goals>
                             <goal>run</goal>
                         </goals>
