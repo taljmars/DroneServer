@@ -75,6 +75,7 @@ public class Exporter {
         String path = packageName.replace('.', '/');
         System.out.println("Package: " + path);
         Enumeration<URL> resources = classLoader.getResources(path);
+	System.out.println("resources: " + resources);
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
