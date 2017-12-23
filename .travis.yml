@@ -2,51 +2,31 @@ language: java
 dist: trusty
 sudo: false
 install: true
-
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 addons:
   apt:
     packages:
-      - oracle-java8-installer
-
+    - oracle-java8-installer
 script:
-  - rm -rf $HOME/.m2/repository
-  - mvn clean package -B -V
-
-jobs:
-  include:
-    - stage: test
-      #script: ./test 1
-    - # stage name not required, will continue to use `test`
-      #script: ./test 2
-    - stage: deploy
-      script: mvn deploy
-
-stages:
-  - compile
-  - test
-  - name: deploy
-    if: branch = master
-
-after_success:
-  - sh set_tags.sh
-
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: TsuKAxdrLzSn45VXLFFR9hnC3cXYGlzH7clMib20uKNSF7BZSwCtKQLJ0b/nTEqyWmv5uNFX59LKx8qAeRLPVoBFzOsfsc4a7CMpzjJdjU6XniHrzdl2ZGj3BNLZjGQBHmh/1A4SWxMHdbTe1pLQdDzmZOeVcZnpTt79ls+FNB54N2koVyTHMrZCrev+2aRQkRgEGb+l32FIjNHks2QJn+9bDOmxt+BMexL0hZrgByHBV7IPnAZjnn/P9nTn1it194PRQ5nsxjFyDlRjq72M/aXZu8ZZ80CGhPNcnYV2oalkgV+IXeqGgzIBv55TQO4WG8qUe/Ar2XC8fsE5pt5tLF3av7HxYBNMI8eX3kbOm+3UKqbOhPzBCmgWBKxwoYe5ZCi7/1ZnP32CwxvNoW8jqfuV6cLE8rS26s3LrrUcEa0pG+m/Ix4U/7Jrl9zL2pLVVnlYJRjeOz0Z3Fv8jAB48QNRJvDkPIhKNHD1RC6pNIWB7X4ojtlxaueZhKg+4OChOoc32C9p0tx4OIZ4KpISu1N99Ojz7OTuO43PRaFa9KB6EbQet6MslXYE/x56BLr96bRmUsw+Z2lHv7pqGlciriGFLvV8JYUOcn6BNZNpml915CKM0xVrnkADxr1PYqaZ/Z+cqQTIWB9pavBoqdrgkhPSBtYu6AmRfwABH6ZZFsA=
-#  file: "target/Console-*.zip"
-#  file_glob: "true"
-#  skip_cleanup: true
-#  on:
-#    branch: master
-#    repo: Fameing/DroneGCS
-
+- rm -rf $HOME/.m2/repository
+- mvn clean package -B -V
+#jobs:
+#  include:
+#  - stage: test
+#  - 
+#  - stage: deploy
+#    script: mvn deploy
+deploy:
+  provider: releases
+  api_key:
+    secure: itUnxb6KI5BsfoI+PThN061EH6wt1H7W9rNpXfntIt7ilBpAP/fBKwtjjFtLmg9TRfmSdWJ3etbT9WckHLnCHnJqSttH2QwP5Vb4WeU3qtSykKzsgm1znCOLtgeqRmFPdrZ7LuuqbFA09Jt1sGhf9Wh2HS2cZiCv2V8zErx3ynnL7betXfHIvuZaYNCZBwt6UJrif1exQRi0iEkKB1IWfHaKvrEgwzcYhj/WOrBHgWmKpsUmNGfOaShHOdPcA+a7ertdstbWCv+oNrL3U1Mu4zsH/U8qYpQmbC9w1mQyJ2ckRvLHtN45wV3IwqBI9yMhosco1v1rjeUpTfnCejcXkQO3Ki62F10O/CK4EiIoBh/33aaZZmZhCtseY4RSW5K+woRc3sgDtP/0CmUMAfZ/2P9Z0dxDR637viyGxSEYHs8IYVTIWJpzyejL22i/U7gnpO8B9UzS6ydauuYlShJmim7H+CJPLut2WEiFSQDVNT2o5U4OfMiAKcPPHcuB+9dt9xBvwOrqObT67A62knp1VPaGsbjrjikAgpQLZog2tr6Vpd1E8XYSKzuLusWl4irvrLiUBpSnmk6EINYbPuEcei6p8osVowXE9AISoh/Vli0OVC3L6XHdNuFOLY++g8m7tW+AiGmVUl0ToL78wcQLvycVdTp60DkZElXx+G8tlI4=
+  file: "ServerInstallation/Linux/*.tar"
+  on:
+    branch: master
+    repo: taljmars/DroneServer/
 cache:
   directories:
-    - '$HOME/.m2/repository'
-
+  - "$HOME/.m2/repository"
 notifications:
   email: true
