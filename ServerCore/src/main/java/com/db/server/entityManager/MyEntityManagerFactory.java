@@ -1,15 +1,10 @@
-package com.db.server;
+package com.db.server.entityManager;
 
 import com.db.server.jpaVendorAdapters.JpaVendorAdapterBase;
-import com.plugins_manager.Plugins;
 import com.plugins_manager.PluginsManager;
-import org.apache.catalina.core.ApplicationContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,19 +14,14 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Configuration
-public class PersistenceJPAConfig {
+public class MyEntityManagerFactory {
 
-    private final static Logger LOGGER = Logger.getLogger(PersistenceJPAConfig.class);
-
-    public PersistenceJPAConfig() {
-        LOGGER.debug("PersistenceJPAConfig Created");
-    }
+    private final static Logger LOGGER = Logger.getLogger(MyEntityManagerFactory.class);
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Autowired DataSource dataSource,
-            @Autowired @Qualifier("hibernateJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
-//            @Autowired @Qualifier("eclipseLinkJpaVendorAdapter") JpaVendorAdapterBase jpaVendorAdapter)
+            @Autowired JpaVendorAdapterBase jpaVendorAdapter)
     {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 

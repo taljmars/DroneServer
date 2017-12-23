@@ -1,5 +1,6 @@
 package com.db.persistence.services.internal;
 
+import com.db.persistence.KeyAspect;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.services.QuerySvc;
 import com.db.persistence.services.SessionsSvc;
@@ -31,11 +32,10 @@ public class SessionsSvcImpl implements SessionsSvc {
 
 	String currentUserName = "";
 	public void setForUser(String userName) {
-		if (currentUserName.equals(userName))
-			return;
-
+		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = objectStoreSessionManager.createSession(userName);
+		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Autowired
@@ -54,7 +54,6 @@ public class SessionsSvcImpl implements SessionsSvc {
 		LOGGER.debug("PUBLISH START !!!");
 		LOGGER.debug("Update revision value in revision manager");
 		workSession.publish();
-		workSession.flush();
 		LOGGER.debug("PUBLISH END !!!");
 	}
 

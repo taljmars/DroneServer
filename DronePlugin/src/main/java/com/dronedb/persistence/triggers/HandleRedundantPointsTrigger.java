@@ -2,7 +2,6 @@ package com.dronedb.persistence.triggers;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
-import com.db.persistence.triggers.UpdateObjectTrigger;
 import com.db.persistence.triggers.UpdateObjectTriggerImpl;
 import com.db.persistence.triggers.UpdateTrigger;
 import com.dronedb.persistence.scheme.CirclePerimeter;
@@ -10,8 +9,6 @@ import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.scheme.Point;
 import com.dronedb.persistence.scheme.PolygonPerimeter;
 import org.apache.log4j.Logger;
-
-import java.util.UUID;
 
 /**
  * Created by taljmars on 3/23/17.
@@ -44,7 +41,7 @@ public class HandleRedundantPointsTrigger extends UpdateObjectTriggerImpl {
 
         if (oldInst instanceof PolygonPerimeter) {
             LOGGER.debug("Handle polyline perimeter update");
-            for (UUID pointUuid : ((PolygonPerimeter) oldInst).getPoints()) {
+            for (String pointUuid : ((PolygonPerimeter) oldInst).getPoints()) {
                 if (((PolygonPerimeter) newInst).getPoints().contains(pointUuid))
                     continue;
 

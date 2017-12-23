@@ -8,7 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
@@ -34,15 +36,22 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     protected SimpleEntityManagerWrapper entityManagerWrapper;
     protected Integer entityManagerCtx;
+    private EntityManager entityManager; //TODO: with need it for post construct stage pass it normally - dont save as a temp
 
     public VirtualizedEntityManager(EntityManager entityManager, Integer entityManagerCtx) {
-        this.entityManagerWrapper = new SimpleEntityManagerWrapper(entityManager);
-        this.entityManagerCtx = entityManagerCtx;
         LOGGER.debug("Create a new VEM for id " + this.entityManagerCtx);
+//        this.entityManagerWrapper = new SimpleEntityManagerWrapper(entityManager, entityManagerCtx);
+        this.entityManagerCtx = entityManagerCtx;
+        this.entityManager = entityManager;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.entityManagerWrapper = applicationContext.getBean(SimpleEntityManagerWrapper.class, entityManager, entityManagerCtx);
     }
 
     @Override
-    public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
+    public <T extends BaseObject> T find(Class<T> clz, String uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
 
         KeyId keyId = new KeyId();
@@ -162,7 +171,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
     }
 
     @Override
-    protected SimpleEntityManagerWrapper getEntityManager() {
+    public SimpleEntityManagerWrapper getEntityManager() {
         return entityManagerWrapper;
     }
 
@@ -218,6 +227,16 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         privateObject.getKeyId().setEntityManagerCtx(entityManagerCtx);
         persist(privateObject);
 
+        // TODO: talma: Critical! Move to event action - Temp WA
+        LockedObject lockedObject = new LockedObject();
+
+        lockedObject.getKeyId().setEntityManagerCtx(0);
+        lockedObject.getKeyId().setToRevision(Constants.TIP_REVISION);
+        lockedObject.setFromRevision(revisionManager.getNextRevision());
+        lockedObject.setReferredCtx(entityManagerCtx);
+        lockedObject.setReferredObjId(privateObject.getKeyId().getObjId());
+        entityManagerWrapper.persist(lockedObject);
+
 //        LOGGER.debug("Create object in private db");
 //        LOGGER.debug("Public " + existingObject);
 //        LOGGER.debug("Private " + privateObject);
@@ -232,6 +251,15 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             if (objectDeref.getKeyId().getEntityManagerCtx() != EntityManagerType.MAIN_ENTITY_MANAGER.id)
                 entityManagerWrapper.remove(objectDeref);
             entityManagerWrapper.remove(item);
+
+            Query lockedQuery = entityManagerWrapper.createNativeQuery("SELECT * FROM LockedObject " +
+                    "WHERE referredctx = " + entityManagerCtx + " AND referredobjid = '" + item.getKeyId().getObjId() + "'", LockedObject.class);
+            List<LockedObject> res = lockedQuery.getResultList();
+            Assert.isTrue(res.size() < 2, "Unexpected amount of locked object");
+            if (res.size() == 1) {
+                LockedObject lockedObject = res.get(0);
+                entityManagerWrapper.remove(lockedObject);
+            }
         }
     }
 
@@ -239,6 +267,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         LOGGER.debug("Handle publish for object of type '" + clz .getCanonicalName()+ "'");
         Query query = createNativeQuery(buildGetPrivateQuery(clz), clz);
         List<T> objs = query.getResultList();
+        LOGGER.debug("Need to publish " + objs.size() + " objects");
         for (T item : objs) {
             T tip = getPublishedByPrivateObject(clz, item);
 
@@ -263,7 +292,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         publicItemDup.setFromRevision(publicItem.getFromRevision());
         publicItemDup.getKeyId().setToRevision(nextRevision);
         publicItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
-//        publicItemDup.setEntityManagerCtx(privateItem.isDeleted() ? -1 : entityManagerCtx);
+//        publicItemDup.getKeyId().setEntityManagerCtx(privateItem.isDeleted() ? -1 : entityManagerCtx);
+        publicItemDup.getKeyId().setEntityManagerCtx(-1);
         entityManagerWrapper.persist(publicItemDup);
 
         // Updating the tip to be align to the private
@@ -283,6 +313,15 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
         // Clean the private
         entityManagerWrapper.remove(privateItem);
+
+        // TODO: talma: Critical! Move to event action - Temp WA
+        Query query = entityManagerWrapper.createNativeQuery("SELECT * FROM LockedObject " +
+                "WHERE referredctx = " + entityManagerCtx + " AND referredobjid = '" + privateItem.getKeyId().getObjId() + "'", LockedObject.class);
+        List<LockedObject> res = query.getResultList();
+        Assert.isTrue(res != null && res.size() == 1, "Unexpected amount of locked object");
+        LockedObject lockedObject = res.get(0);
+        entityManagerWrapper.remove(lockedObject);
+
         LOGGER.debug("Done");
     }
 
@@ -341,7 +380,6 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         if ((obj = entityManagerWrapper.find(clz, keyId)) == null)
             throw new RuntimeException("Failed to find public object");
-
 
         LOGGER.debug("Done");
     }

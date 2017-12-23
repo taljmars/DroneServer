@@ -1,19 +1,24 @@
 package com.db.server.jpaVendorAdapters;
 
 import org.apache.log4j.Logger;
-//import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.AvailableSettings;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-@Qualifier(value = "hibernateJpaVendorAdapter")
-@Component(value = "hibernateJpaVendorAdapter")
+import static com.db.server.SpringProfiles.Hibernate;
+
+@Profile(Hibernate)
+@Component
 public class MyHibernateJpaVendorAdapter extends HibernateJpaVendorAdapter implements JpaVendorAdapterBase {
 
     private final static Logger LOGGER = Logger.getLogger(MyHibernateJpaVendorAdapter.class);
+
+    @Autowired
+    private String dialect;
 
     @Override
     public Properties getProperties() {
@@ -21,12 +26,18 @@ public class MyHibernateJpaVendorAdapter extends HibernateJpaVendorAdapter imple
 
         final Properties properties = new Properties();
         // Flush the DB at the end
-//        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-//        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
         properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create-drop");
-        properties.setProperty(AvailableSettings.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty(AvailableSettings.DIALECT, dialect);
         properties.setProperty(AvailableSettings.SHOW_SQL, "true");
+
+//        properties.setProperty(AvailableSettings.FORMAT_SQL, "true");
+//        properties.setProperty(AvailableSettings.USE_SQL_COMMENTS, "true");
+//        properties.setProperty("spring.jpa.properties.hibernate.type", "trace");
+
+        properties.setProperty("spring.data.rest.detection-strategy", "annotated");
+
 //        hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
+
         return properties;
     }
 }

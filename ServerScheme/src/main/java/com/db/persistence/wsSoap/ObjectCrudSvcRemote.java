@@ -31,8 +31,8 @@ public interface ObjectCrudSvcRemote
 	<T extends BaseObject> T delete(@WebParam T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
 	
 	@WebMethod 
-	<T extends BaseObject> T read(@WebParam final UUID objId) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> T read(@WebParam final String objId) throws ObjectNotFoundRemoteException;
 	
 	@WebMethod
-	<T extends BaseObject> T readByClass(@WebParam final UUID objId, @WebParam final Class<T> clz) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> T readByClass(@WebParam final String objId, @WebParam final Class<T> clz) throws ObjectNotFoundRemoteException;
 }

@@ -1,6 +1,5 @@
-package com.db.server;
+package com.db.server.transactions;
 
-import com.db.persistence.objectStore.MyJpaTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

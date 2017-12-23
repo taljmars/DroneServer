@@ -1,6 +1,8 @@
 package com.db.persistence.objectStore;
 
-import com.db.persistence.scheme.*;
+import com.db.persistence.scheme.BaseObject;
+import com.db.persistence.scheme.Constants;
+import com.db.persistence.scheme.KeyId;
 import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import java.util.UUID;
 
 @Lazy
 @Component
@@ -41,7 +42,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
     }
 
     @Override
-    public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
+    public <T extends BaseObject> T find(Class<T> clz, String uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
 
         KeyId keyId = new KeyId();
@@ -140,7 +141,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
     /*****************************************************************************/
 
     @Override
-    protected SimpleEntityManagerWrapper getEntityManager() {
+    public SimpleEntityManagerWrapper getEntityManager() {
         return virtualizedEntityManager.entityManagerWrapper;
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Component
 public class MissionQuery implements RunnablePayload {
@@ -66,7 +65,7 @@ public class MissionQuery implements RunnablePayload {
 
             for (BaseObject msn : missionList) {
                 Mission mission = (Mission) msn;
-                List<UUID> uids = mission.getMissionItemsUids();
+                List<String> uids = mission.getMissionItemsUids();
                 ans += String.format("%37s | %11d | %10d | %7s | %7s | %10s | %5dm | %5d\n",
                         mission.getKeyId().getObjId(), mission.getFromRevision(), mission.getKeyId().getToRevision(),
                         mission.isDeleted() ? "T" : "", !mission.getKeyId().getEntityManagerCtx().equals(0) ? "PRIVATE" : "PUBLIC",

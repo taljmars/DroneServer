@@ -6,10 +6,7 @@ import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.db.persistence.scheme.BaseObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 public interface ObjectCrudRestSvcRemote
 {
@@ -44,17 +41,17 @@ public interface ObjectCrudRestSvcRemote
 
 	@RequestMapping(value = "/readForUser", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam UUID objId, @RequestParam String userName) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam String objId, @RequestParam String userName) throws ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> read(@RequestParam UUID objId) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId) throws ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/readByClassForUser", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam UUID objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam String objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/readByClass", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam UUID objId, @RequestParam String clz) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz) throws ObjectNotFoundRemoteException;
 }

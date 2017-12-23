@@ -9,11 +9,12 @@ import com.db.persistence.triggers.UpdateTrigger;
 import com.db.persistence.triggers.UpdateTriggers;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.UUID;
 
-import static com.dronedb.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE;
+import static com.db.persistence.scheme.Constants.GEN_CTX;
+
 
 /**
  * Created by taljmars on 3/19/17.
@@ -23,12 +24,13 @@ import static com.dronedb.persistence.scheme.Constants.CIRCLE_PERIMETER_QUERY_FR
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllCirclePerimeters",
-                query = "SELECT * FROM CirclePerimeter WHERE " + CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+//                query = "SELECT * FROM CirclePerimeter WHERE " + CIRCLE_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+                query = "SELECT * FROM CirclePerimeter WHERE " + GEN_CTX,
                 resultClass = CirclePerimeter.class
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedCirclePerimeters",
-                query = "SELECT * FROM CirclePerimeter WHERE entityManagerCtx != 0",
+                query = "SELECT * FROM CirclePerimeter WHERE " + GEN_CTX + " AND (entityManagerCtx != 0)",
                 resultClass = CirclePerimeter.class
         )
 })
@@ -58,7 +60,7 @@ public class CirclePerimeter extends Perimeter implements Serializable {
     @Column(nullable = true)
     @Basic(fetch=FetchType.EAGER)
     @TargetType(clz = Point.class)
-    protected UUID center;
+    protected String center;
 
     @Column(nullable = true)
     protected Double radius;
@@ -80,12 +82,12 @@ public class CirclePerimeter extends Perimeter implements Serializable {
     }
 
     @Getter
-    public UUID getCenter() {
+    public String getCenter() {
         return center;
     }
 
     @Setter
-    public void setCenter(UUID center) {
+    public void setCenter(String center) {
         this.center = center;
     }
 

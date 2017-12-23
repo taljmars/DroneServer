@@ -54,8 +54,8 @@ public class PerimeterCrudSvcImpl implements PerimeterCrudSvc {
 
     private PolygonPerimeter clonePolygon(PolygonPerimeter perimeter) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
         PolygonPerimeter clonePolygon = perimeter.clone();
-        List<UUID> uuidList = new ArrayList<>();
-        for (UUID uuid : clonePolygon.getPoints()) {
+        List<String> uuidList = new ArrayList<>();
+        for (String uuid : clonePolygon.getPoints()) {
             Point point = objectCrudSvc.readByClass(uuid, Point.class);
             Point clonePoint = point.clone();
             clonePoint = objectCrudSvc.update(clonePoint);

@@ -1,5 +1,6 @@
 package com.db.persistence.services.internal;
 
+import com.db.persistence.KeyAspect;
 import com.db.persistence.workSessions.WorkSession;
 import com.db.persistence.workSessions.WorkSessionManager;
 import com.db.persistence.scheme.*;
@@ -8,7 +9,6 @@ import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
-import com.db.server.DroneDBServerAppConfig;
 import com.db.server.DroneServer;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
@@ -52,12 +52,10 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 	@Override
 	@Transactional
 	public void setForUser(String userName) {
-		if (currentUserName.equals(userName))
-			return;
-
 		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
+		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Override
@@ -137,13 +135,13 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 
 	@Override
 	@Transactional
-	public BaseObject read(final UUID uid) {
+	public BaseObject read(final String uid) {
 		return workSession.find(uid);
 	}
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T readByClass(UUID objId, Class<T> clz) throws ObjectNotFoundException {
+	public <T extends BaseObject> T readByClass(String objId, Class<T> clz) throws ObjectNotFoundException {
 		LOGGER.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
 		// First search in the private db

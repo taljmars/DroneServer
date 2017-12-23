@@ -6,7 +6,6 @@ import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
 import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
 import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.scheme.DummyBaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.wsRest.ObjectCrudRestSvcRemote;
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -15,14 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
-//import java.util.UUID;
 
 @RestController
 public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
@@ -147,7 +142,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@Override
 	@RequestMapping(value = "/readForUser", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam UUID objId, @RequestParam String userName) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam String objId, @RequestParam String userName) throws ObjectNotFoundRemoteException {
 		objectCrudSvc.setForUser(userName);
 		return read(objId);
 	}
@@ -156,7 +151,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@Override
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam UUID objId) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId) throws ObjectNotFoundRemoteException {
 		try {
 			LOGGER.debug("Crud REMOTE READ called " + objId);
 			BaseObject object = objectCrudSvc.read(objId);
@@ -174,7 +169,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@Override
 	@RequestMapping(value = "/readByClassForUser", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam UUID objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam String objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException {
 		objectCrudSvc.setForUser(userName);
 		return readByClass(objId, clz);
 	}
@@ -182,7 +177,7 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@Override
 	@RequestMapping(value = "/readByClass", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam UUID objId, @RequestParam String clz) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz) throws ObjectNotFoundRemoteException {
 
 		try {
 			LOGGER.debug("Crud REMOTE READ called '" + objId + "', class '" + clz + "'");

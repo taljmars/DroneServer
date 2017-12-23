@@ -39,7 +39,8 @@ public class ManagedClassTopologicalSorter {
      *
      * @param entityManager to extract the JPA entities
      */
-    private void mapClasses(EntityManager entityManager) {
+//    private void mapClasses(EntityManager entityManager) {
+    private void mapClasses(SimpleEntityManagerWrapper entityManager) {
         Metamodel mm = entityManager.getMetamodel();
         unsortedManagedClasses = new ArrayList<>();
         for (final ManagedType<?> managedType : mm.getManagedTypes()) {
@@ -198,7 +199,8 @@ public class ManagedClassTopologicalSorter {
         }
     }
 
-    public List<Class> getManagedClasses(EntityManager entityManager) {
+//    public List<Class> getManagedClasses(EntityManager entityManager) {
+    public List<Class> getManagedClasses(SimpleEntityManagerWrapper entityManager) {
         if (sortedManagedClasses == null || sortedManagedClasses.isEmpty()) {
             LOGGER.debug("Build topological publish graph");
             mapClasses(entityManager);

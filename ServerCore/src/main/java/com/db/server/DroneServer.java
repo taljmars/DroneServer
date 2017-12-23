@@ -14,10 +14,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.AbstractEnvironment;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.xml.ws.Endpoint;
+
+import static com.db.server.SpringProfiles.*;
 
 @Import({
 		DroneDBServerAppConfig.class,
@@ -29,6 +33,7 @@ import javax.xml.ws.Endpoint;
 		"com.db.persistence",
 		"com.db.server"
 })
+@PropertySource(value = "classpath:application.properties")
 @SpringBootApplication
 public class DroneServer extends SpringBootServletInitializer
 {
@@ -59,7 +64,21 @@ public class DroneServer extends SpringBootServletInitializer
 	}
 
 	public static void main(String[] args) throws Exception {
+		addSpringProfile(Hibernate);
+//		addSpringProfile(EclipseLink);
+//		addSpringProfile(Postgres);
+		addSpringProfile(H2);
+
 		SpringApplication.run(DroneServer.class, args);
+	}
+
+	private static void addSpringProfile(String profile) {
+		String prop = System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
+		if (prop == null)
+			prop = profile;
+		else
+			prop += "," + profile;
+		System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, prop);
 	}
 
 //	public void run(String[] args) {
@@ -85,6 +104,7 @@ public class DroneServer extends SpringBootServletInitializer
 			// External Settings
 			System.setProperty("LOGS.DIR", logPath);
 			System.setProperty("CONF.DIR", confPath);
+
 
 			context = ctx;
 

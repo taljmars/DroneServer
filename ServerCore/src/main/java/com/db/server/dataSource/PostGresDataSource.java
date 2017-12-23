@@ -3,6 +3,7 @@ package com.db.server.dataSource;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
@@ -11,16 +12,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static com.db.server.SpringProfiles.Postgres;
+
+@Profile(Postgres)
 @Configuration
 public class PostGresDataSource implements DataSourceBase {
 
     private static final String FILENAME = "PASS_FILE";
 
     private final static Logger LOGGER = Logger.getLogger(PostGresDataSource.class);
-
-    public PostGresDataSource() {
-        LOGGER.debug("PostGresDataSource Created");
-    }
 
     private static String getPassword() {
         try {
@@ -50,6 +50,13 @@ public class PostGresDataSource implements DataSourceBase {
             dataSource.setPassword( "postgres" );
         else
            dataSource.setPassword(pass);
+
         return dataSource;
+    }
+
+    @Bean
+    @Override
+    public String dialect() {
+        return "org.hibernate.dialect.PostgreSQLDialect";
     }
 }

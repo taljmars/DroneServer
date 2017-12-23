@@ -56,9 +56,9 @@ public class ShowMission implements RunnablePayload {
                 Mission mission = (Mission) msn;
                 ans += "Mission Name: " + mission.getName() + "\n";
                 ans += "Default Alt: " + mission.getDefaultAlt() + "m" + "\n";
-                List<UUID> uids = mission.getMissionItemsUids();
+                List<String> uids = mission.getMissionItemsUids();
                 ans += "Mission Items (" + uids.size() + "):" + "\n";
-                for (UUID uuid : uids) {
+                for (String uuid : uids) {
 //                ResponseEntity<MissionItem> missionItemResponseEntity = objectCrudSvcRemote.read(uuid);
 //                MissionItem missionItem = missionItemResponseEntity.getBody();
 //                System.out.println(missionItem.toString());

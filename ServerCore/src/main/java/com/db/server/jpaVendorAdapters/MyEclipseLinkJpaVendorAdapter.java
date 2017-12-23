@@ -3,16 +3,16 @@ package com.db.server.jpaVendorAdapters;
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.logging.SessionLog;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-@Primary
-@Qualifier(value = "eclipseLinkJpaVendorAdapter")
-@Component(value = "eclipseLinkJpaVendorAdapter")
+import static com.db.server.SpringProfiles.EclipseLink;
+
+@Profile(EclipseLink)
+@Component
 public class MyEclipseLinkJpaVendorAdapter extends EclipseLinkJpaVendorAdapter implements JpaVendorAdapterBase {
 
     private final static Logger LOGGER = Logger.getLogger(MyEclipseLinkJpaVendorAdapter.class);
@@ -25,16 +25,13 @@ public class MyEclipseLinkJpaVendorAdapter extends EclipseLinkJpaVendorAdapter i
 //        properties.setProperty(PersistenceUnitProperties.BATCH_WRITING, BatchWriting.JDBC);
         properties.setProperty(PersistenceUnitProperties.LOGGING_LEVEL, SessionLog.ALL_LABEL/*FINE_LABEL*/);
 
-        properties.setProperty(PersistenceUnitProperties.JDBC_DRIVER, "org.postgresql.Driver");
-        properties.setProperty(PersistenceUnitProperties.JDBC_URL, "jdbc:postgresql://localhost:5432/dronedb");
-        properties.setProperty(PersistenceUnitProperties.JDBC_USER, "postgres");
-        properties.setProperty(PersistenceUnitProperties.JDBC_PASSWORD, "postgres");
         properties.setProperty(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.DROP_AND_CREATE);
 //        properties.setProperty(PersistenceUnitProperties.PERSISTENCE_CONTEXT_FLUSH_MODE, FlushModeType.COMMIT.toString());
         properties.setProperty(PersistenceUnitProperties.PERSISTENCE_CONTEXT_PERSIST_ON_COMMIT, "false");
 
+        properties.setProperty(PersistenceUnitProperties.NATIVE_SQL, "true");
+
         properties.setProperty("showSql", "true");
-//        properties.setProperty("stringtype", "String");
 
         return properties;
     }

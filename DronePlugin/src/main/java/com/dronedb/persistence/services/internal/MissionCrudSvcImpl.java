@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by taljmars on 3/24/17.
@@ -32,9 +31,9 @@ public class MissionCrudSvcImpl implements MissionCrudSvc {
      */
     @Override
     public Mission cloneMission(Mission mission) throws DatabaseValidationException, ObjectNotFoundException, ObjectInstanceException {
-        List<UUID> newUid = new ArrayList<>();
+        List<String> newUid = new ArrayList<>();
         Mission clonedMission = mission.clone();
-        for (UUID uid : clonedMission.getMissionItemsUids()) {
+        for (String uid : clonedMission.getMissionItemsUids()) {
             MissionItem missionItem = objectCrudSvc.readByClass(uid, MissionItem.class);
             MissionItem cloneMissionItem = missionItem.clone();
             cloneMissionItem = objectCrudSvc.update(cloneMissionItem);

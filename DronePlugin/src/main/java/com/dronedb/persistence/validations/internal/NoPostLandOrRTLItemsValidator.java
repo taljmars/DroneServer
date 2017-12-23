@@ -1,17 +1,16 @@
 package com.dronedb.persistence.validations.internal;
 
+import com.db.persistence.services.ObjectCrudSvc;
 import com.dronedb.persistence.scheme.Land;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.scheme.ReturnToHome;
-import com.db.persistence.services.ObjectCrudSvc;
 import com.dronedb.persistence.validations.NoPostLandOrRTLItemsValidation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.UUID;
 
 /**
  * Created by taljmars on 4/5/17.
@@ -34,7 +33,7 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
             boolean foundLandOrRTL = false;
             assert objectCrudSvc != null : "Critical Error, failed to initialized service";
 
-            for (UUID missionItemUid : value.getMissionItemsUids()) {
+            for (String missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
                     LOGGER.debug("Found illegal point"); // TODO: print normal
                     return false;

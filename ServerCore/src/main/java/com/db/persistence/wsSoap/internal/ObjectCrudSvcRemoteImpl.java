@@ -1,6 +1,5 @@
 package com.db.persistence.wsSoap.internal;
 
-import com.db.persistence.wsSoap.ObjectCrudSvcRemote;
 import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
 import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
@@ -8,6 +7,7 @@ import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
 import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
+import com.db.persistence.wsSoap.ObjectCrudSvcRemote;
 import javassist.tools.rmi.ObjectNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.jws.WebService;
-import java.util.UUID;
 
 @Component
 @WebService(endpointInterface = "com.db.persistence.wsSoap.ObjectCrudSvcRemote"
@@ -103,7 +102,7 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 	}
 	
 	@Override
-	public BaseObject read(final UUID objId)  throws ObjectNotFoundRemoteException{
+	public BaseObject read(final String objId)  throws ObjectNotFoundRemoteException{
 		try {
 			LOGGER.debug("Crud REMOTE READ called " + objId);
 			BaseObject object = objectCrudSvc.read(objId);
@@ -119,7 +118,7 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 	}
 	
 	@Override
-	public <T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> T readByClass(final String objId, final Class<T> clz) throws ObjectNotFoundRemoteException {
 		try {
 			LOGGER.debug("Crud REMOTE READ called " + objId + ", class " + clz);
 			T object = objectCrudSvc.readByClass(objId, clz);

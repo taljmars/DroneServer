@@ -66,11 +66,11 @@ public interface ObjectCrudSvc {
 	 * The following retrieve an object exist in the database, an exception will be thrown
 	 * in case the object doesn't exist in the DB.
 	 *
-	 * @param objId UUID of the required object
+	 * @param objId MyUUID of the required object
 	 * @return The object exist in the DB (the exact one)
 	 * @throws ObjectNotFoundException In case the object not found in the database
 	 */
-	BaseObject read(final UUID objId) throws ObjectNotFoundException;
+	BaseObject read(final String objId) throws ObjectNotFoundException;
 
 	/**
 	 * The following retrieve an object exist in the database, unlike the standard read API.
@@ -83,7 +83,7 @@ public interface ObjectCrudSvc {
 	 * @return the existing object.
 	 * @throws ObjectNotFoundException In case the object not found in the database
 	 */
-	<T extends BaseObject> T readByClass(final UUID objId, final Class<T> clz) throws ObjectNotFoundException;
+	<T extends BaseObject> T readByClass(final String objId, final Class<T> clz) throws ObjectNotFoundException;
 
 	void setForUser(String userName);
 }

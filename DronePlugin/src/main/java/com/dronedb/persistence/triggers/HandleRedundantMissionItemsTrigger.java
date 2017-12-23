@@ -30,7 +30,7 @@ public class HandleRedundantMissionItemsTrigger extends UpdateObjectTriggerImpl 
 
         ObjectCrudSvc objectCrudSvc = applicationContext.getBean(ObjectCrudSvc.class);
 
-        for (UUID missionItemuid : ((Mission) oldInst).getMissionItemsUids()) {
+        for (String missionItemuid : ((Mission) oldInst).getMissionItemsUids()) {
             if (((Mission) newInst).getMissionItemsUids().contains(missionItemuid))
                 continue;
 

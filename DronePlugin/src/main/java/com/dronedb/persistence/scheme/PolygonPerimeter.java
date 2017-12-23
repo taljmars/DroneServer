@@ -14,7 +14,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import static com.db.persistence.scheme.Constants.GEN_CTX;
 
 /**
  * Created by taljmars on 3/19/17.
@@ -24,12 +25,13 @@ import java.util.UUID;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetAllPolygonPerimeters",
-                query = "SELECT * FROM PolygonPerimeter WHERE " + Constants.POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+//                query = "SELECT * FROM PolygonPerimeter WHERE " + Constants.POLYGON_PERIMETER_QUERY_FROM_TIP_AND_PRIVATE,
+                query = "SELECT * FROM PolygonPerimeter WHERE " + GEN_CTX,
                 resultClass = PolygonPerimeter.class
         ),
         @NamedNativeQuery(
                 name = "GetAllModifiedPolygonPerimeters",
-                query = "SELECT * FROM PolygonPerimeter WHERE entityManagerCtx != 0",
+                query = "SELECT * FROM PolygonPerimeter WHERE " + GEN_CTX + " AND (entityManagerCtx != 0)",
                 resultClass = PolygonPerimeter.class
         )
 })
@@ -51,7 +53,7 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
     public PolygonPerimeter(PolygonPerimeter polygonPerimeter) {
         super(polygonPerimeter);
         this.points = new ArrayList<>();
-        for (UUID point : polygonPerimeter.getPoints())
+        for (String point : polygonPerimeter.getPoints())
             this.points.add(point);
     }
 
@@ -73,29 +75,29 @@ public class PolygonPerimeter extends Perimeter implements Serializable {
         super.set(baseObject);
         PolygonPerimeter polygonPerimeter = (PolygonPerimeter) baseObject;
         this.points = new ArrayList<>();
-        for (UUID missionItemUid : polygonPerimeter.getPoints()) {
+        for (String missionItemUid : polygonPerimeter.getPoints()) {
             this.points.add(missionItemUid);
         }
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
     @TargetType(clz = Point.class)
-    protected List<UUID> points;
+    protected List<String> points;
 
 
     @Getter
-    public List<UUID> getPoints() {
+    public List<String> getPoints() {
         return points;
     }
 
     @Setter
-    public void setPoints(List<UUID> points) {
+    public void setPoints(List<String> points) {
         this.points.clear();
         if (points != null)
             this.points.addAll(points);
     }
 
-    public void addPoint(UUID point) {
+    public void addPoint(String point) {
         points.add(point);
     }
 

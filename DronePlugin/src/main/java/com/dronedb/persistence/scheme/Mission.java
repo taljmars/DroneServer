@@ -16,31 +16,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import static com.db.persistence.scheme.Constants.GEN_CTX;
 
 
 @NamedNativeQueries({
 	@NamedNativeQuery(
 		name = "GetAllMissions",
 //		query = "SELECT * FROM mission WHERE " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-		query = "SELECT * FROM Mission",
+		query = "SELECT * FROM Mission WHERE " + GEN_CTX,
 		resultClass = Mission.class
 	),
     @NamedNativeQuery(
     	name = "GetMissionById",
 //    	query = "SELECT * FROM mission WHERE objid=:OBJID AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-	query = "SELECT * FROM Mission WHERE objid=:OBJID",
+		query = "SELECT * FROM Mission WHERE (objid = :OBJID) AND " + GEN_CTX,
     	resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 		name = "GetMissionByName",
 		//query = "SELECT * FROM mission WHERE name ilike =:NAME AND " + MISSION_QUERY_FROM_TIP_AND_PRIVATE,
-		query = "SELECT * FROM Mission WHERE name ilike =:NAME",
+		query = "SELECT * FROM Mission WHERE " + GEN_CTX + " AND (name ilike = :NAME)",
 		resultClass = Mission.class
     ),
 	@NamedNativeQuery(
 			name = "GetAllModifiedMissions",
-			query = "SELECT * FROM Mission WHERE entityManagerCtx != 0",
+			query = "SELECT * FROM Mission WHERE " + GEN_CTX + " AND (entityManagerCtx != 0)",
 			resultClass = Mission.class
 	)
 })
@@ -69,7 +70,7 @@ public class Mission extends BaseObject implements Serializable
 		this.name = mission.getName();
 		this.defaultAlt = mission.getDefaultAlt();
 		this.missionItemsUids = new ArrayList<>();
-		for (UUID missionItemUid : mission.getMissionItemsUids()) {
+		for (String missionItemUid : mission.getMissionItemsUids()) {
 			this.missionItemsUids.add(missionItemUid);
 		}
 	}
@@ -81,7 +82,7 @@ public class Mission extends BaseObject implements Serializable
 		this.name = mission.getName();
 		this.defaultAlt = mission.getDefaultAlt();
 		this.missionItemsUids = new ArrayList<>();
-		for (UUID missionItemUid : mission.getMissionItemsUids()) {
+		for (String missionItemUid : mission.getMissionItemsUids()) {
 			this.missionItemsUids.add(missionItemUid);
 		}
 	}
@@ -123,27 +124,27 @@ public class Mission extends BaseObject implements Serializable
 //	@JoinTable(name = "mission_missionitem", joinColumns = @JoinColumn(name = "mission_id", referencedColumnName = "objid"), inverseJoinColumns = @JoinColumn(name = "missionitem_id", referencedColumnName="objid"))
 	@ElementCollection(fetch = FetchType.EAGER)
 	@TargetType(clz = MissionItem.class)
-	private List<UUID> missionItemsUids;
+	private List<String> missionItemsUids;
 	
 	@Getter
-	public List<UUID> getMissionItemsUids() {
+	public List<String> getMissionItemsUids() {
 		return missionItemsUids;
 	}
 	
 	@Setter
-	public void setMissionItemsUids(List<UUID> missionItemsUids) {
+	public void setMissionItemsUids(List<String> missionItemsUids) {
 		this.missionItemsUids.clear();
 		if (missionItemsUids != null)
 			this.missionItemsUids.addAll(missionItemsUids);
 	}
 
 	@Transient
-	public void addMissionItemUid(UUID missionItemUid) {
+	public void addMissionItemUid(String missionItemUid) {
 		this.missionItemsUids.add(missionItemUid);
 	}
 
 	@Transient
-	public boolean removeMissionItemUid(UUID missionItemUid) {
+	public boolean removeMissionItemUid(String missionItemUid) {
 		return this.missionItemsUids.remove(missionItemUid);
 	}
 

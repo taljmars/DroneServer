@@ -2,11 +2,13 @@ package com.db.persistence.scheme;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.UUID;
@@ -20,23 +22,23 @@ import java.util.UUID;
 public class KeyId implements Serializable{
 
     public KeyId() {
-        this.objId = UUID.randomUUID();
+        this.objId = UUID.randomUUID().toString().replace("-", "");
         this.toRevision = Integer.MAX_VALUE;
         this.entityManagerCtx = Integer.MAX_VALUE;
     }
 
-    protected UUID objId;
+    protected String objId;
 
     @Getter
     @Basic(optional = false)
     @XmlElement(required = true)
     @Column(nullable = false)
-    public UUID getObjId() {
+    public String getObjId() {
         return objId;
     }
 
     @Setter
-    public void setObjId(UUID objId) {
+    public void setObjId(String objId) {
         this.objId = objId;
     }
 

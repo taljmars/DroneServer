@@ -1,8 +1,9 @@
 package com.db.persistence.workSessions;
 
+import com.db.persistence.KeyAspect;
+import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.objectStore.PersistencyManager;
-import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.WorkSessionEntity;
 import com.db.persistence.services.internal.RevisionManager;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 public class WorkSessionManager {
@@ -32,7 +32,7 @@ public class WorkSessionManager {
     private ApplicationContext applicationContext;
 
     private Map<String, WorkSession> workSessionMap;
-    private Map<String, UUID> workSessionEntityMap;
+    private Map<String, String> workSessionEntityMap;
 
     private WorkSession publicWorkSession;
 
@@ -49,8 +49,10 @@ public class WorkSessionManager {
 
     @Transactional
     public WorkSession createSession(String userName) {
-        if (workSessionMap.keySet().contains(userName))
+        if (workSessionMap.keySet().contains(userName)) {
+            LOGGER.debug("User session found in cache");
             return workSessionMap.get(userName);
+        }
 
         /*
             In worksession design, the main entity manager of the persistence manager will
@@ -62,6 +64,9 @@ public class WorkSessionManager {
 
         LOGGER.debug("New session id was allocated: " + entityManager.getId());
         WorkSession session = applicationContext.getBean(WorkSession.class, userName, type, entityManager.getId(), entityManager);
+
+        // Setting tenancy identified for object creation
+        KeyAspect.setTenantContext(session.getSessionId());
 
         /* Build an entity to represent the sesion in the database
          * Every object create under this session will be related to this object */
@@ -95,9 +100,16 @@ public class WorkSessionManager {
             throw new RuntimeException("Failed to find entity manager");
         }
 
-        persistencyManager.destroyEntityManager(workSession.getEntityManager());
+        LOGGER.debug("Flush entity manager");
+        workSession.flush();
+
+        LOGGER.debug("Remove Entity manager from cache");
         workSessionEntityMap.remove(workSession.getUserName());
         workSessionMap.remove(workSession.getUserName());
+
+        LOGGER.debug("destroy entity manager");
+        persistencyManager.destroyEntityManager(workSession.getEntityManager());
+
         publicWorkSession.flush();
     }
 
@@ -115,7 +127,7 @@ public class WorkSessionManager {
     }
 
     private WorkSessionEntity getWorkSessionEntity(WorkSession workSession) {
-        UUID workSessionEntryUuid = workSessionEntityMap.get(workSession.getUserName());
+        String workSessionEntryUuid = workSessionEntityMap.get(workSession.getUserName());
         return publicWorkSession.find(WorkSessionEntity.class, workSessionEntryUuid);
     }
 }

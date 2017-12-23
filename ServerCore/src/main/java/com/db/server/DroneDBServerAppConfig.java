@@ -1,17 +1,16 @@
 package com.db.server;
 
+import com.db.server.entityManager.MyEntityManagerFactory;
+import com.db.server.transactions.TransactionManagersConfig;
 import com.generic_tools.environment.Environment;
 import com.generic_tools.validations.RuntimeValidator;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 
 import javax.validation.Validation;
@@ -23,8 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 @Configuration
-//@Import(PersistenceJPAConfigXml.class)
-@Import({PersistenceJPAConfig.class, TransactionManagersConfig.class})
+@Import({MyEntityManagerFactory.class, TransactionManagersConfig.class})
 public class DroneDBServerAppConfig {
 
 	private final static Logger LOGGER = Logger.getLogger(DroneDBServerAppConfig.class);

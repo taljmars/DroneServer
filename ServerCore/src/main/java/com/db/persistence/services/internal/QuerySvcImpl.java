@@ -1,5 +1,6 @@
 package com.db.persistence.services.internal;
 
+import com.db.persistence.KeyAspect;
 import com.db.persistence.exception.QueryException;
 import com.db.persistence.workSessions.WorkSession;
 import com.db.persistence.workSessions.WorkSessionManager;
@@ -36,11 +37,10 @@ public class QuerySvcImpl implements QuerySvc {
 	@Override
 	@Transactional
 	public void setForUser(String userName) {
-		if (currentUserName.equals(userName))
-			return;
-
+		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
+		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.UUID;
 
 public abstract class EntityManagerBase {
 
@@ -18,7 +17,7 @@ public abstract class EntityManagerBase {
 
     public abstract Integer getId();
 
-    public abstract <T extends BaseObject> T find(Class<T> clz, UUID uuid);
+    public abstract <T extends BaseObject> T find(Class<T> clz, String uuid);
 
     public abstract <T extends BaseObject> T delete(T object);
 
@@ -40,7 +39,7 @@ public abstract class EntityManagerBase {
 
     public abstract void publish();
 
-    public BaseObject find(UUID uid) {
+    public BaseObject find(String uid) {
         ObjectDeref objectDeref = find(ObjectDeref.class, uid);
         if (objectDeref == null)
             return null;
@@ -90,6 +89,6 @@ public abstract class EntityManagerBase {
         getEntityManager().remove(objectDeref);
     }
 
-    protected abstract SimpleEntityManagerWrapper getEntityManager();
+    public abstract SimpleEntityManagerWrapper getEntityManager();
 
 }

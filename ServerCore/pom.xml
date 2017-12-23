@@ -8,8 +8,10 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>RELEASE</version>
+        <!--<version>2.0.0.M2</version>-->
         <!--<version>1.3.3.RELEASE</version>-->
         <!--<relativePath>../pom.xml</relativePath>-->
+        <relativePath/>
     </parent>
 
     <artifactId>ServerCore</artifactId>
@@ -41,31 +43,61 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>RELEASE</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>RELEASE</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <!--<version>4.3.5.Final</version>-->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring-ver}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring-ver}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
+            <!--<artifactId>hibernate-jpa-2.1-api</artifactId>-->
+            <!--<version>1.0.0.Final</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-entitymanager</artifactId>-->
+            <!--&lt;!&ndash;<version>4.3.5.Final</version>&ndash;&gt;-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-jdbc</artifactId>-->
+            <!--<version>${spring-ver}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-orm</artifactId>-->
+            <!--<version>${spring-ver}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>javax.inject</groupId>
@@ -86,6 +118,7 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+            <!--<scope>runtime</scope>-->
         </dependency>
 
         <!--Plugin manager-->
@@ -101,12 +134,6 @@
             <artifactId>ServerScheme</artifactId>
             <version>1.0</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.dronedb</groupId>-->
-            <!--<artifactId>DronePlugin</artifactId>-->
-            <!--<version>1.0</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -126,6 +153,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>1.5.2.RELEASE</version>
+
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
@@ -140,7 +168,6 @@
             <artifactId>eclipselink</artifactId>
             <version>2.5.0</version>
         </dependency>
-
 
     </dependencies>
 

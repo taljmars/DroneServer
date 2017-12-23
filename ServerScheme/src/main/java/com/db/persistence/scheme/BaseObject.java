@@ -3,6 +3,9 @@ package com.db.persistence.scheme;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Transient;
 
@@ -14,6 +17,12 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.EXISTING_PROPERTY, property="clz")
+//@FilterDef(name = "tenantFilter",
+//		parameters = {
+//				@ParamDef(name = "entityManagerCtx", type = "integer"),
+//				@ParamDef(name = "cont", type = "string")
+//		})
+//@Filter(name = "tenantFilter", condition = "(entityManagerCtx = :entityManagerCtx OR :cont)")
 public abstract class BaseObject implements Serializable
 {	
 	private static final long serialVersionUID = 1L;
@@ -34,14 +43,14 @@ public abstract class BaseObject implements Serializable
 	}
 
 	/**
-	 * Make a clone of the object (new UUID)
+	 * Make a clone of the object (new MyUUID)
 	 * @return
 	 */
 	@Transient
 	public abstract BaseObject clone();// {return null;};
 
 	/**
-	 * Make a copy of the object, (same UUID)
+	 * Make a copy of the object, (same MyUUID)
 	 * @return
 	 */
 	@Transient

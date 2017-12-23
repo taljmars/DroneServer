@@ -5,4 +5,6 @@ import javax.sql.DataSource;
 public interface DataSourceBase {
 
     DataSource dataSource();
+
+    String dialect();
 }

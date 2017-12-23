@@ -1,7 +1,6 @@
 package com.db.persistence.web.internal;
 
 import com.db.persistence.scheme.BaseObject;
-import com.db.server.DroneDBServerAppConfig;
 import com.plugins_manager.PluginManifest;
 import com.plugins_manager.PluginsManager;
 

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
 
 @Scope("prototype")
 @Component
@@ -50,7 +49,7 @@ public class WorkSession {
 
     @PostConstruct
     protected void init() {
-        this.queryExecutor = new QueryExecutor(this);
+        this.queryExecutor = applicationContext.getBean(QueryExecutor.class, this);
 //        workSessionCache = new WorkSessionPrivateCache();
     }
 
@@ -65,7 +64,7 @@ public class WorkSession {
 
     // Basic CRUD operation
     @Transactional
-    public <T extends BaseObject> T find(Class<T> clz, UUID uuid) {
+    public <T extends BaseObject> T find(Class<T> clz, String uuid) {
         LOGGER.debug("In work session, find " + clz + " ,key=" + uuid);
         T res = entityManager.find(clz, uuid);
         return res;
@@ -95,7 +94,7 @@ public class WorkSession {
         return entityManager.pull(obj);
     }
 
-    public BaseObject find(UUID uid) {
+    public BaseObject find(String uid) {
         return entityManager.find(uid);
     }
 

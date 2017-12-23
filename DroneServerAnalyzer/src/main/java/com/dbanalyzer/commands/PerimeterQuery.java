@@ -5,7 +5,6 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.wsSoap.QueryRequestRemote;
 import com.db.persistence.wsSoap.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
-import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.PolygonPerimeter;
 import com.generic_tools.Pair.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class PerimeterQuery implements RunnablePayload {
@@ -68,7 +66,7 @@ public class PerimeterQuery implements RunnablePayload {
 
             for (BaseObject prm : perimetersList) {
                 PolygonPerimeter polygonPerimeter = (PolygonPerimeter) prm;
-                List<UUID> uids = polygonPerimeter.getPoints();
+                List<String> uids = polygonPerimeter.getPoints();
                 ans += String.format("%37s | %11d | %10d | %7s | %7s | %10s | %5d\n",
                         polygonPerimeter.getKeyId().getObjId(), polygonPerimeter.getFromRevision(), polygonPerimeter.getKeyId().getToRevision(),
                         polygonPerimeter.isDeleted() ? "T" : "", !polygonPerimeter.getKeyId().getEntityManagerCtx().equals(0) ? "PRIVATE" : "PUBLIC",

@@ -7,8 +7,6 @@ import com.dronedb.persistence.scheme.MissionItem;
 import com.db.persistence.services.ObjectCrudSvc;
 import org.apache.log4j.Logger;
 
-import java.util.UUID;
-
 /**
  * Created by taljmars on 3/23/17.
  */
@@ -29,7 +27,7 @@ public class HandleMissionDeletionTrigger extends DeleteObjectTriggerImpl {
 
         ObjectCrudSvc objectCrudSvc = applicationContext.getBean(ObjectCrudSvc.class);
 
-        for (UUID missionItemuid : ((Mission) inst).getMissionItemsUids()) {
+        for (String missionItemuid : ((Mission) inst).getMissionItemsUids()) {
             MissionItem missionItem = objectCrudSvc.readByClass(missionItemuid, MissionItem.class);
             if (missionItem == null) {
                 LOGGER.debug(String.format("Mission Item %s wasn't found in the DB, skip it deletion", missionItemuid));
