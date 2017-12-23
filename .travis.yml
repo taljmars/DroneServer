@@ -24,7 +24,7 @@ deploy:
   file: "ServerInstallation/Linux/*.tar"
   on:
     branch: master
-    repo: taljmars/DroneServer/
+    repo: taljmars/DroneServer
 cache:
   directories:
   - "$HOME/.m2/repository"
