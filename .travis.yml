@@ -11,6 +11,7 @@ addons:
 script:
 - rm -rf $HOME/.m2/repository
 - mvn clean package -B -V
+- ls -lh $HOME/
 #jobs:
 #  include:
 #  - stage: test
@@ -21,7 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: itUnxb6KI5BsfoI+PThN061EH6wt1H7W9rNpXfntIt7ilBpAP/fBKwtjjFtLmg9TRfmSdWJ3etbT9WckHLnCHnJqSttH2QwP5Vb4WeU3qtSykKzsgm1znCOLtgeqRmFPdrZ7LuuqbFA09Jt1sGhf9Wh2HS2cZiCv2V8zErx3ynnL7betXfHIvuZaYNCZBwt6UJrif1exQRi0iEkKB1IWfHaKvrEgwzcYhj/WOrBHgWmKpsUmNGfOaShHOdPcA+a7ertdstbWCv+oNrL3U1Mu4zsH/U8qYpQmbC9w1mQyJ2ckRvLHtN45wV3IwqBI9yMhosco1v1rjeUpTfnCejcXkQO3Ki62F10O/CK4EiIoBh/33aaZZmZhCtseY4RSW5K+woRc3sgDtP/0CmUMAfZ/2P9Z0dxDR637viyGxSEYHs8IYVTIWJpzyejL22i/U7gnpO8B9UzS6ydauuYlShJmim7H+CJPLut2WEiFSQDVNT2o5U4OfMiAKcPPHcuB+9dt9xBvwOrqObT67A62knp1VPaGsbjrjikAgpQLZog2tr6Vpd1E8XYSKzuLusWl4irvrLiUBpSnmk6EINYbPuEcei6p8osVowXE9AISoh/Vli0OVC3L6XHdNuFOLY++g8m7tW+AiGmVUl0ToL78wcQLvycVdTp60DkZElXx+G8tlI4=
-  file: "DroneServer/ServerInstallation/Linux/*.tar"
+  file: "$HOME/DroneServer/ServerInstallation/Linux/*.tar"
   on:
     branch: master
     repo: taljmars/DroneServer
