@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -154,6 +155,9 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             object.setDeleted(false);
             object.getKeyId().setEntityManagerCtx(entityManagerCtx);
 //            object.setEntityManagerCtx(entityManagerCtx);
+
+            object.setCreationDate(new Date());
+            object.setUpdatedAt(new Date());
             entityManagerWrapper.persist(object);
             existingObject = object;
 
@@ -164,6 +168,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         // Handling a case where we've found an object in the private session.
         else {
             existingObject.set(object);
+            existingObject.setUpdatedAt(new Date());
         }
 
         LOGGER.debug("Updated " + existingObject);
@@ -289,9 +294,10 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         // Rewrite the last tip as old version
         publicItemDup.setDeleted(privateItem.isDeleted());
         publicItemDup.setCreationDate(publicItem.getCreationDate());
+        publicItemDup.setUpdatedAt(new Date());
         publicItemDup.setFromRevision(publicItem.getFromRevision());
         publicItemDup.getKeyId().setToRevision(nextRevision);
-        publicItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+//        publicItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
 //        publicItemDup.getKeyId().setEntityManagerCtx(privateItem.isDeleted() ? -1 : entityManagerCtx);
         publicItemDup.getKeyId().setEntityManagerCtx(-1);
         entityManagerWrapper.persist(publicItemDup);
@@ -307,6 +313,8 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         else {
             publicItem.set(privateItem);
             publicItem.setFromRevision(nextRevision);
+            publicItem.setCreationDate(publicItemDup.getCreationDate());
+            publicItem.setUpdatedAt(new Date());
             LOGGER.debug("Old " + publicItemDup);
             LOGGER.debug("New " + publicItem);
         }
@@ -341,8 +349,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             if (item.isDeleted())
                 objectDerefDup.getKeyId().setToRevision(nextRevision);
             objectDerefDup.setDeleted(item.isDeleted());
-//            objectDerefDup.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
-            objectDerefDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+            objectDerefDup.setUpdatedAt(new Date());
 //			LOGGER.debug("DBG " + objectDerefDup);
             entityManagerWrapper.persist(objectDerefDup);
             entityManagerWrapper.remove(objectDeref);
@@ -361,6 +368,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
         privateItemDup.setFromRevision(nextRevision);
         privateItemDup.getKeyId().setToRevision(Constants.TIP_REVISION);
         privateItemDup.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+        privateItemDup.setUpdatedAt(new Date());
         entityManagerWrapper.persist(privateItemDup);
 
         // Clean private

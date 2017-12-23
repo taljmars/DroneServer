@@ -14,6 +14,11 @@ import static com.db.server.SpringProfiles.H2;
 @Configuration
 public class H2DataSource implements DataSourceBase {
 
+    /**
+     * You can always see the db in the following link during runtime:
+     * http://localhost:8080/console
+     */
+
     private final static Logger LOGGER = Logger.getLogger(H2DataSource.class);
 
     @Bean

@@ -161,17 +161,6 @@ public class Mission extends BaseObject implements Serializable
 	public void setDefaultAlt(double alt) {
 		defaultAlt = alt;
 	}
-	
-	@PrePersist
-	public void onCreate() {
-		super.onCreate();
-	}
-	
-	@PreUpdate
-	public void onUpdate() {
-		super.onUpdate();  
-	}
-
 
 	@Override
 	public boolean equals(Object o) {

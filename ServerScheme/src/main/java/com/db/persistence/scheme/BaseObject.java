@@ -57,6 +57,8 @@ public abstract class BaseObject implements Serializable
     public BaseObject copy() {
 	    BaseObject object = clone();
         object.setKeyId(this.getKeyId().copy());
+        object.setCreationDate(this.getCreationDate());
+        object.setUpdatedAt(this.getUpdatedAt());
 	    return object;
     }
 
@@ -73,11 +75,6 @@ public abstract class BaseObject implements Serializable
 
 	private Date creationDate;
 
-	@PrePersist
-	public void onCreate() {  
-		this.creationDate = new Date();
-	}
-
 	@XmlTransient
 	@Transient
 	@Temporal(TemporalType.TIMESTAMP)
@@ -91,11 +88,6 @@ public abstract class BaseObject implements Serializable
 	}
 
 	private Date updatedAt;
-    
-	@PreUpdate
-	public void onUpdate() {
-		this.updatedAt = new Date();
-	}
 
 	@XmlTransient
 	@Transient
