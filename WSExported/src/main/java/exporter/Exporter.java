@@ -30,7 +30,8 @@ public class Exporter {
         }
 
         target = System.getProperty("user.dir") + File.separator + ".." + File.separator + target;
-
+        System.out.println("System actual directory: " + target);
+        System.out.println("Cleaning the following directory from old files: " + target);
         File mainDir = new File(target);
         File[] files = mainDir.listFiles();
         if (files != null) {
@@ -41,6 +42,7 @@ public class Exporter {
                     Files.delete(f.toPath());
             }
         }
+
 
         PluginsManager pluginsManager = PluginsManager.getInstance();
 
@@ -76,7 +78,9 @@ public class Exporter {
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
+            File file = new File(resource.getFile());
+            dirs.add(file);
+            System.out.println("Directory was added for scan: " + file.toString());
         }
 
         List<Class> classes = new ArrayList<>();
