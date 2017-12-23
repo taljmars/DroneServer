@@ -29,6 +29,8 @@ public class Exporter {
             System.out.println("Received target directory as " + target);
         }
 
+        System.out.println(System.getProperty("user.dir"));
+        System.out.println(System.getProperty("home.dir"));
         target = System.getProperty("user.dir") + File.separator + ".." + File.separator + target;
         System.out.println("System actual directory: " + target);
         System.out.println("Cleaning the following directory from old files: " + target);
@@ -75,7 +77,7 @@ public class Exporter {
         String path = packageName.replace('.', '/');
         System.out.println("Package: " + path);
         Enumeration<URL> resources = classLoader.getResources(path);
-	System.out.println("resources: " + resources);
+	    System.out.println("resources: " + resources);
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
