@@ -14,6 +14,7 @@ script:
 - mvn install
 - touch $HOME/build/taljmars/DroneServer/ServerInstallation/Linux/taltes.txt
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
+- echo $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
 #jobs:
 #  include:
 #  - stage: test
