@@ -79,11 +79,11 @@ public class Exporter {
             dirs.add(new File(resource.getFile()));
         }
 
-        List<Class> classes = null;
+        List<Class> classes = new ArrayList<>();
         for (File directory : dirs)
-            classes = handleClassesInPackage(directory, packageName, filter);
+            classes.addAll(handleClassesInPackage(directory, packageName, filter));
 
-        System.out.println("Built " + (classes == null ? 0 :classes.size()) + " classes");
+        System.out.println("Built " + classes.size() + " classes");
     }
 
     private static List<Class> handleClassesInPackage(File directory, String packageName, Filter filter) throws ClassNotFoundException, IOException {
