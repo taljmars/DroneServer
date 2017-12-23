@@ -83,7 +83,7 @@ public class Exporter {
             URL resource = resources.nextElement();
             File file = new File(resource.getFile());
             dirs.add(file);
-            System.out.println("Directory was added for scan: " + file.toString());
+//            System.out.println("Directory was added for scan: " + file.toString());
         }
 
         List<Class> classes = new ArrayList<>();
