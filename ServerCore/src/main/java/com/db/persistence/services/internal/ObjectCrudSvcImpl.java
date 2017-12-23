@@ -1,14 +1,13 @@
 package com.db.persistence.services.internal;
 
-import com.db.persistence.KeyAspect;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
-import com.db.persistence.scheme.*;
-import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
+import com.db.persistence.scheme.BaseObject;
+import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
+import com.db.persistence.workSessions.WorkSession;
+import com.db.persistence.workSessions.WorkSessionManager;
 import com.db.server.DroneServer;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
@@ -23,7 +22,6 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class ObjectCrudSvcImpl implements ObjectCrudSvc
@@ -55,7 +53,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
-		KeyAspect.setTenantContext(workSession.getSessionId());
+//		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Override

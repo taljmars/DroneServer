@@ -1,12 +1,11 @@
 package com.db.persistence.services.internal;
 
-import com.db.persistence.KeyAspect;
 import com.db.persistence.exception.QueryException;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.QueryRequest;
 import com.db.persistence.services.QuerySvc;
+import com.db.persistence.workSessions.WorkSession;
+import com.db.persistence.workSessions.WorkSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class QuerySvcImpl implements QuerySvc {
 		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
 		workSession = workSessionManager.createSession(userName);
-		KeyAspect.setTenantContext(workSession.getSessionId());
+//		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Override

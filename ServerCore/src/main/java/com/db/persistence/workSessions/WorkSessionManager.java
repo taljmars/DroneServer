@@ -1,6 +1,5 @@
 package com.db.persistence.workSessions;
 
-import com.db.persistence.KeyAspect;
 import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.objectStore.PersistencyManager;
@@ -66,7 +65,7 @@ public class WorkSessionManager {
         WorkSession session = applicationContext.getBean(WorkSession.class, userName, type, entityManager.getId(), entityManager);
 
         // Setting tenancy identified for object creation
-        KeyAspect.setTenantContext(session.getSessionId());
+//        KeyAspect.setTenantContext(session.getSessionId());
 
         /* Build an entity to represent the sesion in the database
          * Every object create under this session will be related to this object */
