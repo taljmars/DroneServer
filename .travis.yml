@@ -38,8 +38,8 @@ deploy:
   file: "$HOME/build/taljmars/DroneServer/test.txt"
   overwrite: true
   skip_cleanup: true
-    on:
-      tags: true
+  on:
+    tags: true
 #  on:
 #    all_branches: true
 #    branch: master
