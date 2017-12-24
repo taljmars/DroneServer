@@ -32,6 +32,7 @@ before_deploy:
 - git config --local user.email taljmars@gmail.com
 #- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" -m "tal"
 - git tag "Auto"
+
 deploy:
   provider: releases
   api_key:
