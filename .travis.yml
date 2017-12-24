@@ -25,8 +25,12 @@ deploy:
   api_key:
     secure: m1vMW8ZFhUGds4GUcD6TEyuIUVIFc5PEHDONzhVP6iwjSgXCwxgo+6383udrHOXs/8AB4CRsz0oReNVoMS0Ys/oKx8TXcotX3nSPUy9+wTk/fYUDUJSbYLJxPIcIDOdLL5ucQiiPptNclX564xBl2Hk+CjeE9X0/PN/eSq0y3lYY6ysHt7nIi+O6hrqWFiKeS9nhdgj4PBW7qMa/J2EqJN8F4VOzA4HS2Cb0uL5R+IaLPrbGw5Sq1HwGFtL4LPh8fKQXOZ3RMwz0fhROlDY7u3oNB2i9QpppheqOmIe66/ueuiPbuYuvo5QlDAvIG7ZhXVrknlqIrkGKNEaGm4xespLhaSDd7bJf6q/o04kDVAmdwBc379ixENaVSTDyi6GDHGrDZXliJ6fy8PezXMbMoZLJaCj0BxA9kRx6p3myQ/CT7tHIxpXBfVDYOg7VZwSBcqACD0aRrFGsCZTJ3H+2RByvvgm3LpDOaN+amSSh06rXNqQ5xXhH4HIQsLWFKQ93CyDsfOR6I6Ol526pxDiLyXrEN9DD1YcoPmKph0snCcEQx2aN7xkug1fjzOvjXmJbM8YhQeiAWMDnnhQ8bVcLNjAg0yASeMHb14SJ5W3tfayXG8g8ciMB6l/QNnlTaZAdXe9t+tyD2Oo8alIdX4Tmu0KLb7pDP9Bk3edvx3TyokI=
   file: test.txt
+  skip_cleanup: true
   on:
-    repo: taljmars/DroneServer
+    all_branches: true
+#    repo: taljmars/DroneServer
+    tags: true
+    skip_cleanup: true
 cache:
   directories:
   - "$HOME/.m2/repository"
