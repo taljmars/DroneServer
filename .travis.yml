@@ -16,6 +16,7 @@ script:
 - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
 - echo "$(date +'%Y%m%d%H%M%S')" > $HOME/build/taljmars/DroneServer/test.txt
 - cat $HOME/build/taljmars/DroneServer/test.txt
+- echo $TRAVIS_BUILD_DIR
 
 #jobs:
 #  include:
@@ -27,7 +28,7 @@ before_deploy:
       # Set up git user name and tag this commit
       - git config --local user.name taljmars
       - git config --local user.email taljmars@gmail.com
-#      - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+      - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
   provider: releases
   skip_cleanup: true
@@ -41,6 +42,8 @@ deploy:
     #all_branches: true
     branch: master
     repo: taljmars/DroneServer
+    tags: true
+    skip_cleanup: true
 
 cache:
   directories:
