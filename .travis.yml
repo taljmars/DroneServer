@@ -2,49 +2,51 @@ language: java
 dist: trusty
 sudo: false
 install: true
-
 jdk:
-    - oraclejdk8
-
+- oraclejdk8
 addons:
-    apt:
-        packages:
-          - oracle-java8-installer
-
+  apt:
+    packages:
+    - oracle-java8-installer
 script:
-    - rm -rf $HOME/.m2/repository
-#    - mvn clean
-    - mvn install
-    - ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
-    - echo "$(date +'%Y%m%d%H%M%S')" > $HOME/build/taljmars/DroneServer/test.txt
-    - cat $HOME/build/taljmars/DroneServer/test.txt
-    - echo $TRAVIS_BUILD_DIR
-    - git config --local user.name taljmars
-    - git config --local user.email taljmars@gmail.com
-    - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+- rm -rf $HOME/.m2/repository
+#- mvn clean package -B -V
+- mvn clean
+- mvn install
+- ls -lh $HOME/build/taljmars/DroneServer/ServerInstallation/Linux
+- echo "$(date +'%Y%m%d%H%M%S')" > $HOME/build/taljmars/DroneServer/test.txt
+- cat $HOME/build/taljmars/DroneServer/test.txt
+- echo $TRAVIS_BUILD_DIR
 
+#jobs:
+#  include:
+#  - stage: test
+#  - 
+#  - stage: deploy
+#    script: mvn deploy
 before_deploy:
-    # Set up git user name and tag this commit
-    - git config --local user.name taljmars
-    - git config --local user.email taljmars@gmail.com
-    - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-
+      # Set up git user name and tag this commit
+      - git config --local user.name taljmars
+      - git config --local user.email taljmars@gmail.com
+      - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
-    provider: releases
-    api_key:
-        secure: m1vMW8ZFhUGds4GUcD6TEyuIUVIFc5PEHDONzhVP6iwjSgXCwxgo+6383udrHOXs/8AB4CRsz0oReNVoMS0Ys/oKx8TXcotX3nSPUy9+wTk/fYUDUJSbYLJxPIcIDOdLL5ucQiiPptNclX564xBl2Hk+CjeE9X0/PN/eSq0y3lYY6ysHt7nIi+O6hrqWFiKeS9nhdgj4PBW7qMa/J2EqJN8F4VOzA4HS2Cb0uL5R+IaLPrbGw5Sq1HwGFtL4LPh8fKQXOZ3RMwz0fhROlDY7u3oNB2i9QpppheqOmIe66/ueuiPbuYuvo5QlDAvIG7ZhXVrknlqIrkGKNEaGm4xespLhaSDd7bJf6q/o04kDVAmdwBc379ixENaVSTDyi6GDHGrDZXliJ6fy8PezXMbMoZLJaCj0BxA9kRx6p3myQ/CT7tHIxpXBfVDYOg7VZwSBcqACD0aRrFGsCZTJ3H+2RByvvgm3LpDOaN+amSSh06rXNqQ5xXhH4HIQsLWFKQ93CyDsfOR6I6Ol526pxDiLyXrEN9DD1YcoPmKph0snCcEQx2aN7xkug1fjzOvjXmJbM8YhQeiAWMDnnhQ8bVcLNjAg0yASeMHb14SJ5W3tfayXG8g8ciMB6l/QNnlTaZAdXe9t+tyD2Oo8alIdX4Tmu0KLb7pDP9Bk3edvx3TyokI=
-    file: test.txt
-    skip_cleanup: true
-    overwrite: true
-    on:
-        all_branches: true
-        repo: taljmars/DroneServer
-        tags: true
-        #       skip_cleanup: true
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: itUnxb6KI5BsfoI+PThN061EH6wt1H7W9rNpXfntIt7ilBpAP/fBKwtjjFtLmg9TRfmSdWJ3etbT9WckHLnCHnJqSttH2QwP5Vb4WeU3qtSykKzsgm1znCOLtgeqRmFPdrZ7LuuqbFA09Jt1sGhf9Wh2HS2cZiCv2V8zErx3ynnL7betXfHIvuZaYNCZBwt6UJrif1exQRi0iEkKB1IWfHaKvrEgwzcYhj/WOrBHgWmKpsUmNGfOaShHOdPcA+a7ertdstbWCv+oNrL3U1Mu4zsH/U8qYpQmbC9w1mQyJ2ckRvLHtN45wV3IwqBI9yMhosco1v1rjeUpTfnCejcXkQO3Ki62F10O/CK4EiIoBh/33aaZZmZhCtseY4RSW5K+woRc3sgDtP/0CmUMAfZ/2P9Z0dxDR637viyGxSEYHs8IYVTIWJpzyejL22i/U7gnpO8B9UzS6ydauuYlShJmim7H+CJPLut2WEiFSQDVNT2o5U4OfMiAKcPPHcuB+9dt9xBvwOrqObT67A62knp1VPaGsbjrjikAgpQLZog2tr6Vpd1E8XYSKzuLusWl4irvrLiUBpSnmk6EINYbPuEcei6p8osVowXE9AISoh/Vli0OVC3L6XHdNuFOLY++g8m7tW+AiGmVUl0ToL78wcQLvycVdTp60DkZElXx+G8tlI4=
+#  file_glob: "true"
+  #file: "$HOME/build/taljmars/DroneServer/ServerInstallation/Linux/ServerCore-1.5.9.RELEASE-linux.tar"
+  file: "$HOME/build/taljmars/DroneServer/test.txt"
+  overwrite: true
+  on:
+    all_branches: true
+#    branch: master
+#    repo: taljmars/DroneServer
+    tags: true
+#    skip_cleanup: true
 
 cache:
-    directories:
-        - "$HOME/.m2/repository"
-
+  directories:
+  - "$HOME/.m2/repository"
 notifications:
-    email: true
+  email: true
