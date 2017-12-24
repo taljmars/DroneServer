@@ -29,6 +29,8 @@ before_deploy:
 - git config --local user.name taljmars
 - git config --local user.email taljmars@gmail.com
 - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+- git push origin --tags
+- git fetch origin
 deploy:
   provider: releases
   api_key:
@@ -38,8 +40,8 @@ deploy:
   file: "$HOME/build/taljmars/DroneServer/test.txt"
   overwrite: true
   skip_cleanup: true
-  on:
-    tags: true
+#  on:
+#    tags: true
 #  on:
 #    all_branches: true
 #    branch: master
