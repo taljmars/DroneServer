@@ -42,7 +42,7 @@ deploy:
     #all_branches: true
     branch: master
     repo: taljmars/DroneServer
-    tags: true
+#    tags: true
     skip_cleanup: true
 
 cache:
