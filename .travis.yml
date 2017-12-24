@@ -19,6 +19,9 @@ script:
     - echo "$(date +'%Y%m%d%H%M%S')" > $HOME/build/taljmars/DroneServer/test.txt
     - cat $HOME/build/taljmars/DroneServer/test.txt
     - echo $TRAVIS_BUILD_DIR
+    - git config --local user.name taljmars
+    - git config --local user.email taljmars@gmail.com
+    - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 
 before_deploy:
     # Set up git user name and tag this commit
