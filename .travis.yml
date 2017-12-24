@@ -23,7 +23,8 @@ before_deploy:
 - git config --local user.name taljmars
 - git config --local user.email taljmars@gmail.com
 #- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" -m "tal"
-- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+- git tag "Auto"
+#- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 
 deploy:
   provider: releases
@@ -32,18 +33,18 @@ deploy:
 #  file_glob: "true"
   #file: "$HOME/build/taljmars/DroneServer/ServerInstallation/Linux/ServerCore-1.5.9.RELEASE-linux.tar"
   file:
-    "$HOME/build/taljmars/DroneServer/test.txt"
+#    "$HOME/build/taljmars/DroneServer/test.txt"
     test.txt
   overwrite: true
   skip_cleanup: true
 #  on:
 #    tags: true
-  on:
+#  on:
 #    all_branches: true
-    branch: master
-    repo: taljmars/DroneServer
+#    branch: master
+#    repo: taljmars/DroneServer
 #    tags: true
-    skip_cleanup: true
+#    skip_cleanup: true
 
 cache:
   directories:
