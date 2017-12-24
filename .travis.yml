@@ -25,10 +25,10 @@ script:
 #  - stage: deploy
 #    script: mvn deploy
 before_deploy:
-      # Set up git user name and tag this commit
-      - git config --local user.name taljmars
-      - git config --local user.email taljmars@gmail.com
-      - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+# Set up git user name and tag this commit
+- git config --local user.name taljmars
+- git config --local user.email taljmars@gmail.com
+- git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
   provider: releases
   skip_cleanup: true
@@ -42,7 +42,7 @@ deploy:
 #    all_branches: true
     branch: master
     repo: taljmars/DroneServer
-    tags: true
+#    tags: true
 #    skip_cleanup: true
 
 cache:
