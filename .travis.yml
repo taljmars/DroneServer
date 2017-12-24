@@ -39,9 +39,9 @@ deploy:
   file: "$HOME/build/taljmars/DroneServer/test.txt"
   overwrite: true
   on:
-    all_branches: true
-#    branch: master
-#    repo: taljmars/DroneServer
+#    all_branches: true
+    branch: master
+    repo: taljmars/DroneServer
     tags: true
 #    skip_cleanup: true
 
