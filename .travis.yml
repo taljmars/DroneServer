@@ -28,10 +28,11 @@ env:
 #    script: mvn deploy
 before_deploy:
 # Set up git user name and tag this commit
-- git config --local user.name taljmars
-- git config --local user.email taljmars@gmail.com
-- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" -m "tal"
+- git config --local user.name "Travis CI"
+- git config --local user.email "travis@travis-ci.org"
+#- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" -m "tal"
 - git push origin --tags
+- git commit --message
 - git fetch origin
 deploy:
   provider: releases
