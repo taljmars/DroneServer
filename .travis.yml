@@ -16,10 +16,12 @@ script:
 - echo "$(date +'%Y%m%d%H%M%S')" > $HOME/build/taljmars/DroneServer/test.txt
 - cat $HOME/build/taljmars/DroneServer/test.txt
 - echo $TRAVIS_BUILD_DIR
+
 before_deploy:
 - git config --local user.name taljmars
 - git config --local user.email taljmars@gmail.com
 - git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
 deploy:
   provider: releases
   api_key:
@@ -28,9 +30,9 @@ deploy:
   skip_cleanup: true
   on:
     all_branches: true
-#    repo: taljmars/DroneServer
+    repo: taljmars/DroneServer
     tags: true
-    skip_cleanup: true
+#    skip_cleanup: true
 cache:
   directories:
   - "$HOME/.m2/repository"
