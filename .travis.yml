@@ -28,7 +28,7 @@ before_deploy:
 # Set up git user name and tag this commit
 - git config --local user.name taljmars
 - git config --local user.email taljmars@gmail.com
-- git tag "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+- git tag -a "Auto-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" -m "tal"
 - git push origin --tags
 - git fetch origin
 deploy:
