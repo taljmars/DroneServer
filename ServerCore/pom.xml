@@ -17,7 +17,7 @@
     <artifactId>ServerCore</artifactId>
     <!--<packaging>jar</packaging>-->
     <packaging>war</packaging>
-    <name>Drone Server Core</name>
+    <name>Server Core</name>
 
 
     <!--Because of the inheritances of spring boot we cannot see the parent POM in our-->

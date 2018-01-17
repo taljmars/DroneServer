@@ -43,6 +43,8 @@ public class DroneServer extends SpringBootServletInitializer
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        System.out.println("Start Server with profiles");
+        loadProfile();
 		return application.sources(DroneServer.class);
 	}
 
@@ -64,13 +66,17 @@ public class DroneServer extends SpringBootServletInitializer
 	}
 
 	public static void main(String[] args) throws Exception {
-		addSpringProfile(Hibernate);
-//		addSpringProfile(EclipseLink);
-//		addSpringProfile(Postgres);
-		addSpringProfile(H2);
-
+        System.out.println("Start Server with profiles");
+        loadProfile();
 		SpringApplication.run(DroneServer.class, args);
 	}
+
+	private static void loadProfile() {
+        addSpringProfile(Hibernate);
+//		addSpringProfile(EclipseLink);
+//		addSpringProfile(Postgres);
+        addSpringProfile(H2);
+    }
 
 	private static void addSpringProfile(String profile) {
 		String prop = System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
