@@ -26,63 +26,63 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	@Autowired
 	private QuerySvc querySvc;
 
-	@Override
-	@RequestMapping(value = "/runNativeQueryWithClassForUser", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException {
-		querySvc.setForUser(userName);
-		return runNativeQueryWithClass(queryString, clz);
-	}
-
-	@Override
-	@RequestMapping(value = "/runNativeQueryWithClass", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClass(@RequestParam String queryString, @RequestParam String clz) throws QueryRemoteException {
-		QueryResponseRemote response = new QueryResponseRemote();
-		try {
-			List<T> res = (List<T>) querySvc.runNativeQueryWithClass(queryString, (Class<T>) Class.forName(clz));
-
-			List<T> clonedRes = new ArrayList<>();
-			for (T obj : res) {
-				clonedRes.add((T) obj.copy());
-			}
-			response.setResult(clonedRes);
-			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
-		}
-		catch (ClassNotFoundException e) {
-			LOGGER.error(e);
-			throw new QueryRemoteException(e.getMessage());
-		}
-	}
-
-	@Override
-	@RequestMapping(value = "/runNativeQueryForUser", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryForUser(@RequestParam String queryString, @RequestParam String userName) throws QueryRemoteException {
-		querySvc.setForUser(userName);
-		return runNativeQuery(queryString);
-	}
-
-	@Override
-	@RequestMapping(value = "/runNativeQuery", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQuery(@RequestParam String queryString) throws QueryRemoteException {
-		try {
-			QueryResponseRemote response = new QueryResponseRemote();
-			List<T> res = (List<T>) querySvc.runNativeQuery(queryString);
-
-			List<T> clonedRes = new ArrayList<>();
-			for (T obj : res) {
-				clonedRes.add((T) obj.copy());
-			}
-			response.setResult(clonedRes);
-			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
-		}
-		catch (QueryException e) {
-			LOGGER.error("Failed to run query", e);
-			throw new QueryRemoteException(e.getMessage());
-		}
-	}
+//	@Override
+//	@RequestMapping(value = "/runNativeQueryWithClassForUser", method = RequestMethod.GET)
+//	@ResponseBody
+//	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException {
+//		querySvc.setForUser(userName);
+//		return runNativeQueryWithClass(queryString, clz);
+//	}
+//
+//	@Override
+//	@RequestMapping(value = "/runNativeQueryWithClass", method = RequestMethod.GET)
+//	@ResponseBody
+//	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClass(@RequestParam String queryString, @RequestParam String clz) throws QueryRemoteException {
+//		QueryResponseRemote response = new QueryResponseRemote();
+//		try {
+//			List<T> res = (List<T>) querySvc.runNativeQueryWithClass(queryString, (Class<T>) Class.forName(clz));
+//
+//			List<T> clonedRes = new ArrayList<>();
+//			for (T obj : res) {
+//				clonedRes.add((T) obj.copy());
+//			}
+//			response.setResult(clonedRes);
+//			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
+//		}
+//		catch (ClassNotFoundException e) {
+//			LOGGER.error(e);
+//			throw new QueryRemoteException(e.getMessage());
+//		}
+//	}
+//
+//	@Override
+//	@RequestMapping(value = "/runNativeQueryForUser", method = RequestMethod.GET)
+//	@ResponseBody
+//	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryForUser(@RequestParam String queryString, @RequestParam String userName) throws QueryRemoteException {
+//		querySvc.setForUser(userName);
+//		return runNativeQuery(queryString);
+//	}
+//
+//	@Override
+//	@RequestMapping(value = "/runNativeQuery", method = RequestMethod.GET)
+//	@ResponseBody
+//	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQuery(@RequestParam String queryString) throws QueryRemoteException {
+//		try {
+//			QueryResponseRemote response = new QueryResponseRemote();
+//			List<T> res = (List<T>) querySvc.runNativeQuery(queryString);
+//
+//			List<T> clonedRes = new ArrayList<>();
+//			for (T obj : res) {
+//				clonedRes.add((T) obj.copy());
+//			}
+//			response.setResult(clonedRes);
+//			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
+//		}
+//		catch (QueryException e) {
+//			LOGGER.error("Failed to run query", e);
+//			throw new QueryRemoteException(e.getMessage());
+//		}
+//	}
 
 	@Override
 	@RequestMapping(value = "/runNamedQueryForUser", method = RequestMethod.GET)

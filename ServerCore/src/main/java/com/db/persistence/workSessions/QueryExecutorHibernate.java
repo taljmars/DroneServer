@@ -38,7 +38,7 @@ public class QueryExecutorHibernate implements QueryExecutor {
     }
 
     @Override
-    public <T extends BaseObject> List<T> createQuery(String queryString) {
+    public <T extends BaseObject> List<T> createNativeQuery(String queryString) {
         LOGGER.debug("Query Executor request: " + queryString);
         Query query = workSession.getEntityManager().createQuery(queryString);
         List<T> res = query.getResultList();

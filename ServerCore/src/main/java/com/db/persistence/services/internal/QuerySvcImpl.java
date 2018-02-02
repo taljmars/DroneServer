@@ -42,46 +42,46 @@ public class QuerySvcImpl implements QuerySvc {
 //		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
-	@Override
-	@Transactional
-	public <T extends BaseObject> List<T> runNativeQueryWithClass(String queryString, Class<T> clz)
-	{
-		List<?> lst = workSession.getQueryExecutor().createNativeQuery(queryString, clz);
-		System.err.println("Service " + lst);
-		List<T> arr = new ArrayList();
-
-		Iterator<?> it = lst.iterator();
-		while (it.hasNext()) {
-			Object o = it.next();
-			if (clz.isInstance(o))
-				arr.add((T) o);
-		}
-
-		return arr;
-	}
-
-	@Override
-	@Transactional
-	public <T extends BaseObject> List<? extends BaseObject> runNativeQuery(String queryString) throws QueryException
-	{
-		try {
-			List<?> lst = workSession.getQueryExecutor().createQuery(queryString);
-			System.err.println("Service " + lst);
-			List<T> arr = new ArrayList();
-
-			Iterator<?> it = lst.iterator();
-			while (it.hasNext()) {
-				Object o = it.next();
-				arr.add((T) o);
-			}
-
-			return arr;
-		}
-		catch (Exception e) {
-			LOGGER.error("Failed to run query", e);
-			throw new QueryException(e);
-		}
-	}
+//	@Override
+//	@Transactional
+//	public <T extends BaseObject> List<T> runNativeQueryWithClass(String queryString, Class<T> clz)
+//	{
+//		List<?> lst = workSession.getQueryExecutor().createNativeQuery(queryString, clz);
+//		System.err.println("Service " + lst);
+//		List<T> arr = new ArrayList();
+//
+//		Iterator<?> it = lst.iterator();
+//		while (it.hasNext()) {
+//			Object o = it.next();
+//			if (clz.isInstance(o))
+//				arr.add((T) o);
+//		}
+//
+//		return arr;
+//	}
+//
+//	@Override
+//	@Transactional
+//	public <T extends BaseObject> List<? extends BaseObject> runNativeQuery(String queryString) throws QueryException
+//	{
+//		try {
+//			List<?> lst = workSession.getQueryExecutor().createNativeQuery(queryString);
+//			System.err.println("Service " + lst);
+//			List<T> arr = new ArrayList();
+//
+//			Iterator<?> it = lst.iterator();
+//			while (it.hasNext()) {
+//				Object o = it.next();
+//				arr.add((T) o);
+//			}
+//
+//			return arr;
+//		}
+//		catch (Exception e) {
+//			LOGGER.error("Failed to run query", e);
+//			throw new QueryException(e);
+//		}
+//	}
 
 	@Override
 	@Transactional

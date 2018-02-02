@@ -71,14 +71,14 @@ public class DroneServer extends SpringBootServletInitializer
 		SpringApplication.run(DroneServer.class, args);
 	}
 
-	private static void loadProfile() {
+	public static void loadProfile() {
         addSpringProfile(Hibernate);
 //		addSpringProfile(EclipseLink);
 //		addSpringProfile(Postgres);
         addSpringProfile(H2);
     }
 
-	private static void addSpringProfile(String profile) {
+	public static void addSpringProfile(String profile) {
 		String prop = System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
 		if (prop == null)
 			prop = profile;

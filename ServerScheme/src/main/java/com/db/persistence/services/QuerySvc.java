@@ -18,7 +18,7 @@ public interface QuerySvc {
 	 * @param <T> Generic type of the object
 	 * @return List of query results
 	 */
-	<T extends BaseObject> List<? extends BaseObject> runNativeQueryWithClass(String query, Class<T> clz);
+//	<T extends BaseObject> List<? extends BaseObject> runNativeQueryWithClass(String query, Class<T> clz);
 
 	/**
 	 * The following enable the user to run any queries he wish to run by writing the query syntax
@@ -28,7 +28,7 @@ public interface QuerySvc {
 	 * @param <T> Generic type of the object
 	 * @return List of query results
 	 */
-	<T extends BaseObject> List<? extends BaseObject> runNativeQuery(String query) throws QueryException;
+//	<T extends BaseObject> List<? extends BaseObject> runNativeQuery(String query) throws QueryException;
 
 	/**
 	 * The following enable the user to run a ready made queries written in the code itself.

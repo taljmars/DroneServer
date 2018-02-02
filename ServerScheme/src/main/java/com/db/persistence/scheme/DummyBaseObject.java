@@ -8,7 +8,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-//@XmlRootElement(namespace = "scheme.persistence.db.com")
+import static com.db.persistence.scheme.Constants.GEN_CTX;
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "GetAllDummyBaseObject",
+                query = "SELECT * FROM DummyBaseObject WHERE " + GEN_CTX,
+//                query = "SELECT * FROM DummyBaseObject",
+                resultClass = DummyBaseObject.class
+        )
+})
 @Table
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity

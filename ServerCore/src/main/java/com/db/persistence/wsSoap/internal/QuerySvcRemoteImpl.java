@@ -26,45 +26,45 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 	@Autowired
 	private QuerySvc querySvc;
 
-	@Override
-	public <T extends BaseObject> QueryResponseRemote runNativeQueryWithClass(String queryString, String clz) throws QueryRemoteException{
-		QueryResponseRemote response = new QueryResponseRemote();
-		try {
-			List<T> res = (List<T>) querySvc.runNativeQueryWithClass(queryString, (Class<T>) Class.forName(clz));
-
-			List<T> clonedRes = new ArrayList<>();
-			for (T obj : res) {
-				clonedRes.add((T) obj.copy());
-			}
-
-			response.setResultList(clonedRes);
-			return response;
-		}
-		catch (ClassNotFoundException e) {
-			LOGGER.error(e);
-			throw new QueryRemoteException(e.getMessage());
-		}
-	}
-
-	@Override
-	public <T extends BaseObject> QueryResponseRemote runNativeQuery(String queryString) throws QueryRemoteException {
-		try {
-			QueryResponseRemote response = new QueryResponseRemote();
-			List<T> res = (List<T>) querySvc.runNativeQuery(queryString);
-
-			List<T> clonedRes = new ArrayList<>();
-			for (T obj : res) {
-				clonedRes.add((T) obj.copy());
-			}
-
-			response.setResultList(clonedRes);
-			return response;
-		}
-		catch (QueryException e) {
-			LOGGER.error(e);
-			throw new QueryRemoteException(e.getMessage());
-		}
-	}
+//	@Override
+//	public <T extends BaseObject> QueryResponseRemote runNativeQueryWithClass(String queryString, String clz) throws QueryRemoteException{
+//		QueryResponseRemote response = new QueryResponseRemote();
+//		try {
+//			List<T> res = (List<T>) querySvc.runNativeQueryWithClass(queryString, (Class<T>) Class.forName(clz));
+//
+//			List<T> clonedRes = new ArrayList<>();
+//			for (T obj : res) {
+//				clonedRes.add((T) obj.copy());
+//			}
+//
+//			response.setResultList(clonedRes);
+//			return response;
+//		}
+//		catch (ClassNotFoundException e) {
+//			LOGGER.error(e);
+//			throw new QueryRemoteException(e.getMessage());
+//		}
+//	}
+//
+//	@Override
+//	public <T extends BaseObject> QueryResponseRemote runNativeQuery(String queryString) throws QueryRemoteException {
+//		try {
+//			QueryResponseRemote response = new QueryResponseRemote();
+//			List<T> res = (List<T>) querySvc.runNativeQuery(queryString);
+//
+//			List<T> clonedRes = new ArrayList<>();
+//			for (T obj : res) {
+//				clonedRes.add((T) obj.copy());
+//			}
+//
+//			response.setResultList(clonedRes);
+//			return response;
+//		}
+//		catch (QueryException e) {
+//			LOGGER.error(e);
+//			throw new QueryRemoteException(e.getMessage());
+//		}
+//	}
 	
 	@Override
 	public <T extends BaseObject> QueryResponseRemote runNamedQuery(String queryString, String clz) throws QueryRemoteException{

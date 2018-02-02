@@ -13,12 +13,12 @@ import static com.db.persistence.wsRest.Constants.WS_NAMESPACE;
 //@SOAPBinding(style = Style.RPC)
 public interface QuerySvcRemote {
 
-	@WebMethod
-	<T extends BaseObject> QueryResponseRemote runNativeQueryWithClass(@WebParam String queryString, @WebParam String clz) throws QueryRemoteException;
-
-	@WebMethod
-	<T extends BaseObject> QueryResponseRemote runNativeQuery(@WebParam String queryString) throws QueryRemoteException;
-	
+//	@WebMethod
+//	<T extends BaseObject> QueryResponseRemote runNativeQueryWithClass(@WebParam String queryString, @WebParam String clz) throws QueryRemoteException;
+//
+//	@WebMethod
+//	<T extends BaseObject> QueryResponseRemote runNativeQuery(@WebParam String queryString) throws QueryRemoteException;
+//
 	@WebMethod
 	<T extends BaseObject> QueryResponseRemote runNamedQuery(@WebParam String queryString, @WebParam String clz) throws QueryRemoteException;
 	

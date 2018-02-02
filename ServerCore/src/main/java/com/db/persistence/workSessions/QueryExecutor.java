@@ -9,7 +9,7 @@ public interface QueryExecutor {
 
     <T extends BaseObject> List<T> createNativeQuery(String queryString, Class<T> clz);
 
-    <T extends BaseObject> List<T> createQuery(String queryString);
+    <T extends BaseObject> List<T> createNativeQuery(String queryString);
 
     <T extends BaseObject> List<T> createNamedQuery(String queryString, Class<T> clz);
 

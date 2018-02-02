@@ -7,21 +7,21 @@ import org.springframework.web.bind.annotation.*;
 
 public interface QueryRestSvcRemote {
 
-    @RequestMapping(value = "/runNativeQueryForUser", method = RequestMethod.GET)
-    @ResponseBody
-    <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryForUser(@RequestParam String queryString, @RequestParam String userName) throws QueryRemoteException;
+//    @RequestMapping(value = "/runNativeQueryForUser", method = RequestMethod.GET)
+//    @ResponseBody
+//    <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryForUser(@RequestParam String queryString, @RequestParam String userName) throws QueryRemoteException;
 
-    @RequestMapping(value = "/runNativeQuery", method = RequestMethod.GET)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQuery(@RequestBody String queryString) throws QueryRemoteException;
+//    @RequestMapping(value = "/runNativeQuery", method = RequestMethod.GET)
+//	@ResponseBody
+//	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQuery(@RequestBody String queryString) throws QueryRemoteException;
+//
+//    @RequestMapping(value = "/runNativeQueryWithClassForName", method = RequestMethod.GET)
+//    @ResponseBody
+//    <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException;
 
-    @RequestMapping(value = "/runNativeQueryWithClassForName", method = RequestMethod.GET)
-    @ResponseBody
-    <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClassForUser(@RequestParam String queryString, @RequestParam String clz, @RequestParam String userName) throws QueryRemoteException;
-
-    @RequestMapping(value = "/runNativeQueryWithClass", method = RequestMethod.GET)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClass(@RequestBody String queryString, @RequestBody String clz) throws QueryRemoteException;
+//    @RequestMapping(value = "/runNativeQueryWithClass", method = RequestMethod.GET)
+//	@ResponseBody
+//	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNativeQueryWithClass(@RequestBody String queryString, @RequestBody String clz) throws QueryRemoteException;
 
 	@RequestMapping(value = "/runNamedQueryForUser", method = RequestMethod.GET)
 	@ResponseBody
