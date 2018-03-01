@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -29,12 +30,14 @@ import static com.db.server.SpringProfiles.*;
 		Plugins.class
 })
 @ComponentScan({
+		"com.events",
 		"com.db.persistence.wsRest.internal",
 		"com.db.persistence",
 		"com.db.server"
 })
 @PropertySource(value = "classpath:application.properties")
 @SpringBootApplication
+@EnableScheduling
 public class DroneServer extends SpringBootServletInitializer
 {
 	private final static Logger LOGGER = Logger.getLogger(DroneServer.class);

@@ -3,8 +3,8 @@ package com.db.persistence.services.internal;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.services.QuerySvc;
 import com.db.persistence.services.SessionsSvc;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
+import com.db.persistence.workSession.WorkSession;
+import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -20,7 +20,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 	private final static Logger LOGGER = Logger.getLogger(SessionsSvcImpl.class);
 
 	@Autowired
-	private WorkSessionManager objectStoreSessionManager;
+	private WorkSessionManager workSessionManager;
 
 	private WorkSession workSession;
 
@@ -33,7 +33,7 @@ public class SessionsSvcImpl implements SessionsSvc {
 	public void setForUser(String userName) {
 		currentUserName = userName;
 		LOGGER.debug("Context was changed for user : " + userName);
-		workSession = objectStoreSessionManager.createSession(userName);
+		workSession = workSessionManager.createSession(userName);
 //		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 

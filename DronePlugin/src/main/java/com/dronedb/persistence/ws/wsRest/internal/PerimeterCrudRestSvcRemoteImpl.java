@@ -1,5 +1,6 @@
 package com.dronedb.persistence.ws.wsRest.internal;
 
+import com.db.persistence.events.ServerEventMapper;
 import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
 import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
@@ -7,6 +8,7 @@ import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
 import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.dronedb.persistence.scheme.Perimeter;
 import com.dronedb.persistence.scheme.Point;
+import com.dronedb.persistence.scheme.Waypoint;
 import com.dronedb.persistence.services.PerimeterCrudSvc;
 import com.dronedb.persistence.ws.wsRest.PerimeterCrudRestSvcRemote;
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.jws.WebService;
 
 /**
@@ -29,6 +32,14 @@ public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemot
 
     @Autowired
     private PerimeterCrudSvc perimeterCrudSvc;
+
+    @Autowired
+    ServerEventMapper serverEventMapper;
+
+    @PostConstruct
+    public void init() {
+        LOGGER.debug("Initialize Perimeter CRUD REST");
+    }
 
     @Override
     @RequestMapping(value = "/clonePerimeter", method = RequestMethod.POST)

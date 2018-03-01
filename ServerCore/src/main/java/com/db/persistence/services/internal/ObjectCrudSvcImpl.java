@@ -6,8 +6,10 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
+import com.db.persistence.workSession.WorkSession;
+import com.db.persistence.workSession.WorkSessionManager;
+import com.db.persistence.workSessions.WorkSessionImpl;
+import com.db.persistence.workSessions.WorkSessionManagerImpl;
 import com.db.server.DroneServer;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
@@ -41,6 +43,7 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 
 	@PostConstruct
 	public void init() {
+		System.out.println("talma test");
 		setForUser("PUBLIC");
 	}
 

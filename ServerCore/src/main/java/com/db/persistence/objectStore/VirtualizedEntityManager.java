@@ -1,10 +1,12 @@
 package com.db.persistence.objectStore;
 
+import com.db.persistence.events.audit.ObjectModificationEvent;
 import com.db.persistence.scheme.*;
 import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,12 +20,11 @@ import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Lazy
 @Scope(scopeName = "prototype")
 @Component
-public class VirtualizedEntityManager extends EntityManagerBase {
+public class VirtualizedEntityManager extends EntityManagerBaseImpl {
 
     private final static Logger LOGGER = Logger.getLogger(VirtualizedEntityManager.class);
 
@@ -35,12 +36,15 @@ public class VirtualizedEntityManager extends EntityManagerBase {
     @Autowired
     private ApplicationContext applicationContext;
 
-    protected SimpleEntityManagerWrapper entityManagerWrapper;
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
+//    protected SimpleEntityManagerWrapper entityManagerWrapper;
     protected Integer entityManagerCtx;
     private EntityManager entityManager; //TODO: with need it for post construct stage pass it normally - dont save as a temp
 
     public VirtualizedEntityManager(EntityManager entityManager, Integer entityManagerCtx) {
-        LOGGER.debug("Create a new VEM for id " + this.entityManagerCtx);
+        LOGGER.debug("Create a new VEM for id " + entityManagerCtx);
 //        this.entityManagerWrapper = new SimpleEntityManagerWrapper(entityManager, entityManagerCtx);
         this.entityManagerCtx = entityManagerCtx;
         this.entityManager = entityManager;
@@ -48,6 +52,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     @PostConstruct
     public void init() {
+        LOGGER.debug("Initialize VRM");
         this.entityManagerWrapper = applicationContext.getBean(SimpleEntityManagerWrapper.class, entityManager, entityManagerCtx);
     }
 
@@ -282,8 +287,9 @@ public class VirtualizedEntityManager extends EntityManagerBase {
             }
             else {
                 LOGGER.debug("Tip object not found, object is written to the public DB for the first time");
-                movePrivateToPublic(item, clz, nextRevision);
+                movePrivateToPublicForFirstTime(item, clz, nextRevision);
             }
+            this.publisher.publishEvent(new ObjectModificationEvent(tip, item, nextRevision));
         }
     }
 
@@ -358,7 +364,7 @@ public class VirtualizedEntityManager extends EntityManagerBase {
 
     }
 
-    private <T extends BaseObject> void movePrivateToPublic(T privateItem, Class<T> clz, int nextRevision) {
+    private <T extends BaseObject> void movePrivateToPublicForFirstTime(T privateItem, Class<T> clz, int nextRevision) {
         LOGGER.debug("Moving private to NON existing published object");
         T privateItemDup = (T) privateItem.copy();
 

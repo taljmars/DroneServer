@@ -16,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 
 @Lazy
 @Component
-public class NonVirtualizedEntityManager extends EntityManagerBase {
+public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
 
     private final static Logger LOGGER = Logger.getLogger(NonVirtualizedEntityManager.class);
 
@@ -28,7 +28,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
         this.revisionManager = revisionManager;
     }
 
-    private VirtualizedEntityManager virtualizedEntityManager;
+//    private VirtualizedEntityManager virtualizedEntityManager;
 
     private EntityManager entityManager;
 
@@ -36,20 +36,33 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
         this.entityManager = entityManager;
     }
 
+//    public NonVirtualizedEntityManager() {
+//        System.out.println("talma here!");
+//    }
+
     @PostConstruct
-    private void init() {
-        this.virtualizedEntityManager = applicationContext.getBean(VirtualizedEntityManager.class, this.entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
+    public void init() {
+        LOGGER.debug("Initilize Non VEM");
+        System.out.println("Initilize Non VEM");
+        this.entityManagerWrapper = applicationContext.getBean(SimpleEntityManagerWrapper.class, entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
     }
+
+//    @PostConstruct
+//    private void init() {
+//        System.out.println("Initilize Non VEM");
+//        if (this.virtualizedEntityManager == null)
+//            this.virtualizedEntityManager = applicationContext.getBean(VirtualizedEntityManager.class, this.entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
+//    }
 
     @Override
     public <T extends BaseObject> T find(Class<T> clz, String uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
-
         KeyId keyId = new KeyId();
         keyId.setToRevision(Integer.MAX_VALUE);
         keyId.setObjId(uuid);
         keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
-        return virtualizedEntityManager.entityManagerWrapper.find(clz, keyId);
+//        return virtualizedEntityManager.entityManagerWrapper.find(clz, keyId);
+        return entityManagerWrapper.find(clz, keyId);
     }
 
     @Override
@@ -72,7 +85,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
         }
 
         DeleteObjectDeref(existingObject);
-        virtualizedEntityManager.entityManagerWrapper.remove(existingObject);
+//        virtualizedEntityManager.entityManagerWrapper.remove(existingObject);
+        entityManagerWrapper.remove(existingObject);
         return existingObject;
     }
 
@@ -83,7 +97,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
         object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
 //        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
 //        if (entityInformation.isNew(object)) {
-        virtualizedEntityManager.entityManagerWrapper.persist(object);
+//        virtualizedEntityManager.entityManagerWrapper.persist(object);
+        entityManagerWrapper.persist(object);
 //        else
 //            entityManagerWrapper.merge(object);
     }
@@ -103,7 +118,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
             object.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
             object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
-            virtualizedEntityManager.entityManagerWrapper.persist(object);
+//            virtualizedEntityManager.entityManagerWrapper.persist(object);
+            entityManagerWrapper.persist(object);
             existingObject = object;
 
             // Update ObjectDeref table for future search
@@ -122,12 +138,20 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
 
     @Override
     public void discard() {
-        virtualizedEntityManager.discard();
+//        virtualizedEntityManager.discard();
     }
 
     @Override
     public void publish() {
-        virtualizedEntityManager.publish();
+        int nextRevision = revisionManager.getNextRevision();
+
+        LOGGER.debug("Flush Entity Manager");
+        entityManagerWrapper.flush();
+
+        LOGGER.debug("Set next revision");
+        revisionManager.advance();
+
+//        virtualizedEntityManager.publish();
     }
 
     @Override
@@ -142,6 +166,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBase {
 
     @Override
     public SimpleEntityManagerWrapper getEntityManager() {
-        return virtualizedEntityManager.entityManagerWrapper;
+        return entityManagerWrapper;
+//        return virtualizedEntityManager.entityManagerWrapper;
     }
 }

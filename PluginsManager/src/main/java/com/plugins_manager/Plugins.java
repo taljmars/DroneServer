@@ -14,7 +14,8 @@ import java.util.List;
 @ComponentScan(
         value = {
             "com.db.persistence",
-            "com.dronedb.persistence"
+            "com.dronedb.persistence",
+            "com.auditdb.persistence"
         },
         useDefaultFilters = false,
         includeFilters = @ComponentScan.Filter(Configuration.class)
@@ -28,6 +29,7 @@ public class Plugins {
         servicesList = new ArrayList<>();
 
         servicesList.add("com.db.persistence.ServerSchemeManifest");
+        servicesList.add("com.auditdb.persistence.AuditLogsSchemeManifest");
         servicesList.add("com.dronedb.persistence.DroneSchemeManifest");
     }
 }

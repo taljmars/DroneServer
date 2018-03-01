@@ -1,6 +1,8 @@
 package com.db.persistence.workSessions;
 
 import com.db.persistence.scheme.BaseObject;
+import com.db.persistence.workSession.QueryExecutor;
+import com.db.persistence.workSession.WorkSession;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;

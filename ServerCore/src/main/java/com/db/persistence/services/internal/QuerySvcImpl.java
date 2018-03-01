@@ -1,11 +1,12 @@
 package com.db.persistence.services.internal;
 
-import com.db.persistence.exception.QueryException;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.QueryRequest;
 import com.db.persistence.services.QuerySvc;
-import com.db.persistence.workSessions.WorkSession;
-import com.db.persistence.workSessions.WorkSessionManager;
+import com.db.persistence.workSession.WorkSession;
+import com.db.persistence.workSession.WorkSessionManager;
+import com.db.persistence.workSessions.WorkSessionImpl;
+import com.db.persistence.workSessions.WorkSessionManagerImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

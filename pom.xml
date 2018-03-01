@@ -10,6 +10,7 @@
     <version>1.0</version>
 
     <modules>
+        <module>LogsManagerPlugin</module>
         <module>ServerCore</module>
         <module>DroneServerAnalyzer</module>
         <!--<module>DroneServerTester</module>-->
