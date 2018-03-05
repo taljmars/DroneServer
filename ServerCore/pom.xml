@@ -28,6 +28,7 @@
         <build.output>CMpub</build.output>
         <spring-ver>4.3.3.RELEASE</spring-ver>
         <encoding>UTF-8</encoding>
+        <org.springframework.security.version>4.2.0.RELEASE</org.springframework.security.version>
 
         <!--<aspectj.version>1.7.4</aspectj.version>-->
 
@@ -185,6 +186,11 @@
         <!-- AspectJ dependencies -->
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-aspects</artifactId>-->
+            <!--<version>${spring-ver}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
             <!--<artifactId>spring-aop</artifactId>-->
             <!--<version>${spring-ver}</version>-->
         <!--</dependency>-->
@@ -211,6 +217,25 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>1.5.9.RELEASE</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Security -->
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${org.springframework.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${org.springframework.security.version}</version>
+            <!--<version>5.0.0.RC1</version>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security.version}</version>
         </dependency>
 
     </dependencies>
@@ -324,7 +349,31 @@
                 </executions>
             </plugin>
 
-            <!--talma test aop-->
+            <!--test aop-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>aspectj-maven-plugin</artifactId>-->
+                <!--<version>1.7</version>-->
+                <!--<configuration>-->
+                    <!--<aspectLibraries>-->
+                        <!--<aspectLibrary>-->
+                            <!--<groupId>org.springframework</groupId>-->
+                            <!--<artifactId>spring-aspects</artifactId>-->
+                        <!--</aspectLibrary>-->
+                    <!--</aspectLibraries>-->
+                    <!--<complianceLevel>1.8</complianceLevel>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                    <!--<showWeaveInfo>true</showWeaveInfo>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <!--<plugin>-->
                 <!--<groupId>org.codehaus.mojo</groupId>-->
                 <!--<artifactId>aspectj-maven-plugin</artifactId>-->

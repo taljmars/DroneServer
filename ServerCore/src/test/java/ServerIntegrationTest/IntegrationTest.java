@@ -1,5 +1,6 @@
 package ServerIntegrationTest;
 
+import com.db.persistence.services.LoginSvc;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.services.QuerySvc;
 import com.db.server.DroneServer;
@@ -13,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Iterator;
+
+import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(SpringRunner.class)
@@ -32,6 +35,9 @@ public class IntegrationTest {
     @Autowired private RuntimeValidator runtimeValidator;
     @Autowired private ObjectCrudSvc objectCrudSvc;
     @Autowired private QuerySvc querySvc;
+    @Autowired private LoginSvc loginSvc;
+
+    private String token;
 
     @Before
     public void LoadTest() {
@@ -39,7 +45,23 @@ public class IntegrationTest {
         System.out.println("Loaded Beans:");
         System.out.println(runtimeValidator);
         System.out.println(objectCrudSvc);
+        System.out.println(loginSvc);
         System.out.println("---------------------------------------------------------");
+//        LoginRestRequest loginRestRequest = new LoginRestRequest();
+//        loginRestRequest.setUserName("talma5");
+//        loginRestRequest.setApplicationName("Tester");
+//        loginRestRequest.setTimeout(5000);
+//        LoginRestResponse resp = loginSvc.login(loginRestRequest);
+//        if (!resp.getReturnCode().equals(OK)) {
+//            System.out.println("Failed to login: " + resp.getMessage());
+//            // TODO: have better exception
+//            throw new RuntimeException("Failed to run test");
+//        }
+//        token = resp.getToken();
+        token = INTERNAL_SERVER_USER_TOKEN;
+
+        objectCrudSvc.setToken(token);
+        querySvc.setToken(token);
     }
 
     @Test

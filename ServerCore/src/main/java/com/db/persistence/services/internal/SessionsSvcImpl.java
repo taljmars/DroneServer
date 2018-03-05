@@ -1,9 +1,6 @@
 package com.db.persistence.services.internal;
 
-import com.db.persistence.services.ObjectCrudSvc;
-import com.db.persistence.services.QuerySvc;
 import com.db.persistence.services.SessionsSvc;
-import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,36 +12,17 @@ import javax.annotation.PostConstruct;
 
 @Lazy
 @Component
-public class SessionsSvcImpl implements SessionsSvc {
+public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
 
 	private final static Logger LOGGER = Logger.getLogger(SessionsSvcImpl.class);
 
 	@Autowired
 	private WorkSessionManager workSessionManager;
 
-	private WorkSession workSession;
-
 	@PostConstruct
 	public void init() {
-		setForUser("PUBLIC");
+		LOGGER.debug("Initialize SessionSvc");
 	}
-
-	String currentUserName = "";
-	public void setForUser(String userName) {
-		currentUserName = userName;
-		LOGGER.debug("Context was changed for user : " + userName);
-		workSession = workSessionManager.createSession(userName);
-//		KeyAspect.setTenantContext(workSession.getSessionId());
-	}
-
-	@Autowired
-	private RevisionManager revisionManager;
-
-	@Autowired
-	private QuerySvc querySvc;
-
-	@Autowired
-	private ObjectCrudSvc objectCrudSvc;
 
 	@Override
 	@Transactional
@@ -52,15 +30,18 @@ public class SessionsSvcImpl implements SessionsSvc {
 		// In case we've modified Revision
 		LOGGER.debug("PUBLISH START !!!");
 		LOGGER.debug("Update revision value in revision manager");
-		workSession.publish();
+		workSession = workSession.publish();
 		LOGGER.debug("PUBLISH END !!!");
+		workSession = workSessionManager.createSession(getToken(), workSession.getUserName1());
 	}
 
 	@Override
 	@Transactional
 	public void discard() {
 		LOGGER.debug("DISCARD START !!!");
-		workSession.discard();
+		workSession = workSession.discard();
 		LOGGER.debug("DISCARD END !!!");
+		workSession = workSessionManager.createSession(getToken(), workSession.getUserName1());
 	}
+
 }

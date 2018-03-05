@@ -1,25 +1,16 @@
 package com.db.persistence.wsRest;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by taljmars on 4/28/17.
  */
 public interface SessionsRestSvcRemote {
 
-    @RequestMapping(value = "/publish")
-    void publish();
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    void publish(@RequestHeader("token") String token);
 
-    @RequestMapping(value = "/publishForUser", method = RequestMethod.POST)
-    void publishForUser(@RequestParam String userName);
-
-    @RequestMapping(value = "/discard")
-    void discard();
-
-    @RequestMapping(value = "/discardForUser", method = RequestMethod.POST)
-    void discardForUser(@RequestParam String userName);
+    @RequestMapping(value = "/discard", method = RequestMethod.POST)
+    void discard(@RequestHeader("token") String token);
 
 }

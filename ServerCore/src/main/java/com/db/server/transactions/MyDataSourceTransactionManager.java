@@ -1,29 +1,18 @@
 package com.db.server.transactions;
 
 import org.apache.log4j.Logger;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
-import java.util.Map;
+public class MyDataSourceTransactionManager extends DataSourceTransactionManager {
 
-public class MyJpaTransactionManager extends JpaTransactionManager {
-
-    private final static Logger LOGGER = Logger.getLogger(MyJpaTransactionManager.class);
+    private final static Logger LOGGER = Logger.getLogger(MyDataSourceTransactionManager.class);
     static int itr;
 
-    public MyJpaTransactionManager() {
+    public MyDataSourceTransactionManager() {
         itr++;
 //        LOGGER.debug("Creation " + itr);
-    }
-
-    @Override
-    public Map<String, Object> getJpaPropertyMap() {
-        Map<String, Object> mapper = super.getJpaPropertyMap();
-        for (Map.Entry<String, Object> entry : mapper.entrySet()) {
-            LOGGER.debug("-> " + entry.getKey() + " " + entry.getValue());
-        }
-        return mapper;
     }
 
     @Override
@@ -44,4 +33,5 @@ public class MyJpaTransactionManager extends JpaTransactionManager {
 //        LOGGER.debug("DoRollback " + status);
         super.doRollback(status);
     }
+
 }

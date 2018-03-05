@@ -10,48 +10,28 @@ import org.springframework.web.bind.annotation.*;
 
 public interface ObjectCrudRestSvcRemote
 {
-	@RequestMapping(value = "/createForUser", method = RequestMethod.GET)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> createForUser(@RequestParam String clz, @RequestParam String userName)  throws ObjectInstanceRemoteException;
-
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> create(@RequestParam String clzName) throws ObjectInstanceRemoteException;
+	<T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz, @RequestHeader("token") String token)  throws ObjectInstanceRemoteException;
 
-    @RequestMapping(value = "/updateForUser", method = RequestMethod.POST
-            ,consumes={MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/update", method = RequestMethod.POST ,consumes={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    <T extends BaseObject> ResponseEntity<T> updateForUser(@RequestBody T object, @RequestParam String userName) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> update(@RequestBody T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
+    <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 
 	@RequestMapping(value = "/updateArray", method = RequestMethod.POST)
 	@ResponseBody
-	<T extends BaseObject> void updateArray(@RequestBody T[] objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
-
-    @RequestMapping(value = "/deleteForUser", method = RequestMethod.POST)
-    @ResponseBody
-    <T extends BaseObject> ResponseEntity deleteForUser(@RequestBody T object, @RequestParam String userName) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
+	<T extends BaseObject> void updateArray(@RequestBody T[] objects, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity delete(@RequestBody T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
-
-	@RequestMapping(value = "/readForUser", method = RequestMethod.GET)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam String objId, @RequestParam String userName) throws ObjectNotFoundRemoteException;
+    @ResponseBody
+    <T extends BaseObject> ResponseEntity delete(@RequestBody T object, @RequestHeader("token") String token) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId) throws ObjectNotFoundRemoteException;
-
-	@RequestMapping(value = "/readByClassForUser", method = RequestMethod.GET)
-	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam String objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId, @RequestHeader("token") String token) throws ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/readByClass", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestHeader("token") String clz, @RequestParam String token) throws ObjectNotFoundRemoteException;
+
 }

@@ -50,11 +50,11 @@ public class Dump implements RunnablePayload {
     public String run(String payload) {
         String[] strings = payload.split(" ");
         if (strings.length == 3) {
-            QuerySvcRemoteWrapper.userName = strings[2];
-            System.out.println("Dump dedicated user table of '" + QuerySvcRemoteWrapper.userName + "'");
+//            QuerySvcRemoteWrapper.userName = strings[2];
+//            System.out.println("Dump dedicated user table of '" + QuerySvcRemoteWrapper.userName + "'");
         }
         else {
-            QuerySvcRemoteWrapper.userName = "PUBLIC";
+//            QuerySvcRemoteWrapper.userName = "PUBLIC";
         }
         System.out.println(payload);
         String ans = "Tables:\n";

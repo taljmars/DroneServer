@@ -1,6 +1,5 @@
 package com.db.persistence.workSessions;
 
-import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.objectStore.EntityManagerBaseImpl;
 import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.objectStore.PersistencyManager;
@@ -13,11 +12,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_NAME;
+import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
 
 @Component
 public class WorkSessionManagerImpl implements WorkSessionManager {
@@ -33,40 +36,86 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private Map<String, WorkSession> workSessionMap;
-    private Map<String, String> workSessionEntityMap;
+    private Map<String  /*Security Session Token*/, WorkSession> workSessionMap;
+    private Map<Integer /*DB Session ctx*/, String /* WorkSessionEntityId*/> workSessionEntityMap;
+    private Map<String  /*UserName - when there is not session*/, WorkSession> orphansWorkSessionMap;
 
     private WorkSession publicWorkSession;
 
     public WorkSessionManagerImpl() {
         workSessionMap = new HashMap<>();
         workSessionEntityMap = new HashMap<>();
+        orphansWorkSessionMap = new HashMap<>();
     }
 
     @PostConstruct
-    private void init() {
-        EntityManagerBaseImpl entityManager = (EntityManagerBaseImpl) persistencyManager.createEntityManager(EntityManagerType.MAIN_ENTITY_MANAGER);
-        publicWorkSession = applicationContext.getBean(WorkSession.class, "public", WorkSessionType.PUBLIC, entityManager.getId(), entityManager);
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void init() {
+//        EntityManagerBaseImpl entityManager = (EntityManagerBaseImpl) persistencyManager.createEntityManager(EntityManagerType.MAIN_ENTITY_MANAGER);
+//        publicWorkSession = applicationContext.getBean(WorkSession.class, INTERNAL_SERVER_USER_TOKEN, INTERNAL_SERVER_USER_NAME, WorkSessionType.PUBLIC, entityManager.getId(), entityManager);
+        publicWorkSession = createSession(INTERNAL_SERVER_USER_TOKEN, INTERNAL_SERVER_USER_NAME);
     }
 
     @Override
     @Transactional
-    public WorkSession createSession(String userName) {
-        if (workSessionMap.keySet().contains(userName)) {
+    public WorkSession getSessionByToken(String token) {
+        if (workSessionMap.keySet().contains(token)) {
             LOGGER.debug("User session found in cache");
-            return workSessionMap.get(userName);
+            return workSessionMap.get(token);
+        }
+
+        //TODO: have a nicer message
+//        LOGGER.debug("Session doesn't exist");
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public WorkSession getOrhpanSessionByUserName(String user) {
+        if (orphansWorkSessionMap.keySet().contains(user)) {
+            LOGGER.debug("User session found in cache");
+            return orphansWorkSessionMap.get(user);
+        }
+
+        //TODO: have a nicer message
+        LOGGER.debug("Session doesn't exist");
+        return null;
+    }
+
+    @Override
+    public WorkSession reviveSession(WorkSession workSession, String token) {
+        WorkSession workSession1 = orphansWorkSessionMap.remove(workSession.getUserName1());
+        workSession1.setToken(token);
+        workSessionMap.put(token, workSession1);
+        return workSession1;
+    }
+
+    @Override
+    public WorkSession orphanizeSession(String token) {
+        WorkSession workSessionToOrphanize = workSessionMap.remove(token);
+        orphansWorkSessionMap.put(workSessionToOrphanize.getUserName1(), workSessionToOrphanize);
+        return workSessionToOrphanize;
+    }
+
+    @Override
+    @Transactional
+    public WorkSession createSession(String token, String userName1) {
+        if (workSessionMap.keySet().contains(token)) {
+            LOGGER.debug("User session found in cache");
+//            return workSessionMap.get(userName);
+            throw new RuntimeException("Session aleady exist");
         }
 
         /*
             In worksession design, the main entity manager of the persistence manager will
             be the public session, while the virtualized ones will be called private
         */
-        WorkSessionType type = userName.toLowerCase().equals("public") ? WorkSessionType.PUBLIC : WorkSessionType.PRIVATE;
+        WorkSessionType type = token.equals(INTERNAL_SERVER_USER_TOKEN) ? WorkSessionType.PUBLIC : WorkSessionType.PRIVATE;
         EntityManagerType entityManagerType = type == WorkSessionType.PUBLIC ? EntityManagerType.MAIN_ENTITY_MANAGER : EntityManagerType.VIRTUALIZED_ENTITY_MANAGER;
         EntityManagerBaseImpl entityManager = (EntityManagerBaseImpl) persistencyManager.createEntityManager(entityManagerType);
 
         LOGGER.debug("New session id was allocated: " + entityManager.getId());
-        WorkSession session = applicationContext.getBean(WorkSession.class, userName, type, entityManager.getId(), entityManager);
+        WorkSession workSession = applicationContext.getBean(WorkSession.class, token, userName1, type, entityManager.getId(), entityManager);
 
         // Setting tenancy identified for object creation
 //        KeyAspect.setTenantContext(session.getSessionId());
@@ -74,25 +123,29 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
         /* Build an entity to represent the sesion in the database
          * Every object create under this session will be related to this object */
         WorkSessionEntity workSessionEntity = new WorkSessionEntity();
-        workSessionEntity.getKeyId().setEntityManagerCtx(session.getSessionId());
+        workSessionEntity.getKeyId().setEntityManagerCtx(workSession.getSessionId());
 //        workSessionEntity.setEntityManagerCtx(session.getSessionId());
-        workSessionEntity.setReferredEntityManagerCtx(session.getSessionId());
-        workSessionEntity.setUserName(session.getUserName());
+        workSessionEntity.setReferredEntityManagerCtx(workSession.getSessionId());
+        workSessionEntity.setUserName(workSession.getUserName1());
         workSessionEntity.setDirty(false);
 
-        if (type.equals(WorkSessionType.PUBLIC))
+        if (type.equals(WorkSessionType.PUBLIC)) {
             workSessionEntity.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+            workSessionEntity = workSession.update(workSessionEntity);
+        }
+        else {
+            workSessionEntity = publicWorkSession.update(workSessionEntity);
+        }
 
-        workSessionEntity = publicWorkSession.update(workSessionEntity);
 
-        workSessionMap.put(userName, session);
-        workSessionEntityMap.put(userName, workSessionEntity.getKeyId().getObjId());
-        return session;
+        workSessionMap.put(token, workSession);
+        workSessionEntityMap.put(workSession.getSessionId(), workSessionEntity.getKeyId().getObjId());
+        return workSession;
     }
 
     @Override
     @Transactional
-    public void destroySession(WorkSession workSession) {
+    public WorkSession destroySession(WorkSession workSession) {
         LOGGER.debug("Destroying session '" + workSession.getSessionId() + "'");
         WorkSessionEntity workSessionEntity = getWorkSessionEntity(workSession);
         if (workSessionEntity != null) {
@@ -108,13 +161,16 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
         workSession.flush();
 
         LOGGER.debug("Remove Entity manager from cache");
-        workSessionEntityMap.remove(workSession.getUserName());
-        workSessionMap.remove(workSession.getUserName());
+//        workSessionEntityMap.remove(workSession.getUserName1());
+        workSessionEntityMap.remove(workSession.getSessionId());
+        workSessionMap.remove(workSession.getToken());
 
         LOGGER.debug("destroy entity manager");
         persistencyManager.destroyEntityManager(workSession.getEntityManager());
 
         publicWorkSession.flush();
+
+        return workSession;
     }
 
     @Override
@@ -132,7 +188,8 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
     }
 
     private WorkSessionEntity getWorkSessionEntity(WorkSession workSession) {
-        String workSessionEntryUuid = workSessionEntityMap.get(workSession.getUserName());
+//        String workSessionEntryUuid = workSessionEntityMap.get(workSession.getUserName1());
+        String workSessionEntryUuid = workSessionEntityMap.get(workSession.getSessionId());
         return publicWorkSession.find(WorkSessionEntity.class, workSessionEntryUuid);
     }
 }

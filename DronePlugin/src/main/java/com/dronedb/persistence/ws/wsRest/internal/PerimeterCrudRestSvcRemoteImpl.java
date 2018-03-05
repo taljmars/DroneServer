@@ -42,10 +42,22 @@ public class PerimeterCrudRestSvcRemoteImpl implements PerimeterCrudRestSvcRemot
     }
 
     @Override
+    @RequestMapping(value = "/clonePerimeterForToken", method = RequestMethod.POST)
+    @ResponseBody
+    @SuppressWarnings("unchecked")
+    public <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter, @RequestHeader("token") String token)
+            throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
+
+        return clonePerimeter(perimeter);
+    }
+
+    @Override
     @RequestMapping(value = "/clonePerimeter", method = RequestMethod.POST)
     @ResponseBody
     @SuppressWarnings("unchecked")
-    public <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
+    public <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter)
+            throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
+
         try {
             LOGGER.debug("cloning perimeter");
             T clonedPerimeter = (T) perimeterCrudSvc.clonePerimeter(perimeter).copy();

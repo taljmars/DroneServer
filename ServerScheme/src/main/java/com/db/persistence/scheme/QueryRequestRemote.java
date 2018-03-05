@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.scheme;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;

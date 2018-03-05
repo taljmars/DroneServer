@@ -38,6 +38,20 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
      * @throws DatabaseValidationRemoteException
      */
     @Override
+    @RequestMapping(value = "/cloneMissionForToken", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Mission> cloneMission(@RequestBody Mission mission, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
+        return cloneMission(mission);
+    }
+
+    /**
+     * Will clone the mission object and every mission item.
+     * Mind the the objid of each object and subobject is being regenerated
+     * @param mission
+     * @return
+     * @throws DatabaseValidationRemoteException
+     */
+    @Override
     @RequestMapping(value = "/cloneMission", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Mission> cloneMission(@RequestBody Mission mission) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {

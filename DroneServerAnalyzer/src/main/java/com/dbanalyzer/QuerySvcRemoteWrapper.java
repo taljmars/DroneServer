@@ -40,11 +40,11 @@ public class QuerySvcRemoteWrapper {
     @Autowired
     private RestClientHelper restClientHelper;
 
-    public static String userName = "PUBLIC";
+    public static String token = "PUBLIC";
     public QueryResponseRemote query(QueryRequestRemote queryRequestRemote) throws QueryRemoteException {
         try {
             //        return querySvcRemote.query(queryRequestRemote);
-            WebResource.Builder builder = restClientHelper.getWebResource("queryForUser", "userName", userName);
+            WebResource.Builder builder = restClientHelper.getWebResource("queryForToken", "token", token);
             ObjectMapper mapper = new ObjectMapper();
             LOGGER.debug("Request to be send: {} " + mapper.writeValueAsString(queryRequestRemote));
             ClientResponse response = builder.post(ClientResponse.class, mapper.writeValueAsString(queryRequestRemote));
@@ -61,8 +61,8 @@ public class QuerySvcRemoteWrapper {
         MultivaluedMap multivaluedMap = new MultivaluedMapImpl();
         multivaluedMap.add("queryString", queryString);
         multivaluedMap.add("clz", clz);
-        multivaluedMap.add("userName", userName);
-        WebResource.Builder builder = restClientHelper.getWebResource("runNativeQueryWithClassForUser", multivaluedMap);
+        multivaluedMap.add("token", token);
+        WebResource.Builder builder = restClientHelper.getWebResource("runNativeQueryWithClassForToken", multivaluedMap);
         ClientResponse response = builder.get(ClientResponse.class);
         return resolveResponse(response);
     }
@@ -71,8 +71,8 @@ public class QuerySvcRemoteWrapper {
         //        return querySvcRemote.runNativeQuery(queryString, clz);
         MultivaluedMap multivaluedMap = new MultivaluedMapImpl();
         multivaluedMap.add("queryString", queryString);
-        multivaluedMap.add("userName", userName);
-        WebResource.Builder builder = restClientHelper.getWebResource("runNativeQueryForUser", multivaluedMap);
+        multivaluedMap.add("token", token);
+        WebResource.Builder builder = restClientHelper.getWebResource("runNativeQueryForToken", multivaluedMap);
         ClientResponse response = builder.get(ClientResponse.class);
         return resolveResponse(response);
     }
@@ -82,8 +82,8 @@ public class QuerySvcRemoteWrapper {
         MultivaluedMap multivaluedMap = new MultivaluedMapImpl();
         multivaluedMap.add("queryString", queryString);
         multivaluedMap.add("clz", clz);
-        multivaluedMap.add("userName", userName);
-        WebResource.Builder builder = restClientHelper.getWebResource("runNamedQueryForUser", multivaluedMap);
+        multivaluedMap.add("token", token);
+        WebResource.Builder builder = restClientHelper.getWebResource("runNamedQueryForToken", multivaluedMap);
         ClientResponse response = builder.get(ClientResponse.class);
         return resolveResponse(response);
     }

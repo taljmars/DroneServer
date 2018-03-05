@@ -3,9 +3,9 @@ package com.db.persistence.services;
 /**
  * Created by taljmars on 4/28/17.
  */
-public interface SessionsSvc {
+public interface SessionsSvc  extends TokenAwareSvc {
 
-    void setForUser(String userName);
+    void setToken(String token);
 
     /**
      * The following publish all the private changes to the public database.

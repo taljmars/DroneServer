@@ -14,6 +14,8 @@ import javax.annotation.PostConstruct;
 import javax.persistence.Table;
 import java.util.*;
 
+import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
+
 @Component
 public class LogsDumperScheduler {
 
@@ -35,7 +37,7 @@ public class LogsDumperScheduler {
 
     @Scheduled(fixedRate=5000)
     public void tik() {
-        LOGGER.debug("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
+//        LOGGER.debug("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
 
         List<BaseObject> eventList = new ArrayList<>();
         int size = eventQueue.size();
@@ -52,7 +54,8 @@ public class LogsDumperScheduler {
         }
 
         if (!eventList.isEmpty()) {
-            WorkSession workSession = workSessionManager.createSession("public");
+//            WorkSession workSession = workSessionManager.createSession("public", "");
+            WorkSession workSession = workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
             for (BaseObject auditLog : eventList)
                 workSession.update(auditLog);
 

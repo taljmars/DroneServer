@@ -2,7 +2,6 @@ package com.db.persistence.workSession;
 
 import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.scheme.BaseObject;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface WorkSession {
 
@@ -20,11 +19,15 @@ public interface WorkSession {
 
     BaseObject find(String uid);
 
-    void publish();
+    WorkSession publish();
 
-    void discard();
+    WorkSession discard();
 
     int getSessionId();
 
-    String getUserName();
+    String getToken();
+
+    void setToken(String token);
+
+    String getUserName1();
 }

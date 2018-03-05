@@ -5,9 +5,9 @@ import java.util.List;
 import com.db.persistence.exception.QueryException;
 import com.db.persistence.scheme.BaseObject;
 
-public interface QuerySvc {
+public interface QuerySvc extends TokenAwareSvc {
 
-    void setForUser(String userName);
+    void setToken(String token);
 
     /**
 	 * The following enable the user to run any queries he wish to run by writing the query syntax

@@ -26,16 +26,18 @@ public class WorkSessionImpl implements WorkSession {
 
     private WorkSessionManager workSessionManager;
 
-    private String userName;
+    private String token;
+    private String userName1;
     private int sessionId;
     private WorkSessionType type;
     private Boolean isDirty;
     private EntityManagerBaseImpl entityManager;
     private QueryExecutor queryExecutor;
 
-    public WorkSessionImpl(String userName, WorkSessionType type, Integer sessionId, EntityManagerBaseImpl entityManager) {
-        LOGGER.debug("New WorkSession was allocation for user '" + userName + "'");
-        this.userName = userName;
+    public WorkSessionImpl(String token, String userName, WorkSessionType type, Integer sessionId, EntityManagerBaseImpl entityManager) {
+        LOGGER.debug("New WorkSession was allocation for token '" + token + "', user '" + userName + "'");
+        this.token = token;
+        this.userName1 = userName;
         this.type = type;
         this.sessionId = sessionId;
         this.entityManager = entityManager;
@@ -43,7 +45,8 @@ public class WorkSessionImpl implements WorkSession {
     }
 
     public WorkSessionImpl(WorkSessionImpl workSession) {
-        this.userName = workSession.userName;
+        this.token = workSession.token;
+        this.userName1 = workSession.userName1;
         this.type = workSession.type;
         this.sessionId = workSession.sessionId;
         this.entityManager = workSession.entityManager;
@@ -116,19 +119,18 @@ public class WorkSessionImpl implements WorkSession {
 
     @Override
     @Transactional
-    public void publish() {
-        LOGGER.debug("Publishing session id '" + sessionId + "' of user '" + userName + "'");
+    public WorkSession publish() {
+        LOGGER.debug("Publishing db session id '" + sessionId + "' of token '" + token + "' of user '" + userName1 + "'");
         entityManager.publish();
-        workSessionManager.destroySession(this);
+        return workSessionManager.destroySession(this);
     }
 
     @Override
     @Transactional
-    public void discard() {
-        LOGGER.debug("Discarding session id '" + sessionId + "' of user '" + userName + "'");
+    public WorkSession discard() {
+        LOGGER.debug("Discarding session id '" + sessionId + "' of token '" + token + "' of user '" + userName1 + "'");
         entityManager.discard();
-        workSessionManager.destroySession(this);
-//        workSessionManager.destroySession(this, true);
+        return workSessionManager.destroySession(this);
     }
 
     @Override
@@ -137,7 +139,17 @@ public class WorkSessionImpl implements WorkSession {
     }
 
     @Override
-    public String getUserName() {
-        return userName;
+    public String getToken() {
+        return token;
+    }
+
+    @Override
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Override
+    public String getUserName1() {
+        return userName1;
     }
 }

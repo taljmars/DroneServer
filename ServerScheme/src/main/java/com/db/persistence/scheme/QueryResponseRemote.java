@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.scheme;
 
 import com.db.persistence.scheme.BaseObject;
 

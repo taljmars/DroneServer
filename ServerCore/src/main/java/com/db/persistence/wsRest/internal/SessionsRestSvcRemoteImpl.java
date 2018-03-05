@@ -15,30 +15,17 @@ public class SessionsRestSvcRemoteImpl implements SessionsRestSvcRemote {
     private SessionsSvc sessionsSvc;
 
     @Override
-    @RequestMapping(value = "/publish")
-//    @Transactional
-    public void publish() {
-        sessionsSvc.publish();
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    public void publish(@RequestHeader("token") String token) {
+        sessionsSvc.setToken(token);
+        try {sessionsSvc.publish();}
+        finally {sessionsSvc.flushToken();}
     }
-
     @Override
-    @RequestMapping(value = "/publishForUser", method = RequestMethod.POST)
-    public void publishForUser(@RequestParam String userName) {
-        sessionsSvc.setForUser(userName);
-        sessionsSvc.publish();
-    }
-
-        @Override
-    @RequestMapping(value = "/discard")
-//    @Transactional
-    public void discard() {
-        sessionsSvc.discard();
-    }
-
-    @Override
-    @RequestMapping(value = "/discardForUser", method = RequestMethod.POST)
-    public void discardForUser(@RequestParam String userName) {
-        sessionsSvc.setForUser(userName);
-        sessionsSvc.discard();
+    @RequestMapping(value = "/discard", method = RequestMethod.POST)
+    public void discard(@RequestHeader("token") String token) {
+        sessionsSvc.setToken(token);
+        try {sessionsSvc.discard();}
+        finally {sessionsSvc.flushToken();}
     }
 }

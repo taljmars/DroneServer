@@ -6,10 +6,6 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
-import com.db.persistence.workSession.WorkSession;
-import com.db.persistence.workSession.WorkSessionManager;
-import com.db.persistence.workSessions.WorkSessionImpl;
-import com.db.persistence.workSessions.WorkSessionManagerImpl;
 import com.db.server.DroneServer;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
@@ -20,48 +16,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ObjectCrudSvcImpl implements ObjectCrudSvc
+public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSvc
 {
 	private final static Logger LOGGER = Logger.getLogger(ObjectCrudSvcImpl.class);
 
 	@Autowired
 	private RuntimeValidator runtimeValidator;
 
-	@Autowired
-	private RevisionManager revisionManager;
-
-	private WorkSession workSession;
-
-	@Autowired
-	private WorkSessionManager workSessionManager;
-
 	@PostConstruct
 	public void init() {
 		System.out.println("talma test");
-		setForUser("PUBLIC");
-	}
-
-	private static List<EntityManager> hash = new ArrayList<>();
-
-	private String currentUserName = "";
-	@Override
-	@Transactional
-	public void setForUser(String userName) {
-		currentUserName = userName;
-		LOGGER.debug("Context was changed for user : " + userName);
-		workSession = workSessionManager.createSession(userName);
-//		KeyAspect.setTenantContext(workSession.getSessionId());
 	}
 
 	@Override
 	@Transactional
-	//public <T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceException {
 	public <T extends BaseObject> T create(String clz) throws ObjectInstanceException {
 		LOGGER.debug("Crud CREATE called " + clz);
 		try {
@@ -229,4 +202,9 @@ public class ObjectCrudSvcImpl implements ObjectCrudSvc
 			throw new ObjectInstanceException(e);
 		}
 	}
+
+//	@Override
+//	public void setWorkSession(WorkSession workSession) {
+//		this.workSession = workSession;
+//	}
 }

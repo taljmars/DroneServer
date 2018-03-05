@@ -34,18 +34,16 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
-	@RequestMapping(value = "/createForUser", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> createForUser(@RequestParam String clz, @RequestParam String userName)  throws ObjectInstanceRemoteException {
-		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
-		objectCrudSvc.setForUser(userName);
-		return create(clz);
-	}
-
-	@Override
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz)  throws ObjectInstanceRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz, @RequestHeader("token") String token)  throws ObjectInstanceRemoteException {
+		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
+		objectCrudSvc.setToken(token);
+		try {return create(clz);}
+		finally {objectCrudSvc.flushToken();}
+	}
+
+	private <T extends BaseObject> ResponseEntity<T> create(String clz)  throws ObjectInstanceRemoteException {
 		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
 		try {
 			T t = (T) objectCrudSvc.create(clz).copy();
@@ -59,22 +57,18 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
-	@RequestMapping(value = "/updateForUser", method = RequestMethod.POST
-			,consumes={MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = "/update" ,method = RequestMethod.POST ,consumes={MediaType.APPLICATION_JSON_VALUE})
 	@ResponseBody
 //	@Transactional
-	public <T extends BaseObject> ResponseEntity<T> updateForUser(@RequestBody T object, @RequestParam String userName) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
 
 		LOGGER.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
-		objectCrudSvc.setForUser(userName);
-		return update(object);
+		objectCrudSvc.setToken(token);
+		try {return update(object);}
+		finally {objectCrudSvc.flushToken();}
 	}
 
-	@Override
-	@RequestMapping(value = "/update", method = RequestMethod.POST
-					,consumes={MediaType.APPLICATION_JSON_VALUE})
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException{
+	private <T extends BaseObject> ResponseEntity<T> update(T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException{
 
 		LOGGER.debug("Crud REMOTE UPDATE called, type: " + object.getClass().getCanonicalName() + ", object: " + object);
 		try {
@@ -94,7 +88,10 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	@Override
 	@RequestMapping(value = "/updateArray", method = RequestMethod.POST)
 	@ResponseBody
-	public <T extends BaseObject> void updateArray(@RequestBody T[] objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+	public <T extends BaseObject> void updateArray(@RequestBody T[] objects, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException {
+		if (1==1) {
+			throw new RuntimeException("Not implemented yet");
+		}
 		try {
 			objectCrudSvc.updateArray(objects);
 		}
@@ -109,18 +106,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
-	@RequestMapping(value = "/deleteForUser", method = RequestMethod.POST)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity deleteForUser(@RequestBody T object, @RequestParam String userName) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
-		objectCrudSvc.setForUser(userName);
-		return delete(object);
-	}
-
-
-	@Override
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity delete(@RequestBody T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity delete(@RequestBody T object, @RequestHeader("token") String token) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
+		objectCrudSvc.setToken(token);
+		try {return delete(object);}
+		finally {objectCrudSvc.flushToken();}
+	}
+
+	private <T extends BaseObject> ResponseEntity delete(T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException {
 		try {
 			T obj = objectCrudSvc.delete(object);
 			return new ResponseEntity(obj.copy(), HttpStatus.OK);
@@ -140,18 +134,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
-	@RequestMapping(value = "/readForUser", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readForUser(@RequestParam String objId, @RequestParam String userName) throws ObjectNotFoundRemoteException {
-		objectCrudSvc.setForUser(userName);
-		return read(objId);
-	}
-
-
-	@Override
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId, @RequestHeader("token") String token) throws ObjectNotFoundRemoteException {
+		objectCrudSvc.setToken(token);
+		try {return read(objId);}
+		finally {objectCrudSvc.flushToken();}
+	}
+
+	private <T extends BaseObject> ResponseEntity<T> read(String objId) throws ObjectNotFoundRemoteException {
 		try {
 			LOGGER.debug("Crud REMOTE READ called " + objId);
 			BaseObject object = objectCrudSvc.read(objId);
@@ -167,17 +158,15 @@ public class ObjectCrudRestSvcRemoteImpl implements ObjectCrudRestSvcRemote
 	}
 
 	@Override
-	@RequestMapping(value = "/readByClassForUser", method = RequestMethod.GET)
-	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readByClassForUser(@RequestParam String objId, @RequestParam String clz, @RequestParam String userName) throws ObjectNotFoundRemoteException {
-		objectCrudSvc.setForUser(userName);
-		return readByClass(objId, clz);
-	}
-
-	@Override
 	@RequestMapping(value = "/readByClass", method = RequestMethod.GET)
 	@ResponseBody
-	public <T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz) throws ObjectNotFoundRemoteException {
+	public <T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz, @RequestHeader("token") String token) throws ObjectNotFoundRemoteException {
+		objectCrudSvc.setToken(token);
+		try {return readByClass(objId, clz);}
+		finally {objectCrudSvc.flushToken();}
+	}
+
+	private <T extends BaseObject> ResponseEntity<T> readByClass(String objId, String clz) throws ObjectNotFoundRemoteException {
 
 		try {
 			LOGGER.debug("Crud REMOTE READ called '" + objId + "', class '" + clz + "'");

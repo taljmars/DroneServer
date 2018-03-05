@@ -18,6 +18,10 @@ import javax.jws.soap.SOAPBinding;
  */
 public interface MissionCrudRestSvcRemote {
 
+    @RequestMapping(value = "/cloneMissionForToken", method = RequestMethod.POST)
+    @ResponseBody
+    ResponseEntity<Mission> cloneMission(@RequestBody Mission mission, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException;
+
     @RequestMapping(value = "/cloneMission", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<Mission> cloneMission(@RequestBody Mission mission) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException;
