@@ -10,20 +10,20 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
 public abstract class EventLogObject extends BaseObject {
 
+    private String userName;
     private String eventCode;
     private Date eventTime;
 
-    public EventLogObject() {
-        super();
-    }
+    public EventLogObject() {}
 
     public EventLogObject(EventLogObject auditLog) {
         super(auditLog);
-        EventLogObject tmp = (EventLogObject) auditLog.copy();
-        this.eventCode = tmp.eventCode;
-        this.eventTime = tmp.eventTime;
+        this.eventCode = auditLog.eventCode;
+        this.eventTime = auditLog.eventTime;
+        this.userName = auditLog.userName;
     }
 
     @Override
@@ -34,24 +34,29 @@ public abstract class EventLogObject extends BaseObject {
         EventLogObject auditLog = (EventLogObject) super.copy();
         auditLog.eventCode = this.eventCode;
         auditLog.eventTime = this.eventTime;
+        auditLog.userName = this.userName;
         return auditLog;
     }
 
     @Override
     public void set(BaseObject baseObject) {
-        EventLogObject auditLog = (EventLogObject) baseObject.copy();
+        EventLogObject auditLog = (EventLogObject) baseObject;
         this.eventCode = auditLog.eventCode;
         this.eventTime = auditLog.eventTime;
+        this.userName = auditLog.userName;
     }
 
-    @XmlTransient
-    @Transient
+//    @XmlTransient
+//    @Transient
     @Temporal(TemporalType.TIMESTAMP)
     @Getter
     public Date getEventTime() {
         return eventTime;
     }
 
+    @XmlTransient
+    @Transient
+    @Setter
     public void setEventTime(Date eventTime) {
         this.eventTime = eventTime;
     }
@@ -67,13 +72,24 @@ public abstract class EventLogObject extends BaseObject {
         this.eventCode = eventCode;
     }
 
+    @Getter
+    public String getUserName() {
+        return userName;
+    }
+
+    @Setter
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         EventLogObject that = (EventLogObject) o;
-        return Objects.equals(eventCode, that.eventCode) &&
+        return  Objects.equals(userName, that.userName) &&
+                Objects.equals(eventCode, that.eventCode) &&
                 Objects.equals(eventTime, that.eventTime);
     }
 
@@ -87,6 +103,7 @@ public abstract class EventLogObject extends BaseObject {
         return "EventLogObject{" +
                 "eventCode='" + eventCode + '\'' +
                 ", eventTime=" + eventTime +
+                ", userName=" + userName +
                 ", deleted=" + deleted +
                 ", fromRevision=" + fromRevision +
                 ", clz=" + clz +

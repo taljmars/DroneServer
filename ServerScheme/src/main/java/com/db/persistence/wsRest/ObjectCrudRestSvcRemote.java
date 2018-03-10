@@ -12,26 +12,26 @@ public interface ObjectCrudRestSvcRemote
 {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz, @RequestHeader("token") String token)  throws ObjectInstanceRemoteException;
+	<T extends BaseObject> ResponseEntity<T> create(@RequestParam String clz)  throws ObjectInstanceRemoteException;
 
     @RequestMapping(value = "/update", method = RequestMethod.POST ,consumes={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
+    <T extends BaseObject> ResponseEntity<T> update(@RequestBody T object) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 
 	@RequestMapping(value = "/updateArray", method = RequestMethod.POST)
 	@ResponseBody
-	<T extends BaseObject> void updateArray(@RequestBody T[] objects, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
+	<T extends BaseObject> void updateArray(@RequestBody T[] objects) throws DatabaseValidationRemoteException, ObjectInstanceRemoteException;
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    <T extends BaseObject> ResponseEntity delete(@RequestBody T object, @RequestHeader("token") String token) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
+    <T extends BaseObject> ResponseEntity delete(@RequestBody T object) throws ObjectInstanceRemoteException, DatabaseValidationRemoteException, ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId, @RequestHeader("token") String token) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> read(@RequestParam String objId) throws ObjectNotFoundRemoteException;
 
 	@RequestMapping(value = "/readByClass", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestHeader("token") String clz, @RequestParam String token) throws ObjectNotFoundRemoteException;
+	<T extends BaseObject> ResponseEntity<T> readByClass(@RequestParam String objId, @RequestParam String clz) throws ObjectNotFoundRemoteException;
 
 }

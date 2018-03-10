@@ -10,6 +10,7 @@ public class LoginResponse {
     private Date date;
     private String message;
     private Integer returnCode;
+    private String userName;
 
     public LoginResponse() {
     }
@@ -44,5 +45,13 @@ public class LoginResponse {
 
     public void setReturnCode(Integer returnCode) {
         this.returnCode = returnCode;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

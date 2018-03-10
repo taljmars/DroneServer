@@ -1,7 +1,9 @@
 package com.auditdb.persistence.event_listeners;
 
 import com.auditdb.persistence.dumper.EventQueue;
-import com.auditdb.persistence.scheme.AuditLog;
+import com.auditdb.persistence.scheme.AccessLog;
+import com.auditdb.persistence.scheme.ObjectModificationLog;
+import com.db.persistence.events.ServerEventMapper;
 import com.db.persistence.events.audit.ObjectModificationEvent;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 
 @Component
 public class ObjectModificationListener {
@@ -18,6 +21,9 @@ public class ObjectModificationListener {
     @Autowired
     private EventQueue eventQueue;
 
+    @Autowired
+    private ServerEventMapper serverEventMapper;
+
     @PostConstruct
     public void init() {
         LOGGER.debug("ObjectModificationListener Initialized");
@@ -25,14 +31,15 @@ public class ObjectModificationListener {
 
 //    @TransactionalEventListener
     @EventListener
-    public void handleOrderCreatedEvent(ObjectModificationEvent objectModificationEvent) {
-        LOGGER.debug("Modification event: " + objectModificationEvent);
-        AuditLog auditLog = new AuditLog();
-        auditLog.setReferredObjId(objectModificationEvent.getItem().getKeyId().getObjId());
-        auditLog.setUserName("tester");
+    public void handleOrderCreatedEvent(ObjectModificationEvent event) {
+        LOGGER.debug("Modification event: " + event);
+        ObjectModificationLog auditLog = new ObjectModificationLog();
+        auditLog.setReferredObjId(event.getItem().getKeyId().getObjId());
         auditLog.setChangedFields(null);
         auditLog.setChangedValues(null);
-        eventQueue.queue(objectModificationEvent, auditLog);
+
+        auditLog.setUserName(event.getUserName());
+        eventQueue.queue(event, auditLog);
     }
 
 }

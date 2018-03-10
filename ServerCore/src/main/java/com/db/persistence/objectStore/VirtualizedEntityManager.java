@@ -1,12 +1,10 @@
 package com.db.persistence.objectStore;
 
-import com.db.persistence.events.audit.ObjectModificationEvent;
 import com.db.persistence.scheme.*;
 import com.db.persistence.services.internal.RevisionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -35,9 +33,6 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
 //    protected SimpleEntityManagerWrapper entityManagerWrapper;
     protected Integer entityManagerCtx;
@@ -289,7 +284,6 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
                 LOGGER.debug("Tip object not found, object is written to the public DB for the first time");
                 movePrivateToPublicForFirstTime(item, clz, nextRevision);
             }
-            this.publisher.publishEvent(new ObjectModificationEvent(tip, item, nextRevision));
         }
     }
 

@@ -12,10 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 //import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -35,7 +32,8 @@ import static com.db.server.SpringProfiles.*;
 		"com.events",
 		"com.db.persistence.wsRest.internal",
 		"com.db.persistence",
-		"com.db.server"
+		"com.db.server",
+		"com.db.aspects"
 })
 @PropertySource(value = "classpath:application.properties")
 @SpringBootApplication

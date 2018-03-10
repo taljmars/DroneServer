@@ -15,10 +15,10 @@ public interface LoginRestSvcRemote {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<LogoutResponse> logout(@RequestHeader("token") String token);
+    ResponseEntity<LogoutResponse> logout();
 
     @RequestMapping(value = "/keepAlive", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<KeepAliveResponse> keepAlive(@RequestHeader("token") String token);
+    ResponseEntity<KeepAliveResponse> keepAlive();
 
 }

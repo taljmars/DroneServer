@@ -20,7 +20,7 @@ public class EventQueue {
     private Queue<EventLogObject> eventQueue;
 
     public EventQueue() {
-        eventQueue = new ArrayBlockingQueue(50);
+        eventQueue = new ArrayBlockingQueue(100);
     }
 
     public void queue(Object event, EventLogObject eventForStoring) {
@@ -29,6 +29,7 @@ public class EventQueue {
 
         eventForStoring.setEventTime(new Date());
         eventForStoring.setEventCode(serverEventMapper.getEventCode(event.getClass()));
+        System.out.println("Will store: " + eventForStoring.toString());
         eventQueue.add(eventForStoring);
     }
 

@@ -1,7 +1,8 @@
 package com.auditdb.persistence.event_listeners;
 
 import com.auditdb.persistence.dumper.EventQueue;
-import com.auditdb.persistence.scheme.AuditLog;
+import com.auditdb.persistence.scheme.AccessLog;
+import com.db.persistence.events.ServerEventMapper;
 import com.db.persistence.events.audit.AccessEvent;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class AccessListener {
     @Autowired
     private EventQueue eventQueue;
 
+    @Autowired
+    private ServerEventMapper serverEventMapper;
+
     @PostConstruct
     public void init() {
         LOGGER.debug("AccessListener Initialized");
@@ -25,7 +29,11 @@ public class AccessListener {
 
     @EventListener
     public void handleEvent(AccessEvent accessEvent) {
-        LOGGER.debug("Modofication event: " + accessEvent);
-        eventQueue.queue(accessEvent, new AuditLog());
+        LOGGER.debug("Access event: " + accessEvent);
+        AccessLog auditLog = new AccessLog();
+        auditLog.setLogin(true);
+
+        auditLog.setUserName(accessEvent.getUserName());
+        eventQueue.queue(accessEvent, auditLog);
     }
 }

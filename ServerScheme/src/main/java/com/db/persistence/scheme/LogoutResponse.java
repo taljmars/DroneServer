@@ -9,6 +9,7 @@ public class LogoutResponse {
     private Date date;
     private String message;
     private Integer returnCode;
+    private String userName;
 
     public LogoutResponse() {
     }
@@ -35,5 +36,13 @@ public class LogoutResponse {
 
     public void setReturnCode(Integer returnCode) {
         this.returnCode = returnCode;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

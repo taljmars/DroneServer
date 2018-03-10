@@ -1,11 +1,9 @@
 package com.db.server;
 
-import com.db.server.security.ServerAuthProvider;
 import com.db.server.security.ServerAccessDeniedHandler;
-import com.db.server.security.ServerSessionRegistry;
+import com.db.server.security.ServerAuthProvider;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,9 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
@@ -84,4 +80,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().disable();
     }
+
 }

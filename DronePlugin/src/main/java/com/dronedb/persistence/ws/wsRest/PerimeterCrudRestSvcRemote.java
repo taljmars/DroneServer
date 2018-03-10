@@ -17,10 +17,6 @@ import javax.jws.soap.SOAPBinding;
  */
 public interface PerimeterCrudRestSvcRemote {
 
-    @RequestMapping(value = "/clonePerimeterForToken", method = RequestMethod.POST)
-    @ResponseBody
-    <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException;
-
     @RequestMapping(value = "/clonePerimeter", method = RequestMethod.POST)
     @ResponseBody
     <T extends Perimeter> ResponseEntity<T> clonePerimeter(@RequestBody T perimeter) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException;

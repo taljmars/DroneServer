@@ -184,32 +184,44 @@
         </dependency>
 
         <!-- AspectJ dependencies -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-aspects</artifactId>-->
-            <!--<version>${spring-ver}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring-ver}</version>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
             <!--<artifactId>spring-aop</artifactId>-->
             <!--<version>${spring-ver}</version>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.aspectj</groupId>-->
-            <!--<artifactId>aspectjrt</artifactId>-->
-            <!--<version>${aspectj.version}</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.aspectj</groupId>-->
             <!--<artifactId>aspectjtools</artifactId>-->
             <!--<version>${aspectj.version}</version>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.aspectj</groupId>-->
-            <!--<artifactId>aspectjweaver</artifactId>-->
-            <!--<version>${aspectj.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring-ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <!--Testing-->
         <dependency>
@@ -350,30 +362,30 @@
             </plugin>
 
             <!--test aop-->
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>aspectj-maven-plugin</artifactId>-->
-                <!--<version>1.7</version>-->
-                <!--<configuration>-->
-                    <!--<aspectLibraries>-->
-                        <!--<aspectLibrary>-->
-                            <!--<groupId>org.springframework</groupId>-->
-                            <!--<artifactId>spring-aspects</artifactId>-->
-                        <!--</aspectLibrary>-->
-                    <!--</aspectLibraries>-->
-                    <!--<complianceLevel>1.8</complianceLevel>-->
-                    <!--<source>1.8</source>-->
-                    <!--<target>1.8</target>-->
-                    <!--<showWeaveInfo>true</showWeaveInfo>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>compile</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.7</version>
+                <configuration>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-aspects</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                    <complianceLevel>1.8</complianceLevel>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <showWeaveInfo>true</showWeaveInfo>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--<plugin>-->
                 <!--<groupId>org.codehaus.mojo</groupId>-->
                 <!--<artifactId>aspectj-maven-plugin</artifactId>-->

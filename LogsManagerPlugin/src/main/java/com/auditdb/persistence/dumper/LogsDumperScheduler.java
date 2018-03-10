@@ -35,9 +35,11 @@ public class LogsDumperScheduler {
         storingTable = new HashMap<>();
     }
 
-    @Scheduled(fixedRate=5000)
+    @Scheduled(fixedRate = 45 * 1000)
     public void tik() {
-//        LOGGER.debug("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
+        LOGGER.debug("============================================================================");
+        LOGGER.debug("============================ LOG DUMPER BEGIN =============================");
+        LOGGER.debug("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
 
         List<BaseObject> eventList = new ArrayList<>();
         int size = eventQueue.size();
@@ -61,6 +63,9 @@ public class LogsDumperScheduler {
 
             workSession.publish();
         }
+
+        LOGGER.debug("============================== LOG DUMPER END ==============================");
+        LOGGER.debug("============================================================================");
     }
 
     private String getStoredTable(Class<? extends EventLogObject> se) {

@@ -1,6 +1,7 @@
 package com.db.persistence.services.internal;
 
 import com.db.persistence.services.SessionsSvc;
+import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,18 @@ public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
 		// In case we've modified Revision
 		LOGGER.debug("PUBLISH START !!!");
 		LOGGER.debug("Update revision value in revision manager");
-		workSession = workSession.publish();
+		WorkSession workSession = workSession().publish();
 		LOGGER.debug("PUBLISH END !!!");
-		workSession = workSessionManager.createSession(getToken(), workSession.getUserName1());
+		workSessionManager.createSession(getToken(), workSession.getUserName1());
 	}
 
 	@Override
 	@Transactional
 	public void discard() {
 		LOGGER.debug("DISCARD START !!!");
-		workSession = workSession.discard();
+		WorkSession workSession = workSession().discard();
 		LOGGER.debug("DISCARD END !!!");
-		workSession = workSessionManager.createSession(getToken(), workSession.getUserName1());
+		workSessionManager.createSession(getToken(), workSession.getUserName1());
 	}
 
 }

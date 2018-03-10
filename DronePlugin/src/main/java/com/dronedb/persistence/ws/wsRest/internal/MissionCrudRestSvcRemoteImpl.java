@@ -14,10 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-
-import javax.jws.WebService;
 
 /**
  * Created by taljmars on 3/24/17.
@@ -29,20 +26,6 @@ public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
 
     @Autowired
     private MissionCrudSvc missionCrudSvc;
-
-    /**
-     * Will clone the mission object and every mission item.
-     * Mind the the objid of each object and subobject is being regenerated
-     * @param mission
-     * @return
-     * @throws DatabaseValidationRemoteException
-     */
-    @Override
-    @RequestMapping(value = "/cloneMissionForToken", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Mission> cloneMission(@RequestBody Mission mission, @RequestHeader("token") String token) throws DatabaseValidationRemoteException, ObjectNotFoundRemoteException, ObjectInstanceRemoteException {
-        return cloneMission(mission);
-    }
 
     /**
      * Will clone the mission object and every mission item.

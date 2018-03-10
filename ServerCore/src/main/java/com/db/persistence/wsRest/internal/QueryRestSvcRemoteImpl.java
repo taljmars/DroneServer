@@ -30,17 +30,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(
 			@RequestParam String queryString,
-			@RequestParam String clz,
-			@RequestHeader("token") String token) throws QueryRemoteException {
-
-		querySvc.setToken(token);
-		try {return runNamedQuery(queryString, clz);}
-		finally {querySvc.flushToken();}
-	}
-
-	private <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(
-			String queryString,
-			String clz) throws QueryRemoteException {
+			@RequestParam String clz) throws QueryRemoteException {
 
 		QueryResponseRemote response = new QueryResponseRemote();
 		try {
@@ -64,15 +54,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 	@RequestMapping(value = "/query", method = RequestMethod.POST)
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> query(
-			@RequestBody QueryRequestRemote queryRequestRemote,
-			@RequestHeader("token") String token) throws QueryRemoteException {
-
-		querySvc.setToken(token);
-		try {return query(queryRequestRemote);}
-		finally {querySvc.flushToken();}
-	}
-
-	private <T extends BaseObject> ResponseEntity<QueryResponseRemote> query(QueryRequestRemote queryRequestRemote) throws QueryRemoteException{
+			@RequestBody QueryRequestRemote queryRequestRemote) throws QueryRemoteException {
 
 		LOGGER.debug("Query request from client: " + queryRequestRemote);
 		QueryRequest queryRequest = new QueryRequest();

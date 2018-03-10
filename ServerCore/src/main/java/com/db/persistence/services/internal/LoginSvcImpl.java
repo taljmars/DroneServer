@@ -8,12 +8,16 @@ import com.db.server.security.MySessionInformation;
 import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import static com.db.persistence.scheme.LoginLogoutStatus.FAIL;
 import static com.db.persistence.scheme.LoginLogoutStatus.OK;
@@ -68,6 +72,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(token);
         sessionInformation.setApplicationName(loginRequest.getApplicationName());
         sessionInformation.setTimeout(loginRequest.getTimeout());
+        resp.setUserName(sessionInformation.getPrincipal());
         resp.setToken(token); // TODO: Should be a real token
         resp.setMessage("Login successfully");
         resp.setReturnCode(OK);
@@ -80,7 +85,6 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
     public LogoutResponse logout() {
         LogoutResponse resp = new LogoutResponse();
         resp.setDate(new Date());
-
         MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(getToken());
         if (sessionInformation == null) {
             LOGGER.error("Try to logout the server, session doesn't exist" + getToken());
@@ -89,7 +93,8 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         }
         else {
             LOGGER.debug("Try to logout the server, token=" + getToken() + ", userName=" + sessionInformation.getPrincipal());
-            serverSessionRegistry.unregisterSession(getToken());
+            sessionInformation = serverSessionRegistry.unregisterSession(getToken());
+            resp.setUserName(sessionInformation.getPrincipal());
             resp.setMessage("Successfully Logout");
             resp.setReturnCode(OK);
         }
@@ -112,13 +117,16 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
             res.setServerDate(new Date());
             res.setReturnCode(OK);
         }
+        LOGGER.debug("Keep alive was received");
         return res;
     }
 
 
-    @Scheduled(fixedRate = 30 * 1000)
+    @Scheduled(fixedRate = 15 * 1000)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
         Long currentTime = new Date().getTime();
+        List<String> sessionIdsToFree = new ArrayList();
         Iterator<String> it = serverSessionRegistry.getAllPrincipals().iterator();
         while (it.hasNext()) {
             String principal = it.next();
@@ -129,16 +137,21 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
                 continue;
             }
             Long timeSinceLastKA = (currentTime - sessionInformation.getLastRequest().getTime()) / 1000;
-            System.out.println(timeSinceLastKA + " " + currentTime + " " + sessionInformation.getLastRequest().getTime() + " " + sessionInformation.getTimeout());
+            System.out.println("Past time: " + timeSinceLastKA + ", timeout:" + sessionInformation.getTimeout() + ", pricipal " + sessionInformation.getPrincipal());
             if (timeSinceLastKA > sessionInformation.getTimeout()) {
                 String token = sessionInformation.getSessionId();
                 WorkSession workSession = null;
-                if ((workSession = workSessionManager.orphanizeSession(token)) == null)
-                    throw new RuntimeException("Failed to orphanize session");
+                if ((workSession = workSessionManager.orphanizeSession(token)) == null) {
+                    System.err.println("Failed to orphanized session");
+                    return;
+                }
 
-                LOGGER.debug("Session " + token + " of working session" + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
-                serverSessionRegistry.unregisterSession(sessionId);
+                System.out.println("Session " + token + " of working session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
+                sessionIdsToFree.add(sessionId);
             }
         }
+        for (String sessionId : sessionIdsToFree)
+            serverSessionRegistry.unregisterSession(sessionId);
+
     }
 }

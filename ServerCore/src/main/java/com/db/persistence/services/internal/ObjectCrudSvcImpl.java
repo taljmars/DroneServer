@@ -70,7 +70,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 		}
 
 		LOGGER.debug("Going to update object");
-		T existingObject = workSession.update(object);
+		T existingObject = workSession().update(object);
 
 		LOGGER.debug("Handling triggers");
 		handleUpdateTriggers(oldVersion, existingObject, oldVersion == null ? PHASE.CREATE : PHASE.UPDATE );
@@ -93,7 +93,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 	public <T extends BaseObject> T delete(T object) throws DatabaseValidationException, ObjectInstanceException, ObjectNotFoundException {
 		LOGGER.debug("Crud DELETE called " + object);
 
-		T existingPrivateObject = workSession.delete(object);
+		T existingPrivateObject = workSession().delete(object);
 		if (existingPrivateObject == null) {
 			throw new ObjectInstanceException("Object wasn't found");
 		}
@@ -102,7 +102,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 		LOGGER.debug("Calling delete triggers");
 		handleDeleteTriggers(existingPrivateObject);
 
-		workSession.flush();
+		workSession().flush();
 
 		return existingPrivateObject;
 	}
@@ -110,7 +110,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 	@Override
 	@Transactional
 	public BaseObject read(final String uid) {
-		return workSession.find(uid);
+		return workSession().find(uid);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 		LOGGER.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
 		// First search in the private db
-		T object = workSession.find(clz ,objId);
+		T object = workSession().find(clz ,objId);
 		return object;
 	}
 

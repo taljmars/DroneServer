@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 public interface SessionsRestSvcRemote {
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    void publish(@RequestHeader("token") String token);
+    void publish();
 
     @RequestMapping(value = "/discard", method = RequestMethod.POST)
-    void discard(@RequestHeader("token") String token);
+    void discard();
 
 }

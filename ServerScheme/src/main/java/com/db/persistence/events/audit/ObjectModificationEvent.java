@@ -11,11 +11,13 @@ public class ObjectModificationEvent implements AuditEvent {
     private final BaseObject tip;
     private final BaseObject item;
     private final int nextRevision;
+    private final String userName;
 
-    public <T extends BaseObject> ObjectModificationEvent(T tip, T item, int nextRevision) {
+    public <T extends BaseObject> ObjectModificationEvent(T tip, T item, int nextRevision, String userName) {
         this.tip = tip;
         this.item = item;
         this.nextRevision = nextRevision;
+        this.userName = userName;
     }
 
     public BaseObject getTip() {
@@ -31,11 +33,17 @@ public class ObjectModificationEvent implements AuditEvent {
     }
 
     @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
     public String toString() {
         return "ObjectModificationEvent{" +
                 "tip=" + tip +
                 ", item=" + item +
                 ", nextRevision=" + nextRevision +
+                ", userName=" + userName +
                 '}';
     }
 }

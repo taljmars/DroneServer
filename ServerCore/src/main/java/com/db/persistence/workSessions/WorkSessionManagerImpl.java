@@ -36,8 +36,9 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private Map<String  /*Security Session Token*/, WorkSession> workSessionMap;
-    private Map<Integer /*DB Session ctx*/, String /* WorkSessionEntityId*/> workSessionEntityMap;
+    private Map<String  /*Security Session Token*/              , WorkSession> workSessionMap;
+    private Map<Integer /*DB Session ctx*/                      , String /* WorkSessionEntityId*/> workSessionEntityMap;
+    private Map<Integer /*DB Session ctx*/                      , String /* User Name*/> workSessionUserNames;
     private Map<String  /*UserName - when there is not session*/, WorkSession> orphansWorkSessionMap;
 
     private WorkSession publicWorkSession;
@@ -46,6 +47,7 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
         workSessionMap = new HashMap<>();
         workSessionEntityMap = new HashMap<>();
         orphansWorkSessionMap = new HashMap<>();
+        workSessionUserNames = new HashMap<>();
     }
 
     @PostConstruct
@@ -140,6 +142,7 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
 
         workSessionMap.put(token, workSession);
         workSessionEntityMap.put(workSession.getSessionId(), workSessionEntity.getKeyId().getObjId());
+        workSessionUserNames.put(workSession.getSessionId(), workSession.getUserName1());
         return workSession;
     }
 
@@ -163,7 +166,11 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
         LOGGER.debug("Remove Entity manager from cache");
 //        workSessionEntityMap.remove(workSession.getUserName1());
         workSessionEntityMap.remove(workSession.getSessionId());
-        workSessionMap.remove(workSession.getToken());
+        String userName = workSessionUserNames.remove(workSession.getSessionId());
+        if (orphansWorkSessionMap.containsKey(userName))
+            orphansWorkSessionMap.remove(userName);
+        else
+            workSessionMap.remove(workSession.getToken());
 
         LOGGER.debug("destroy entity manager");
         persistencyManager.destroyEntityManager(workSession.getEntityManager());
@@ -191,5 +198,11 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
 //        String workSessionEntryUuid = workSessionEntityMap.get(workSession.getUserName1());
         String workSessionEntryUuid = workSessionEntityMap.get(workSession.getSessionId());
         return publicWorkSession.find(WorkSessionEntity.class, workSessionEntryUuid);
+    }
+
+    @Override
+    public String getUserNameByCtx(Integer ctx) {
+        String userName = workSessionUserNames.get(ctx);
+        return userName;
     }
 }

@@ -17,4 +17,6 @@ public interface WorkSessionManager {
     WorkSession reviveSession(WorkSession workSession, String token);
 
     WorkSession orphanizeSession(String token);
+
+    String getUserNameByCtx(Integer ctx);
 }

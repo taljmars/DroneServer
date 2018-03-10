@@ -2,19 +2,13 @@ package com.db.server.security;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
-import sun.security.x509.GeneralNames;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-
-import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_NAME;
 
 @Component
 public class ServerSessionRegistry {
@@ -33,11 +27,12 @@ public class ServerSessionRegistry {
         mySessionInformationMap.put(sessionId, new MySessionInformation(sessionInformation));
     }
 
-    public void unregisterSession(String sessionId) {
+    public MySessionInformation unregisterSession(String sessionId) {
         LOGGER.debug("Unregister " + sessionId);
         MySessionInformation sessionInformation = mySessionInformationMap.get(sessionId);
         mySessionInformationMap.remove(sessionId);
         sessionInformation.expireNow();
+        return sessionInformation;
     }
 
     public String getSessionId(String userName) {
