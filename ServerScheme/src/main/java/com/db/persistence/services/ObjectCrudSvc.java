@@ -83,5 +83,5 @@ public interface ObjectCrudSvc extends TokenAwareSvc {
 	 */
 	<T extends BaseObject> T readByClass(final String objId, final Class<T> clz) throws ObjectNotFoundException;
 
-	void setToken(String userName);
+	ObjectCrudSvc setToken(String userName);
 }

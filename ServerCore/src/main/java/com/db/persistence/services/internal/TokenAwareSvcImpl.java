@@ -4,18 +4,14 @@ import com.db.persistence.services.TokenAwareSvc;
 import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
-
-public abstract class TokenAwareSvcImpl implements TokenAwareSvc {
+public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements TokenAwareSvc {
 
     private final static Logger LOGGER = Logger.getLogger(TokenAwareSvcImpl.class);
 
@@ -26,8 +22,9 @@ public abstract class TokenAwareSvcImpl implements TokenAwareSvc {
 
     @Override
     @Transactional
-    public void setToken(String token) {
+    public T setToken(String token) {
         this.token = token;
+        return (T) this;
     }
 
     @Override

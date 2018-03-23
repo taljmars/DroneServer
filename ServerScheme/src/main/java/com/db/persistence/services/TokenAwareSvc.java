@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TokenAwareSvc {
 
     @Transactional
-    void setToken(String token);
+    <T extends TokenAwareSvc> T setToken(String token);
 
     @Transactional
     String getToken();

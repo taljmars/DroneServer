@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSvc
+public class ObjectCrudSvcImpl extends TokenAwareSvcImpl<ObjectCrudSvc> implements ObjectCrudSvc
 {
 	private final static Logger LOGGER = Logger.getLogger(ObjectCrudSvcImpl.class);
 

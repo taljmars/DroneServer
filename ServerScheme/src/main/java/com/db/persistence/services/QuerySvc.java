@@ -7,7 +7,7 @@ import com.db.persistence.scheme.BaseObject;
 
 public interface QuerySvc extends TokenAwareSvc {
 
-    void setToken(String token);
+	QuerySvc setToken(String token);
 
     /**
 	 * The following enable the user to run any queries he wish to run by writing the query syntax

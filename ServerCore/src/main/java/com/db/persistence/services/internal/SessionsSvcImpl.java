@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 
 @Lazy
 @Component
-public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
+public class SessionsSvcImpl extends TokenAwareSvcImpl<SessionsSvc> implements SessionsSvc {
 
 	private final static Logger LOGGER = Logger.getLogger(SessionsSvcImpl.class);
 

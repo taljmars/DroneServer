@@ -3,6 +3,7 @@ package com.auditdb.persistence.dumper;
 import com.auditdb.persistence.base_scheme.EventLogLinkerObject;
 import com.db.persistence.scheme.BaseObject;
 import com.auditdb.persistence.base_scheme.EventLogObject;
+import com.db.persistence.services.SessionsSvc;
 import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
@@ -25,6 +26,9 @@ public class LogsDumperScheduler {
     private WorkSessionManager workSessionManager;
 
     @Autowired
+    private SessionsSvc sessionsSvc;
+
+    @Autowired
     private EventQueue eventQueue;
 
     private Map<Class, String> storingTable;
@@ -37,34 +41,39 @@ public class LogsDumperScheduler {
 
     @Scheduled(fixedRate = 45 * 1000)
     public void tik() {
-        LOGGER.info("============================================================================");
-        LOGGER.info("============================ LOG DUMPER BEGIN =============================");
-        LOGGER.info("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
+        try {
+            LOGGER.info("============================================================================");
+            LOGGER.info("============================ LOG DUMPER BEGIN =============================");
+            LOGGER.info("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
 
-        List<BaseObject> eventList = new ArrayList<>();
-        int size = eventQueue.size();
-        for (int i = 0 ; i < size ; i++) {
-            EventLogObject se = eventQueue.pop();
+            List<BaseObject> eventList = new ArrayList<>();
+            int size = eventQueue.size();
+            for (int i = 0; i < size; i++) {
+                EventLogObject se = eventQueue.pop();
 
-            eventList.add(se);
-            EventLogLinkerObject eventLogLinkerObject = new EventLogLinkerObject();
-            eventLogLinkerObject.setReferedObj(se.getKeyId().getObjId());
-            eventLogLinkerObject.setType(getStoredTable(se.getClass()));
-            eventLogLinkerObject.setEventCode(se.getEventCode());
+                eventList.add(se);
+                EventLogLinkerObject eventLogLinkerObject = new EventLogLinkerObject();
+                eventLogLinkerObject.setReferedObj(se.getKeyId().getObjId());
+                eventLogLinkerObject.setType(getStoredTable(se.getClass()));
+                eventLogLinkerObject.setEventCode(se.getEventCode());
 
-            eventList.add(eventLogLinkerObject);
+                eventList.add(eventLogLinkerObject);
+            }
+
+            if (!eventList.isEmpty()) {
+                WorkSession workSession = workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
+                for (BaseObject auditLog : eventList)
+                    workSession.update(auditLog);
+
+                sessionsSvc.setToken(INTERNAL_SERVER_USER_TOKEN).publish();
+            }
+
+            LOGGER.info("============================== LOG DUMPER END ==============================");
+            LOGGER.info("============================================================================");
         }
-
-        if (!eventList.isEmpty()) {
-            WorkSession workSession = workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
-            for (BaseObject auditLog : eventList)
-                workSession.update(auditLog);
-
-            workSession.publish();
+        catch (Exception e) {
+            LOGGER.error("Failed to dump events", e);
         }
-
-        LOGGER.info("============================== LOG DUMPER END ==============================");
-        LOGGER.info("============================================================================");
     }
 
     private String getStoredTable(Class<? extends EventLogObject> se) {

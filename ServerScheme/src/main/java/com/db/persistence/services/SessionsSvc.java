@@ -5,7 +5,7 @@ package com.db.persistence.services;
  */
 public interface SessionsSvc  extends TokenAwareSvc {
 
-    void setToken(String token);
+    SessionsSvc setToken(String token);
 
     /**
      * The following publish all the private changes to the public database.
