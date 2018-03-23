@@ -87,13 +87,14 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         resp.setDate(new Date());
         MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(getToken());
         if (sessionInformation == null) {
-            LOGGER.error("Try to logout the server, session doesn't exist" + getToken());
+            LOGGER.error("Try to logout the server, session doesn't exist " + getToken());
             resp.setMessage("Failed to logout");
             resp.setReturnCode(FAIL);
         }
         else {
             LOGGER.debug("Try to logout the server, token=" + getToken() + ", userName=" + sessionInformation.getPrincipal());
             sessionInformation = serverSessionRegistry.unregisterSession(getToken());
+            workSessionManager.orphanizeSession(getToken());
             resp.setUserName(sessionInformation.getPrincipal());
             resp.setMessage("Successfully Logout");
             resp.setReturnCode(OK);
@@ -137,7 +138,13 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
                 continue;
             }
             Long timeSinceLastKA = (currentTime - sessionInformation.getLastRequest().getTime()) / 1000;
-            System.out.println("Past time: " + timeSinceLastKA + ", timeout:" + sessionInformation.getTimeout() + ", pricipal " + sessionInformation.getPrincipal());
+            System.out.println(
+                    "Past time: " + timeSinceLastKA +
+                    ", timeout:" + sessionInformation.getTimeout() +
+                    ", pricipal " + sessionInformation.getPrincipal() +
+                    ", sessionId " + sessionInformation.getSessionId() +
+                    ", CoreSessionId " + sessionInformation.getCoreObject().getSessionId()
+            );
             if (timeSinceLastKA > sessionInformation.getTimeout()) {
                 String token = sessionInformation.getSessionId();
                 WorkSession workSession = null;

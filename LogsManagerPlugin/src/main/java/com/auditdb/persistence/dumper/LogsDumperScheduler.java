@@ -37,9 +37,9 @@ public class LogsDumperScheduler {
 
     @Scheduled(fixedRate = 45 * 1000)
     public void tik() {
-        LOGGER.debug("============================================================================");
-        LOGGER.debug("============================ LOG DUMPER BEGIN =============================");
-        LOGGER.debug("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
+        LOGGER.info("============================================================================");
+        LOGGER.info("============================ LOG DUMPER BEGIN =============================");
+        LOGGER.info("Audit Log" + (new Date()).toString() + " , logs amount=" + eventQueue.size());
 
         List<BaseObject> eventList = new ArrayList<>();
         int size = eventQueue.size();
@@ -56,7 +56,6 @@ public class LogsDumperScheduler {
         }
 
         if (!eventList.isEmpty()) {
-//            WorkSession workSession = workSessionManager.createSession("public", "");
             WorkSession workSession = workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
             for (BaseObject auditLog : eventList)
                 workSession.update(auditLog);
@@ -64,8 +63,8 @@ public class LogsDumperScheduler {
             workSession.publish();
         }
 
-        LOGGER.debug("============================== LOG DUMPER END ==============================");
-        LOGGER.debug("============================================================================");
+        LOGGER.info("============================== LOG DUMPER END ==============================");
+        LOGGER.info("============================================================================");
     }
 
     private String getStoredTable(Class<? extends EventLogObject> se) {

@@ -95,7 +95,13 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
     @Override
     public WorkSession orphanizeSession(String token) {
         WorkSession workSessionToOrphanize = workSessionMap.remove(token);
-        orphansWorkSessionMap.put(workSessionToOrphanize.getUserName1(), workSessionToOrphanize);
+        if (workSessionToOrphanize.isDirty()) {
+            LOGGER.debug("Session is dirty - need to be orphanize");
+            orphansWorkSessionMap.put(workSessionToOrphanize.getUserName1(), workSessionToOrphanize);
+        }
+        else {
+            LOGGER.debug("Session is clean, skip orphanization");
+        }
         return workSessionToOrphanize;
     }
 

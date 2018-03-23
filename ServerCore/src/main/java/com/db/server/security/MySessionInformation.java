@@ -57,4 +57,8 @@ public class MySessionInformation {//extends SessionInformation {
     public Date getLastRequest() {
         return this.sessionInformation.getLastRequest();
     }
+
+    public SessionInformation getCoreObject() {
+        return sessionInformation;
+    }
 }

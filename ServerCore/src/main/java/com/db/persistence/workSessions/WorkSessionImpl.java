@@ -152,4 +152,9 @@ public class WorkSessionImpl implements WorkSession {
     public String getUserName1() {
         return userName1;
     }
+
+    @Override
+    public Boolean isDirty() {
+        return isDirty;
+    }
 }

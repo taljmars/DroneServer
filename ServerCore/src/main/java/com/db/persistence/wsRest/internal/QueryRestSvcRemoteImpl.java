@@ -75,6 +75,7 @@ public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
 			return new ResponseEntity<QueryResponseRemote>(response, HttpStatus.OK);
 		}
 		catch (ClassNotFoundException  | QueryException e) {
+			LOGGER.error("Usually the issue is within the class value, in this reqesut the value is '" + queryRequestRemote.getClz() + "'");
 			LOGGER.error(e);
 			throw new QueryRemoteException(e.getMessage());
 		}

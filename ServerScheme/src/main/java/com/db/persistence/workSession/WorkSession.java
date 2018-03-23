@@ -30,4 +30,6 @@ public interface WorkSession {
     void setToken(String token);
 
     String getUserName1();
+
+    Boolean isDirty();
 }
