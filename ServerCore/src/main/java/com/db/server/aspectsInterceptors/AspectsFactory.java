@@ -2,6 +2,7 @@ package com.db.server.aspectsInterceptors;
 
 import com.db.aspects.LoginLogoutAspect;
 import com.db.aspects.ObjectsModificationAspect;
+import com.db.aspects.RegistrationAspect;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.Aspects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class AspectsFactory {
     @Bean
     public LoginLogoutAspect loginLogoutAspect() {
         LoginLogoutAspect aspect = Aspects.aspectOf(LoginLogoutAspect.class);
+        return aspect;
+    }
+
+    @Bean
+    public RegistrationAspect registrationAspect() {
+        RegistrationAspect aspect = Aspects.aspectOf(RegistrationAspect.class);
         return aspect;
     }
 	

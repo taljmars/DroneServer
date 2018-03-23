@@ -65,7 +65,8 @@ public class QueryExecutorHibernate implements QueryExecutor {
                 query.setParameter(p.getKey(), p.getValue());
         }
 
-        query.setParameter("CTX", workSession.getSessionId());
+        if (query.getParameters().stream().anyMatch((p) -> p.getName().equals("CTX")))
+            query.setParameter("CTX", workSession.getSessionId());
         List<T> res = query.getResultList();
         return translateResults(res);
     }

@@ -42,7 +42,18 @@ public class UsersListener {
     public void handleEvent(RegistrationEvent registrationEvent) {
         LOGGER.debug("Registration event: " + registrationEvent);
         RegistrationLog logEntry = new RegistrationLog();
-        logEntry.setDescription(registrationEvent.getEventType() + "");
+        switch (registrationEvent.getEventType()) {
+            case USERCREATION:
+                logEntry.setDescription("User Created");
+                break;
+            case USERUPDATE:
+                logEntry.setDescription("User Changed");
+                break;
+            case USERDELETION:
+                logEntry.setDescription("User Deleted");
+                break;
+        }
+
         logEntry.setUserName(registrationEvent.getUserName());
         eventQueue.queue(registrationEvent, logEntry);
     }
