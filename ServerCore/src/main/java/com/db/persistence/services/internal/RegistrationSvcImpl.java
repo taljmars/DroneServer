@@ -43,14 +43,14 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
         if (!isUserNameValid(userName)) {
             LOGGER.debug("User name invalid " + userName);
             resp.setMessage("User name invalid, make sure it contain at lease 4 characters and not space");
-            resp.setReturnCode(0);
+            resp.setReturnCode(-1);
             return resp;
         }
 
         if (!isPasswordValid(userName, password)) {
             LOGGER.debug("Password invalid " + password);
             resp.setMessage("Password invalid, make sure it contain at lease 4 characters and not space");
-            resp.setReturnCode(0);
+            resp.setReturnCode(-1);
             return resp;
         }
 
@@ -61,6 +61,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
                 LOGGER.debug("User already exist");
                 resp.setMessage("User already exist");
                 resp.setReturnCode(-1);
+                return resp;
             }
 
             LOGGER.debug("Creating user in database");
@@ -76,9 +77,10 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
             LOGGER.error("Failed to create user", e);
             resp.setMessage("Internal Error: Failed to create user");
             resp.setReturnCode(-1);
+            return resp;
         }
 
-        LOGGER.debug("User was successfully created");
+        LOGGER.debug("User '" + userName + "' was successfully created");
         resp.setMessage("User was successfully created");
         resp.setReturnCode(0);
         return resp;
@@ -108,6 +110,9 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
     }
 
     private boolean isUserNameValid(String userName) {
+        if (userName == null)
+            return false;
+
         if (userName.contains(" "))
             return false;
 
@@ -118,6 +123,9 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
     }
 
     private boolean isPasswordValid(String userName, String password) {
+        if (password == null)
+            return false;
+
         if (password.contains(" "))
             return false;
 

@@ -28,11 +28,24 @@ public class ServerAuthProvider implements AuthenticationProvider {
 
         LOGGER.debug("Try to authenticate '" + authentication.getName() + "'");
         String name = authentication.getName();
+        String password = authentication.getCredentials().toString();
+
+        if (name.equals("tester1") || name.equals("tester2")) {
+            Object authDetails = authentication.getDetails();
+            if (authDetails instanceof WebAuthenticationDetails) {
+                String address = ((WebAuthenticationDetails) authDetails).getRemoteAddress();
+                if (address.equals("127.0.0.1") && name.equals(password)) {
+                    LOGGER.debug("Authenticated ->" + authentication);
+                    LOGGER.debug("Tester user for localhost is in use");
+                    UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(name, password, Collections.emptyList());
+                    return userAuth;
+                }
+            }
+        }
 
         User user = registrationSvc.getUserByName(name);
-        String password = authentication.getCredentials().toString();
         LOGGER.debug("Try to login with, user=" + name + ", pass=" + password + ", gor user:" + user);
-        if (name.equals("tester1") || name.equals("tester2") || (user != null && user.getPassword().equals(password))) {
+        if (user != null && user.getPassword().equals(password)) {
             LOGGER.debug("Authenticated ->" + authentication);
             UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(name, password, Collections.emptyList());
             return userAuth;

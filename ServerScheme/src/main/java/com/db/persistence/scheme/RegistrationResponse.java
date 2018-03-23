@@ -6,21 +6,12 @@ import java.util.Date;
 @XmlRootElement
 public class RegistrationResponse {
 
-    private boolean signingIn;;
     private Date date;
     private String message;
     private Integer returnCode;
     private String userName;
 
     public RegistrationResponse() {
-    }
-
-    public void setSigningIn(boolean signingIn) {
-        this.signingIn = signingIn;
-    }
-
-    public boolean getSigningIn() {
-        return signingIn;
     }
 
     public void setDate(Date date) {
