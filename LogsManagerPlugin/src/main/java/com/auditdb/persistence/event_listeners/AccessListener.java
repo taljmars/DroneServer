@@ -31,8 +31,7 @@ public class AccessListener {
     public void handleEvent(AccessEvent accessEvent) {
         LOGGER.debug("Access event: " + accessEvent);
         AccessLog auditLog = new AccessLog();
-        auditLog.setLogin(true);
-
+        auditLog.setLogin(accessEvent.getEventType().equals(AccessEvent.AccessEventType.LOGIN) ? true : false);
         auditLog.setUserName(accessEvent.getUserName());
         eventQueue.queue(accessEvent, auditLog);
     }

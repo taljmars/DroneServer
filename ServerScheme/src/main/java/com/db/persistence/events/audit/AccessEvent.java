@@ -8,12 +8,20 @@ import java.util.UUID;
 @ServerEvent(id = 5)
 public class AccessEvent implements AuditEvent {
 
+    public enum AccessEventType{
+        LOGIN,
+        LOGOUT,
+        TIMEOUT
+    }
+
+    private final AccessEventType eventType;
     private final String userName;
     private final Date date;
     private final Integer res;
     private final String msg;
 
-    public AccessEvent(String userName, Date date, Integer returnCode, String message) {
+    public AccessEvent(AccessEventType eventType, String userName, Date date, Integer returnCode, String message) {
+        this.eventType = eventType;
         this.userName = userName;
         this.date = date;
         this.res = returnCode;
@@ -37,10 +45,15 @@ public class AccessEvent implements AuditEvent {
         return msg;
     }
 
+    public AccessEventType getEventType() {
+        return eventType;
+    }
+
     @Override
     public String toString() {
         return "AccessEvent{" +
-                "userName='" + userName + '\'' +
+                "eventType='" + eventType + '\'' +
+                ", userName='" + userName + '\'' +
                 ", date=" + date +
                 ", res=" + res +
                 ", msg='" + msg + '\'' +

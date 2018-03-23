@@ -43,7 +43,7 @@ public class LoginLogoutAspect {
     public void accessLogin(JoinPoint joinPoint, LoginResponse result) {
         try {
             LOGGER.debug("Publish Access event for token:" + result.getToken());
-            publisher.publishEvent(new AccessEvent(result.getUserName(), result.getDate(), result.getReturnCode(), result.getMessage()));
+            publisher.publishEvent(new AccessEvent(AccessEvent.AccessEventType.LOGIN, result.getUserName(), result.getDate(), result.getReturnCode(), result.getMessage()));
         }
         catch (Throwable t) {LOGGER.error("Error occur during event publishing:" + t.getMessage(), t);}
     }
@@ -55,7 +55,7 @@ public class LoginLogoutAspect {
     public void accessLogout(JoinPoint joinPoint, LogoutResponse result) {
         try {
             LOGGER.debug("Publish Access event for token");
-            publisher.publishEvent(new AccessEvent(result.getUserName(), result.getDate(), result.getReturnCode(), result.getMessage()));
+            publisher.publishEvent(new AccessEvent(AccessEvent.AccessEventType.LOGOUT, result.getUserName(), result.getDate(), result.getReturnCode(), result.getMessage()));
         }
         catch (Throwable t) {LOGGER.error("Error occur during event publishing:" + t.getMessage(), t);}
     }
