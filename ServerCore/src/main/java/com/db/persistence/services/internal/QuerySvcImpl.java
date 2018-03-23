@@ -49,11 +49,11 @@ public class QuerySvcImpl extends TokenAwareSvcImpl<QuerySvc> implements QuerySv
 		LOGGER.debug(queryRequest.toString());
 		Class<? extends BaseObject> clz = queryRequest.getClz();
 		String queryStr = queryRequest.getQuery();
-		Map<String, String> params = queryRequest.getParameters();
+		Map<String, Object> params = queryRequest.getParameters();
 
 
 		LOGGER.debug("Running named query: " + queryStr + ", for class: " + clz.getCanonicalName());
-		List<? extends BaseObject> lst = workSession().getQueryExecutor().createNamedQuery(queryStr, clz);
+		List<? extends BaseObject> lst = workSession().getQueryExecutor().createNamedQuery(queryStr, params, clz);
 		LOGGER.debug("Service " + lst);
 		List<T> arr = new ArrayList();
 

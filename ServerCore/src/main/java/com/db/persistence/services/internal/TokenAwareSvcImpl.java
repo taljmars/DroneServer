@@ -11,6 +11,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
+
 public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements TokenAwareSvc {
 
     private final static Logger LOGGER = Logger.getLogger(TokenAwareSvcImpl.class);
@@ -33,8 +35,8 @@ public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements Toke
         if (RequestContextHolder.getRequestAttributes() != null) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             String uri = request.getRequestURI();
-            if (uri.equals("/login"))
-                return null;
+            if (uri.equals("/login") || uri.equals("/registerNewUser"))
+                return INTERNAL_SERVER_USER_TOKEN;
 
             String token = request.getHeader("token");
             if (token != null)
@@ -55,8 +57,8 @@ public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements Toke
         if (RequestContextHolder.getRequestAttributes() != null) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             String uri = request.getRequestURI();
-            if (uri.equals("/login"))
-                return null;
+            if (uri.equals("/login") || uri.equals("/registerNewUser"))
+                return workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
 
             String token = request.getHeader("token");
             if (token != null)

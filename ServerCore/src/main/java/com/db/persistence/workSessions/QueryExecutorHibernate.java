@@ -60,8 +60,10 @@ public class QueryExecutorHibernate implements QueryExecutor {
     public <T extends BaseObject> List<T> createNamedQuery(String queryString, Map<String, Object> parameterSet, Class<T> clz) {
         LOGGER.debug("Query Executor request: " + queryString + ", for class: " + clz.getSimpleName());
         TypedQuery<T> query = workSession.getEntityManager().createNamedQuery(queryString, clz);
-        for (Map.Entry<String, Object> p : parameterSet.entrySet())
-            query.setParameter(p.getKey(), p.getValue());
+        if (parameterSet != null) {
+            for (Map.Entry<String, Object> p : parameterSet.entrySet())
+                query.setParameter(p.getKey(), p.getValue());
+        }
 
         query.setParameter("CTX", workSession.getSessionId());
         List<T> res = query.getResultList();

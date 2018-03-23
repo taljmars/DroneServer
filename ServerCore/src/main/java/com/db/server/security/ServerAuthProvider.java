@@ -1,6 +1,10 @@
 package com.db.server.security;
 
+import com.db.persistence.scheme.User;
+import com.db.persistence.services.LoginSvc;
+import com.db.persistence.services.RegistrationSvc;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,15 +20,20 @@ public class ServerAuthProvider implements AuthenticationProvider {
 
     private final static Logger LOGGER = Logger.getLogger(ServerAuthProvider.class);
 
+    @Autowired
+    private RegistrationSvc registrationSvc;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         LOGGER.debug("Try to authenticate '" + authentication.getName() + "'");
         String name = authentication.getName();
 
-        if (name.equals("tester1") || name.equals("tester2")){
+        User user = registrationSvc.getUserByName(name);
+        String password = authentication.getCredentials().toString();
+        LOGGER.debug("Try to login with, user=" + name + ", pass=" + password + ", gor user:" + user);
+        if (name.equals("tester1") || name.equals("tester2") || (user != null && user.getPassword().equals(password))) {
             LOGGER.debug("Authenticated ->" + authentication);
-            String password = authentication.getCredentials().toString();
             UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(name, password, Collections.emptyList());
             return userAuth;
         }

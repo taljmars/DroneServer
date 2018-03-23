@@ -1,9 +1,6 @@
 package com.db.persistence.services;
 
-import com.db.persistence.scheme.KeepAliveResponse;
-import com.db.persistence.scheme.LoginRequest;
-import com.db.persistence.scheme.LoginResponse;
-import com.db.persistence.scheme.LogoutResponse;
+import com.db.persistence.scheme.*;
 
 public interface LoginSvc extends TokenAwareSvc {
 
@@ -15,4 +12,5 @@ public interface LoginSvc extends TokenAwareSvc {
     // Token Aware
     KeepAliveResponse keepAlive();
 
+//    User getUserByName(String userName);
 }

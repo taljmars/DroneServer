@@ -15,11 +15,11 @@ public class QueryRequest {
 	@XmlElement(required = true)	
 	private Class<? extends BaseObject> clz;
 		
-	private Map<String, String> params;
+	private Map<String, Object> params;
 
 	// Ctor
 	public QueryRequest() {
-		params = new HashMap<String, String>();
+		params = new HashMap<>();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class QueryRequest {
 	 * Get the parameters list to be supplied to the query during it execution.
 	 * @return Map representing the parameter name (of the query) and it value
 	 */
-	public Map<String, String> getParameters() {
+	public Map<String, Object> getParameters() {
 		return params;
 	}
 

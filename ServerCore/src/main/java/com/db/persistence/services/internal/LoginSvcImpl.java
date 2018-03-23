@@ -8,7 +8,6 @@ import com.db.server.security.MySessionInformation;
 import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -121,7 +120,6 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         LOGGER.debug("Keep alive was received");
         return res;
     }
-
 
     @Scheduled(fixedRate = 15 * 1000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
