@@ -17,7 +17,7 @@ public abstract class EntityManagerBaseImpl implements EntityManagerBase {
 
     protected SimpleEntityManagerWrapper entityManagerWrapper;
 
-    public abstract Integer getId();
+//    public abstract Integer getId();
 
     @Override
     public <T extends BaseObject> TypedQuery<T> createNamedQuery(String queryString, Class<T> clz) {

@@ -1,5 +1,6 @@
 package com.db.persistence.workSessions;
 
+import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.objectStore.EntityManagerBaseImpl;
 import com.db.persistence.objectStore.EntityManagerType;
 import com.db.persistence.objectStore.PersistencyManager;
@@ -120,7 +121,8 @@ public class WorkSessionManagerImpl implements WorkSessionManager {
         */
         WorkSessionType type = token.equals(INTERNAL_SERVER_USER_TOKEN) ? WorkSessionType.PUBLIC : WorkSessionType.PRIVATE;
         EntityManagerType entityManagerType = type == WorkSessionType.PUBLIC ? EntityManagerType.MAIN_ENTITY_MANAGER : EntityManagerType.VIRTUALIZED_ENTITY_MANAGER;
-        EntityManagerBaseImpl entityManager = (EntityManagerBaseImpl) persistencyManager.createEntityManager(entityManagerType);
+//        EntityManagerBaseImpl entityManager = (EntityManagerBaseImpl) persistencyManager.createEntityManager(entityManagerType);
+        EntityManagerBase entityManager = persistencyManager.createEntityManager(entityManagerType);
 
         LOGGER.debug("New session id was allocated: " + entityManager.getId());
         WorkSession workSession = applicationContext.getBean(WorkSession.class, token, userName1, type, entityManager.getId(), entityManager);

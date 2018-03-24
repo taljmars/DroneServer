@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public interface EntityManagerBase {
+
     <T extends BaseObject> T find(Class<T> clz, String uuid);
 
     <T extends BaseObject> T delete(T object);
@@ -19,4 +20,6 @@ public interface EntityManagerBase {
     <T extends BaseObject> Query createNativeQuery(String queryString, Class<T> clz);
 
     <T extends BaseObject> T pull(T obj);
+
+    Integer getId();
 }
