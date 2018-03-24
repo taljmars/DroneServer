@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.objectStore;
 
 import com.db.persistence.scheme.BaseObject;
@@ -16,8 +21,6 @@ public abstract class EntityManagerBaseImpl implements EntityManagerBase {
     protected RevisionManager revisionManager;
 
     protected SimpleEntityManagerWrapper entityManagerWrapper;
-
-//    public abstract Integer getId();
 
     @Override
     public <T extends BaseObject> TypedQuery<T> createNamedQuery(String queryString, Class<T> clz) {

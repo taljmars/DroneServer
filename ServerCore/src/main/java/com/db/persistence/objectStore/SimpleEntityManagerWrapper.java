@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.objectStore;
 
 import org.springframework.context.annotation.Scope;
@@ -16,9 +21,9 @@ import java.util.Map;
 @Scope("prototype")
 public class SimpleEntityManagerWrapper {//} implements EntityManager {
 
-    public EntityManager entityManager; //tODO: need to be private
+    public EntityManager entityManager; //TODO: need to be private
 //    private EntityManager entityManager;
-    public final Integer ctx;//tODO: need to be private
+    public final Integer ctx;//TODO: need to be private
 
     public SimpleEntityManagerWrapper(EntityManager entityManager, Integer ctx) {
         this.entityManager = entityManager;

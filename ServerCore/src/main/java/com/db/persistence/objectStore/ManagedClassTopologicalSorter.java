@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.objectStore;
 
 import com.db.persistence.scheme.BaseObject;
@@ -9,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
-import javax.persistence.EntityManager;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import java.lang.annotation.Annotation;

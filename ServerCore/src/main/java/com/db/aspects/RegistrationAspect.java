@@ -1,9 +1,11 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.aspects;
 
-import com.db.persistence.events.audit.AccessEvent;
 import com.db.persistence.events.audit.RegistrationEvent;
-import com.db.persistence.scheme.LoginResponse;
-import com.db.persistence.scheme.LogoutResponse;
 import com.db.persistence.scheme.RegistrationResponse;
 import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;

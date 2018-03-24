@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.server.aspectsInterceptors;
 
 import com.db.aspects.LoginLogoutAspect;
@@ -16,7 +21,6 @@ import javax.annotation.PostConstruct;
 public class AspectsFactory {
 
     private final static Logger LOGGER = Logger.getLogger(AspectsFactory.class);
-
 
     @Autowired
     private ApplicationContext context;

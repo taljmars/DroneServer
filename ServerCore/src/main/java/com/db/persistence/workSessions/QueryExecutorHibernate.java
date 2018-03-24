@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.workSessions;
 
 import com.db.persistence.scheme.BaseObject;

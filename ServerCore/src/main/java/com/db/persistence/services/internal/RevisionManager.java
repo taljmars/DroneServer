@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.services.internal;
 
 import com.db.persistence.objectStore.EntityManagerType;
@@ -15,9 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by taljmars on 4/29/17.
- */
 @Lazy
 @Component
 public class RevisionManager {

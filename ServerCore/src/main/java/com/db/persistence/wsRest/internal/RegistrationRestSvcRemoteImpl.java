@@ -1,8 +1,12 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.wsRest.internal;
 
 import com.db.persistence.scheme.RegistrationRequest;
 import com.db.persistence.scheme.RegistrationResponse;
-import com.db.persistence.services.LoginSvc;
 import com.db.persistence.services.RegistrationSvc;
 import com.db.persistence.wsRest.RegistrationRestSvcRemote;
 import org.apache.log4j.Logger;

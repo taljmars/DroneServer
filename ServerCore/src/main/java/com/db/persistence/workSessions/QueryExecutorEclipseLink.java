@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.workSessions;
 
 import com.db.persistence.scheme.BaseObject;
@@ -10,7 +15,10 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.db.server.SpringProfiles.EclipseLink;
 

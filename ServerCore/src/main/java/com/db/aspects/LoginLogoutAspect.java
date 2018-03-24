@@ -1,22 +1,21 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.aspects;
 
 import com.db.persistence.events.audit.AccessEvent;
 import com.db.persistence.scheme.LoginResponse;
 import com.db.persistence.scheme.LogoutResponse;
-import com.db.persistence.workSession.WorkSessionManager;
-import com.db.server.security.MySessionInformation;
 import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
 

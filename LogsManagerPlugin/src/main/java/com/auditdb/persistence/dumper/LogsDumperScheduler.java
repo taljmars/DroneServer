@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.auditdb.persistence.dumper;
 
 import com.auditdb.persistence.base_scheme.EventLogLinkerObject;

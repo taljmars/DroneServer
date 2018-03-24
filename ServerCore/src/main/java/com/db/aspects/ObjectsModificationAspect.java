@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.aspects;
 
 import com.db.persistence.events.audit.ObjectEvent;

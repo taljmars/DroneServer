@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.objectStore;
 
 import com.db.persistence.scheme.BaseObject;
@@ -117,8 +122,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
 
     @Override
     public void discard() {
-//        virtualizedEntityManager.discard();
-        //TODO: BUG ?!?!?!?
+        // Non visualized entity manager write directly to the tip, publish is not relevant
     }
 
     @Override

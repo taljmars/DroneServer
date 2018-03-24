@@ -1,3 +1,8 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.wsRest.internal;
 
 import com.db.persistence.scheme.KeepAliveResponse;
@@ -8,10 +13,8 @@ import com.db.persistence.services.LoginSvc;
 import com.db.persistence.wsRest.LoginRestSvcRemote;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

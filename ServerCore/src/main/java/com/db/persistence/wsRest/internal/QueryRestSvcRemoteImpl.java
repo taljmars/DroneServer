@@ -1,12 +1,17 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.wsRest.internal;
 
 import com.db.persistence.exception.QueryException;
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.services.QueryRequest;
-import com.db.persistence.services.QuerySvc;
 import com.db.persistence.scheme.QueryRequestRemote;
 import com.db.persistence.scheme.QueryResponseRemote;
+import com.db.persistence.services.QueryRequest;
+import com.db.persistence.services.QuerySvc;
 import com.db.persistence.wsRest.QueryRestSvcRemote;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
