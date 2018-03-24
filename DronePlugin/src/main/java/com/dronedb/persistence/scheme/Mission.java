@@ -77,7 +77,6 @@ public class Mission extends BaseObject implements Serializable
 
 	@Override
 	public void set(BaseObject baseObject) {
-		System.out.println("Setting mission");
 		Mission mission = (Mission) baseObject;
 		this.name = mission.getName();
 		this.defaultAlt = mission.getDefaultAlt();

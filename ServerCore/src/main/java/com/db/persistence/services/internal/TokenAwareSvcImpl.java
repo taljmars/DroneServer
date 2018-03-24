@@ -65,8 +65,6 @@ public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements Toke
                 this.token = token;
         }
 
-        System.out.println("My Token ->" + this.token);
-
         LOGGER.debug("Context was changed for token : " + this.token + ", For service: " + getClass().getSimpleName());
         WorkSession existingWorkSession = workSessionManager.getSessionByToken(this.token);
         if (existingWorkSession == null) {

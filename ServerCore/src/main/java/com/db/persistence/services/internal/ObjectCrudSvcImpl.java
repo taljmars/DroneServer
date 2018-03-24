@@ -30,7 +30,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl<ObjectCrudSvc> implemen
 
 	@PostConstruct
 	public void init() {
-		System.out.println("talma test");
+		LOGGER.debug("Initialize ObjectCrudSvc");
 	}
 
 	@Override

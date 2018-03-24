@@ -33,7 +33,11 @@ public class LoginLogoutAspect {
 
     @PostConstruct
     public void init() {
-        System.out.println("TalAspect " + publisher);
+        LOGGER.debug("Initialized LoginLogoutAspect, EventPublisher=" + publisher + ", ServerSessionRegistry=" + serverSessionRegistry);
+        if (publisher == null) {
+            LOGGER.error("Event publisher is null, make sure you initialized the aspects via AspectFactory");
+            System.exit(-1);
+        }
     }
 
     @Transactional

@@ -28,31 +28,17 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
         this.revisionManager = revisionManager;
     }
 
-//    private VirtualizedEntityManager virtualizedEntityManager;
-
     private EntityManager entityManager;
 
     public <T extends BaseObject> NonVirtualizedEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-//    public NonVirtualizedEntityManager() {
-//        System.out.println("talma here!");
-//    }
-
     @PostConstruct
     public void init() {
-        LOGGER.debug("Initilize Non VEM");
-        System.out.println("Initilize Non VEM");
+        LOGGER.debug("Initialize Non VEM");
         this.entityManagerWrapper = applicationContext.getBean(SimpleEntityManagerWrapper.class, entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
     }
-
-//    @PostConstruct
-//    private void init() {
-//        System.out.println("Initilize Non VEM");
-//        if (this.virtualizedEntityManager == null)
-//            this.virtualizedEntityManager = applicationContext.getBean(VirtualizedEntityManager.class, this.entityManager, EntityManagerType.MAIN_ENTITY_MANAGER.id);
-//    }
 
     @Override
     public <T extends BaseObject> T find(Class<T> clz, String uuid) {
@@ -61,7 +47,6 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
         keyId.setToRevision(Integer.MAX_VALUE);
         keyId.setObjId(uuid);
         keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
-//        return virtualizedEntityManager.entityManagerWrapper.find(clz, keyId);
         return entityManagerWrapper.find(clz, keyId);
     }
 
@@ -85,7 +70,6 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
         }
 
         DeleteObjectDeref(existingObject);
-//        virtualizedEntityManager.entityManagerWrapper.remove(existingObject);
         entityManagerWrapper.remove(existingObject);
         return existingObject;
     }
@@ -95,12 +79,8 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
         object.getKeyId().setToRevision(Constants.TIP_REVISION);
         object.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
         object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
-//        workSessionCache.put(object.getClass(), object.getKeyId().getObjId(), object);
-//        if (entityInformation.isNew(object)) {
-//        virtualizedEntityManager.entityManagerWrapper.persist(object);
+
         entityManagerWrapper.persist(object);
-//        else
-//            entityManagerWrapper.merge(object);
     }
 
     public <T extends BaseObject> T update(T object) {
@@ -118,7 +98,6 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
             object.getKeyId().setToRevision(Constants.TIP_REVISION);
             object.getKeyId().setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
             object.setDeleted(false); //TODO: Check if we need this one, wasn't tested at all
-//            virtualizedEntityManager.entityManagerWrapper.persist(object);
             entityManagerWrapper.persist(object);
             existingObject = object;
 
@@ -139,6 +118,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
     @Override
     public void discard() {
 //        virtualizedEntityManager.discard();
+        //TODO: BUG ?!?!?!?
     }
 
     @Override

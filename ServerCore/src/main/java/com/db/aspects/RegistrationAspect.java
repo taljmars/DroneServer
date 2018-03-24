@@ -29,7 +29,11 @@ public class RegistrationAspect {
 
     @PostConstruct
     public void init() {
-        System.out.println("TalAspect " + publisher);
+        LOGGER.debug("Initialized RegistrationAspect, EventPublisher=" + publisher);
+        if (publisher == null) {
+            LOGGER.error("Event publisher is null, make sure you initialized the aspects via AspectFactory");
+            System.exit(-1);
+        }
     }
 
     @Transactional
