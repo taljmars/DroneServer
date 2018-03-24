@@ -20,7 +20,7 @@ public class EventQueue {
     private Queue<EventLogObject> eventQueue;
 
     public EventQueue() {
-        eventQueue = new ArrayBlockingQueue(100);
+        eventQueue = new ArrayBlockingQueue<EventLogObject>(100);
     }
 
     public void queue(Object event, EventLogObject eventForStoring) {

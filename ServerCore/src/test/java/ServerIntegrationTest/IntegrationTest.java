@@ -3,7 +3,7 @@ package ServerIntegrationTest;
 import com.db.persistence.services.LoginSvc;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.services.QuerySvc;
-import com.db.server.DroneServer;
+import com.db.server.ServerMain;
 import com.generic_tools.validations.RuntimeValidator;
 import com.plugins_manager.Plugins;
 import org.junit.Before;
@@ -20,7 +20,7 @@ import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN
 //@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(SpringRunner.class)
 //@ActiveProfiles({H2, Hibernate})
-@ContextConfiguration(classes = DroneServer.class)
+@ContextConfiguration(classes = ServerMain.class)
 public class IntegrationTest {
 
     static {
@@ -29,7 +29,7 @@ public class IntegrationTest {
             if (!it.next().equals("com.db.persistence.ServerSchemeManifest"))
                 it.remove();
         }
-        DroneServer.loadProfile();
+        ServerMain.loadProfile();
     }
 
     @Autowired private RuntimeValidator runtimeValidator;

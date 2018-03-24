@@ -33,8 +33,6 @@ public class ObjectCrudSvcRemoteImpl implements ObjectCrudSvcRemote
 	}
 
 	@Override
-//	@WebResult(partName = "tal1", name = "tal2" ,targetNamespace = "http://scheme.persistence.dronedb.com/")
-//	public <T extends BaseObject> T create(Class<T> clz) throws ObjectInstanceRemoteException {
 	public <T extends BaseObject> T create(String clz) throws ObjectInstanceRemoteException {
 		LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
 		try {

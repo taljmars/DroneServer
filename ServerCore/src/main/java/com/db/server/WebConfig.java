@@ -6,7 +6,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
-public class DroneWeb {
+public class WebConfig {
 
     @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {

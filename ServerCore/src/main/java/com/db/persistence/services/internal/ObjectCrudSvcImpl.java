@@ -6,7 +6,7 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.triggers.*;
 import com.db.persistence.triggers.UpdateTrigger.PHASE;
-import com.db.server.DroneServer;
+import com.db.server.ServerMain;
 import com.generic_tools.validations.RuntimeValidator;
 import com.generic_tools.validations.ValidatorResponse;
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -160,7 +160,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl<ObjectCrudSvc> implemen
 				Class<? extends UpdateObjectTrigger> trigger = (Class<? extends UpdateObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				LOGGER.debug("Trigger executed: " + trigger.getSimpleName());
 				UpdateObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(DroneServer.context);
+				t.setApplicationContext(ServerMain.context);
 				t.handleUpdateObject(oldInst, newInst, phase);
 			}
 		} 
@@ -192,7 +192,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl<ObjectCrudSvc> implemen
 				String triggerClasspath = deleteTrigger.trigger();
 				Class<DeleteObjectTrigger> trigger = (Class<DeleteObjectTrigger>) this.getClass().getClassLoader().loadClass(triggerClasspath);
 				DeleteObjectTrigger t = trigger.newInstance();
-				t.setApplicationContext(DroneServer.context);
+				t.setApplicationContext(ServerMain.context);
 				LOGGER.debug("Trigger executed: " + t.getClass().getSimpleName());
 				t.handleDeleteObject(inst);	
 			}
@@ -203,8 +203,4 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl<ObjectCrudSvc> implemen
 		}
 	}
 
-//	@Override
-//	public void setWorkSession(WorkSession workSession) {
-//		this.workSession = workSession;
-//	}
 }

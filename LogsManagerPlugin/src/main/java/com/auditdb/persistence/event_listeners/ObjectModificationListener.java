@@ -57,9 +57,9 @@ public class ObjectModificationListener {
                 ((ObjectUpdateLog) auditLog).setReferredObjId(event.getItem().getKeyId().getObjId());
                 ((ObjectUpdateLog) auditLog).setReferredObjType(event.getItem().getClz());
 
-                List<String> changedFields = new ArrayList();
-                List<String> changedFromValues = new ArrayList();
-                List<String> changedToValues = new ArrayList();
+                List<String> changedFields = new ArrayList<String>();
+                List<String> changedFromValues = new ArrayList<String>();
+                List<String> changedToValues = new ArrayList<String>();
                 BaseObject from = event.getTip();
                 BaseObject to = event.getItem();
                 Method[] methods = from.getClass().getMethods();

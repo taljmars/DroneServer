@@ -4,7 +4,7 @@ import com.db.persistence.workSession.WorkSession;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface TokenAwareSvc {
+public interface TokenAwareSvc<T> {
 
     @Transactional
     <T extends TokenAwareSvc> T setToken(String token);

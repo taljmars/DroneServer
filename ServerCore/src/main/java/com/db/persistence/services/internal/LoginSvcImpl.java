@@ -124,39 +124,46 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
     @Scheduled(fixedRate = 15 * 1000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
-        Long currentTime = new Date().getTime();
-        List<String> sessionIdsToFree = new ArrayList();
-        Iterator<String> it = serverSessionRegistry.getAllPrincipals().iterator();
-        while (it.hasNext()) {
-            String principal = it.next();
-            String sessionId = serverSessionRegistry.getSessionId(principal);
-            MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(sessionId);
-            if (sessionInformation.getTimeout() == null) {
-                sessionInformation.setTimeout(DEFAULT_TIMEOUT);
-                continue;
-            }
-            Long timeSinceLastKA = (currentTime - sessionInformation.getLastRequest().getTime()) / 1000;
-            System.out.println(
-                    "Past time: " + timeSinceLastKA +
-                    ", timeout:" + sessionInformation.getTimeout() +
-                    ", pricipal " + sessionInformation.getPrincipal() +
-                    ", sessionId " + sessionInformation.getSessionId() +
-                    ", CoreSessionId " + sessionInformation.getCoreObject().getSessionId()
-            );
-            if (timeSinceLastKA > sessionInformation.getTimeout()) {
-                String token = sessionInformation.getSessionId();
-                WorkSession workSession = null;
-                if ((workSession = workSessionManager.orphanizeSession(token)) == null) {
-                    System.err.println("Failed to orphanized session");
-                    return;
+        try {
+            Long currentTime = new Date().getTime();
+            List<String> sessionIdsToFree = new ArrayList();
+            Iterator<String> it = serverSessionRegistry.getAllPrincipals().iterator();
+            while (it.hasNext()) {
+                String principal = it.next();
+                String sessionId = serverSessionRegistry.getSessionId(principal);
+                MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(sessionId);
+                if (sessionInformation.getTimeout() == null) {
+                    sessionInformation.setTimeout(DEFAULT_TIMEOUT);
+                    continue;
                 }
-
-                System.out.println("Session " + token + " of working session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
-                sessionIdsToFree.add(sessionId);
+                Long timeSinceLastKA = (currentTime - sessionInformation.getLastRequest().getTime()) / 1000;
+                LOGGER.debug(
+                                "Past time: " + timeSinceLastKA +
+                                ", timeout:" + sessionInformation.getTimeout() +
+                                ", pricipal " + sessionInformation.getPrincipal() +
+                                ", sessionId " + sessionInformation.getSessionId() +
+                                ", CoreSessionId " + sessionInformation.getCoreObject().getSessionId()
+                );
+                if (timeSinceLastKA > sessionInformation.getTimeout()) {
+                    //String token = sessionInformation.getSessionId();
+                    // TODO: Need to investigate why there are some session that being stored in Spring session manager
+                    // TODO: Even after I explicitly mark the session as expired
+                    if (LOGGER.isDebugEnabled()) {
+                        WorkSession workSession = workSessionManager.getSessionByToken(sessionId);
+                        if (workSession == null || (workSession = workSessionManager.orphanizeSession(sessionId)) == null) {
+                            LOGGER.warn("Failed to orphanized session, sessionId is a leftover");
+                        } else {
+                            LOGGER.debug("Session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
+                        }
+                    }
+                    sessionIdsToFree.add(sessionId);
+                }
             }
+            for (String sessionId : sessionIdsToFree)
+                serverSessionRegistry.unregisterSession(sessionId);
         }
-        for (String sessionId : sessionIdsToFree)
-            serverSessionRegistry.unregisterSession(sessionId);
-
+        catch (Exception e) {
+            LOGGER.error("Failed to check connections", e);
+        }
     }
 }

@@ -23,9 +23,9 @@ import java.io.IOException;
 
 @Configuration
 @Import({MyEntityManagerFactory.class, TransactionManagersConfig.class})
-public class DroneDBServerAppConfig {
+public class DatabaseServerConfig {
 
-	private final static Logger LOGGER = Logger.getLogger(DroneDBServerAppConfig.class);
+	private final static Logger LOGGER = Logger.getLogger(DatabaseServerConfig.class);
 
 	private static final String portFile = "PORT";
 	private static final String ipFile = "IP";

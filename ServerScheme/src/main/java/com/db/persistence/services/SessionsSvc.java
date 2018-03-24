@@ -1,10 +1,13 @@
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
 package com.db.persistence.services;
 
-/**
- * Created by taljmars on 4/28/17.
- */
-public interface SessionsSvc  extends TokenAwareSvc {
+public interface SessionsSvc extends TokenAwareSvc {
 
+    @Override
     SessionsSvc setToken(String token);
 
     /**

@@ -81,7 +81,7 @@ public class LogsDumperScheduler {
         if (storeTable != null)
             return storeTable;
 
-        Class clz = se;
+        Class<?> clz = se;
         while (!clz.getName().equals(Object.class.getName())) {
             if (clz.isAnnotationPresent(Table.class)) {
                 LOGGER.debug("Found table is " + clz.getSimpleName() + " for object of type " + clz.getSimpleName());
@@ -92,7 +92,8 @@ public class LogsDumperScheduler {
                 storingTable.put(se, tableName);
                 return tableName;
             }
-            clz = clz.getSuperclass();
+            if (EventLogObject.class.isAssignableFrom(clz.getSuperclass()))
+                clz = clz.getSuperclass();
         }
 
         throw new RuntimeException("Object doesn't have storing definitions or it is not a POJO");
