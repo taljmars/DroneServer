@@ -31,7 +31,8 @@ public class ServerSessionRegistry {
         LOGGER.debug("Unregister " + sessionId);
         MySessionInformation sessionInformation = mySessionInformationMap.get(sessionId);
         mySessionInformationMap.remove(sessionId);
-        sessionInformation.expireNow();
+        if (sessionInformation != null)
+            sessionInformation.expireNow();
         return sessionInformation;
     }
 
