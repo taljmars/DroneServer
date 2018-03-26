@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.ws;
 
 import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
 import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public interface ObjectCrudRestSvcRemote
+public interface ObjectCrudSvcRemote
 {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ResponseBody

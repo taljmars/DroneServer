@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.ws;
 
 import com.db.persistence.scheme.KeepAliveResponse;
 import com.db.persistence.scheme.LoginRequest;
@@ -7,7 +7,7 @@ import com.db.persistence.scheme.LogoutResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public interface LoginRestSvcRemote {
+public interface LoginSvcRemote {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody

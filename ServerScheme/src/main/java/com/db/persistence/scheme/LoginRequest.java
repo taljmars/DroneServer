@@ -68,7 +68,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRestRequest{" +
+        return "LoginRequest{" +
                 "userName='" + userName + '\'' +
                 "timeout='" + timeout + '\'' +
                 ", applicationName='" + applicationName + '\'' +

@@ -29,7 +29,7 @@ import static com.db.server.SpringProfiles.Hibernate;
 })
 @ComponentScan({
 		"com.events",
-		"com.db.persistence.wsRest.internal",
+		"com.db.persistence.ws.internal",
 		"com.db.persistence",
 		"com.db.server",
 		"com.db.aspects"

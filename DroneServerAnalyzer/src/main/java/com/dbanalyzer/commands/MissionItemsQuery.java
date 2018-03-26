@@ -2,10 +2,9 @@ package com.dbanalyzer.commands;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
+import com.db.persistence.scheme.QueryRequestRemote;
+import com.db.persistence.scheme.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
-import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.generic_tools.Pair.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +50,14 @@ public class MissionItemsQuery implements RunnablePayload {
     @Override
     public String run(String payload) {
         String ans = "";
-        try {
+        //try {
             QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
 
             String queryString = payload.substring("miq ".length());
-            QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQueryWithClass(queryString, MissionItem.class.getCanonicalName());
+            QueryResponseRemote queryResponseRemote;// = querySvcRemote.runNativeQueryWithClass(queryString, MissionItem.class.getCanonicalName());
 
-            List<BaseObject> missionList = queryResponseRemote.getResultList();
-            ans += "Total Mission: " + missionList.size() + "\n";
+            List<BaseObject> missionList = null;// = queryResponseRemote.getResultList();
+            ans += "Total Mission: " ;//+ missionList.size() + "\n";
             ans += String.format("%37s | %11s | %10s | %7s | %7s | %10s | %6s | %6s\n",
                     "UUID", "fromVersion", "toVersion", "Deleted", "DB",
                     "Type", "Lat", "Lng"
@@ -76,10 +75,10 @@ public class MissionItemsQuery implements RunnablePayload {
                         missionItem.getLon()
                 );
             }
-        }
-        catch (QueryRemoteException e) {
-            ans += "ERROR: " + e.getMessage();
-        }
+        //}
+//        catch (QueryRemoteException e) {
+//            ans += "ERROR: " + e.getMessage();
+//        }
         ans += "\n";
         return ans;
     }

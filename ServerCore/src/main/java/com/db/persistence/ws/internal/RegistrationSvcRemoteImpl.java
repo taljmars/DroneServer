@@ -3,12 +3,12 @@
  * Copyright (c) 2018.
  */
 
-package com.db.persistence.wsRest.internal;
+package com.db.persistence.ws.internal;
 
 import com.db.persistence.scheme.RegistrationRequest;
 import com.db.persistence.scheme.RegistrationResponse;
 import com.db.persistence.services.RegistrationSvc;
-import com.db.persistence.wsRest.RegistrationRestSvcRemote;
+import com.db.persistence.ws.RegistrationSvcRemote;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class RegistrationRestSvcRemoteImpl implements RegistrationRestSvcRemote {
+public class RegistrationSvcRemoteImpl implements RegistrationSvcRemote {
 
-    private final static Logger LOGGER = Logger.getLogger(RegistrationRestSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(RegistrationSvcRemoteImpl.class);
 
     @Autowired
     private RegistrationSvc registrationSvc;

@@ -2,8 +2,6 @@ package com.dbanalyzer.commands;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
 import com.dronedb.persistence.scheme.PolygonPerimeter;
 import com.generic_tools.Pair.Pair;
@@ -49,14 +47,14 @@ public class PerimeterQuery implements RunnablePayload {
     @Override
     public String run(String payload) {
         String ans = "";
-        try {
-            QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
+//        try {
+//            QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
+//
+//            String queryString = payload.substring("pq ".length());
+//            QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQueryWithClass(queryString, PolygonPerimeter.class.getCanonicalName());
 
-            String queryString = payload.substring("pq ".length());
-            QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQueryWithClass(queryString, PolygonPerimeter.class.getCanonicalName());
-
-            List<BaseObject> perimetersList = queryResponseRemote.getResultList();
-            ans += "Total Perimeters: " + perimetersList.size() + "\n";
+            List<BaseObject> perimetersList = null;// = queryResponseRemote.getResultList();
+            ans += "Total Perimeters: " ;//+ perimetersList.size() + "\n";
             ans += String.format("%37s | %11s | %10s | %7s | %7s | %10s | %5s\n",
                     "UUID", "fromVersion", "toVersion", "Deleted", "DB",
                     "Name", "Items"
@@ -74,10 +72,10 @@ public class PerimeterQuery implements RunnablePayload {
                         uids.size()
                 );
             }
-        }
-        catch (QueryRemoteException e) {
-            ans += "ERROR: " + e.getMessage();
-        }
+//        }
+//        catch (QueryRemoteException e) {
+//            ans += "ERROR: " + e.getMessage();
+//        }
         ans += "\n";
         return ans;
     }

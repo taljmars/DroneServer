@@ -1,4 +1,9 @@
-package com.dronedb.persistence.ws.wsRest;
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
+package com.dronedb.persistence.ws;
 
 import com.db.persistence.remote_exception.DatabaseValidationRemoteException;
 import com.db.persistence.remote_exception.ObjectInstanceRemoteException;
@@ -8,15 +13,10 @@ import com.dronedb.persistence.scheme.MissionItem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-
 /**
  * Created by taljmars on 3/24/17.
  */
-public interface MissionCrudRestSvcRemote {
+public interface MissionCrudSvcRemote {
 
     @RequestMapping(value = "/cloneMission", method = RequestMethod.POST)
     @ResponseBody

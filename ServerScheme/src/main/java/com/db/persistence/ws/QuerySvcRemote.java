@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.ws;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
@@ -7,7 +7,7 @@ import com.db.persistence.scheme.QueryResponseRemote;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public interface QueryRestSvcRemote {
+public interface QuerySvcRemote {
 
 	@RequestMapping(value = "/runNamedQuery", method = RequestMethod.GET)
 	@ResponseBody

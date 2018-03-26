@@ -2,9 +2,8 @@ package com.dbanalyzer;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
-import com.db.persistence.wsSoap.QuerySvcRemote;
+import com.db.persistence.scheme.QueryRequestRemote;
+import com.db.persistence.scheme.QueryResponseRemote;
 import com.dbanalyzer.internal.RestClientHelper;
 import com.generic_tools.Pair.Pair;
 import com.sun.jersey.api.client.ClientResponse;
@@ -35,7 +34,7 @@ public class QuerySvcRemoteWrapper {
     }
 
 //    @Autowired
-    private QuerySvcRemote querySvcRemote;
+   // private QuerySvcRemote querySvcRemote;
 
     @Autowired
     private RestClientHelper restClientHelper;
@@ -114,7 +113,7 @@ public class QuerySvcRemoteWrapper {
                 }
             }
             QueryResponseRemote queryResponseRemote = new QueryResponseRemote();
-            queryResponseRemote.setResultList(resultList);
+            //queryResponseRemote.setResultList(resultList);
             LOGGER.debug("Query response size: {}", queryResponseRemote.getResultList() == null ? 0 : queryResponseRemote.getResultList().size());
             return queryResponseRemote;
         }

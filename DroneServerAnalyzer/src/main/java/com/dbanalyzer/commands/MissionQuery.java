@@ -2,8 +2,8 @@ package com.dbanalyzer.commands;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
+import com.db.persistence.scheme.QueryRequestRemote;
+import com.db.persistence.scheme.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
 import com.dronedb.persistence.scheme.Mission;
 import com.generic_tools.Pair.Pair;
@@ -47,15 +47,15 @@ public class MissionQuery implements RunnablePayload {
     @Override
     public String run(String payload) {
         String ans = "";
-        try {
+//        try {
             QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
 
             String queryString = payload.substring("mq ".length());
-            QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQueryWithClass(queryString, Mission.class.getCanonicalName());
+            QueryResponseRemote queryResponseRemote;// = querySvcRemote.runNativeQueryWithClass(queryString, Mission.class.getCanonicalName());
 //        QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQuery(queryString);
 
-            List<BaseObject> missionList = queryResponseRemote.getResultList();
-            ans += "Total Mission: " + missionList.size() + "\n";
+            List<BaseObject> missionList = null;//= queryResponseRemote.getResultList();
+            ans += "Total Mission: " ;//+ missionList.size() + "\n";
             ans += String.format("%37s | %11s | %10s | %7s | %7s | %10s | %6s | %5s\n",
                     "UUID", "fromVersion", "toVersion", "Deleted", "DB",
                     "Name", "Alt", "Items"
@@ -74,10 +74,10 @@ public class MissionQuery implements RunnablePayload {
                         uids.size()
                 );
             }
-        }
-        catch (QueryRemoteException e) {
-            ans += "ERROR: " + e.getMessage();
-        }
+//        }
+//        catch (QueryRemoteException e) {
+//            ans += "ERROR: " + e.getMessage();
+//        }
         ans += "\n";
         return ans;
     }

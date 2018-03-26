@@ -28,7 +28,6 @@ public class ServerSchemeManifest implements PluginManifest {
     @Override
     public List<String> getWebServicePackage() {
         List<String> arr = new ArrayList<>();
-        arr.add("com.db.persistence.wsSoap");
         return arr;
     }
 
@@ -36,7 +35,6 @@ public class ServerSchemeManifest implements PluginManifest {
     public List<String> getSchemePackage() {
         List<String> arr = new ArrayList<>();
         arr.add("com.db.persistence.scheme");
-        arr.add("com.db.persistence.wsSoap");
         return arr;
     }
 

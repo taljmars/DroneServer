@@ -1,4 +1,9 @@
-package com.dronedb.persistence.ws.wsRest.internal;
+/*
+ * Tal Martsiano
+ * Copyright (c) 2018.
+ */
+
+package com.dronedb.persistence.ws.internal;
 
 import com.db.persistence.exception.DatabaseValidationException;
 import com.db.persistence.exception.ObjectInstanceException;
@@ -8,7 +13,7 @@ import com.db.persistence.remote_exception.ObjectNotFoundRemoteException;
 import com.dronedb.persistence.scheme.Mission;
 import com.dronedb.persistence.scheme.MissionItem;
 import com.dronedb.persistence.services.MissionCrudSvc;
-import com.dronedb.persistence.ws.wsRest.MissionCrudRestSvcRemote;
+import com.dronedb.persistence.ws.MissionCrudSvcRemote;
 import javassist.tools.rmi.ObjectNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +25,9 @@ import org.springframework.web.bind.annotation.*;
  * Created by taljmars on 3/24/17.
  */
 @RestController
-public class MissionCrudRestSvcRemoteImpl implements MissionCrudRestSvcRemote
+public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
 {
-    private final static Logger LOGGER = Logger.getLogger(MissionCrudRestSvcRemoteImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(MissionCrudSvcRemoteImpl.class);
 
     @Autowired
     private MissionCrudSvc missionCrudSvc;

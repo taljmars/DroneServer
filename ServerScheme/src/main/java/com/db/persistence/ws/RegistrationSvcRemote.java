@@ -1,4 +1,4 @@
-package com.db.persistence.wsRest;
+package com.db.persistence.ws;
 
 import com.db.persistence.scheme.RegistrationRequest;
 import com.db.persistence.scheme.RegistrationResponse;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-public interface RegistrationRestSvcRemote {
+public interface RegistrationSvcRemote {
 
     @RequestMapping(value = "/registerNewUser", method = RequestMethod.POST)
     @ResponseBody

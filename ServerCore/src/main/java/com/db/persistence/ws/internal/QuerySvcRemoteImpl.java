@@ -3,7 +3,7 @@
  * Copyright (c) 2018.
  */
 
-package com.db.persistence.wsRest.internal;
+package com.db.persistence.ws.internal;
 
 import com.db.persistence.exception.QueryException;
 import com.db.persistence.remote_exception.QueryRemoteException;
@@ -12,7 +12,7 @@ import com.db.persistence.scheme.QueryRequestRemote;
 import com.db.persistence.scheme.QueryResponseRemote;
 import com.db.persistence.services.QueryRequest;
 import com.db.persistence.services.QuerySvc;
-import com.db.persistence.wsRest.QueryRestSvcRemote;
+import com.db.persistence.ws.QuerySvcRemote;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class QueryRestSvcRemoteImpl implements QueryRestSvcRemote {
+public class QuerySvcRemoteImpl implements QuerySvcRemote {
 
-	private final static Logger LOGGER = Logger.getLogger(QueryRestSvcRemoteImpl.class);
+	private final static Logger LOGGER = Logger.getLogger(QuerySvcRemoteImpl.class);
 	
 	@Autowired
 	private QuerySvc querySvc;

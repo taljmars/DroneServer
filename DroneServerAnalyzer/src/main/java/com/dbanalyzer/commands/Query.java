@@ -1,8 +1,8 @@
 package com.dbanalyzer.commands;
 
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
+import com.db.persistence.scheme.QueryRequestRemote;
+import com.db.persistence.scheme.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
 import com.generic_tools.Pair.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +63,10 @@ public class Query implements RunnablePayload {
             QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
 
             String queryString = payload.substring("q ".length());
-            QueryResponseRemote queryResponseRemote = querySvcRemote.runNativeQuery(queryString);
+            QueryResponseRemote queryResponseRemote;// = querySvcRemote.runNativeQuery(queryString);
 
-            List<BaseObject> objectList = queryResponseRemote.getResultList();
-            ans += getObjectToTableString(objectList);
+            //List<BaseObject> objectList = queryResponseRemote.getResultList();
+            //ans += getObjectToTableString(objectList);
         }
         catch (Exception e) {
 //            e.printStackTrace();

@@ -2,8 +2,8 @@ package com.dbanalyzer.commands;
 
 import com.db.persistence.remote_exception.QueryRemoteException;
 import com.db.persistence.scheme.BaseObject;
-import com.db.persistence.wsSoap.QueryRequestRemote;
-import com.db.persistence.wsSoap.QueryResponseRemote;
+import com.db.persistence.scheme.QueryRequestRemote;
+import com.db.persistence.scheme.QueryResponseRemote;
 import com.dbanalyzer.QuerySvcRemoteWrapper;
 import com.dronedb.persistence.scheme.Mission;
 import com.generic_tools.Pair.Pair;
@@ -45,12 +45,12 @@ public class ShowMission implements RunnablePayload {
     @Override
     public String run(String payload) {
         String ans = "";
-        try {
-            QueryRequestRemote queryRequestRemote = new QueryRequestRemote();
-            queryRequestRemote.setClz(Mission.class.getCanonicalName());
-            queryRequestRemote.setQuery("GetAllMissions");
-            QueryResponseRemote queryResponseRemote = querySvcRemote.query(queryRequestRemote);
-            List<BaseObject> missionList = queryResponseRemote.getResultList();
+        //try {
+            QueryRequestRemote queryRequestRemote = null;// = new QueryRequestRemote();
+            //queryRequestRemote.setClz(Mission.class.getCanonicalName());
+            //queryRequestRemote.setQuery("GetAllMissions");
+            QueryResponseRemote queryResponseRemote;// = querySvcRemote.query(queryRequestRemote);
+            List<BaseObject> missionList = null;// = queryResponseRemote.getResultList();
             ans += "Total Mission: " + missionList.size() + "\n";
             for (BaseObject msn : missionList) {
                 Mission mission = (Mission) msn;
@@ -65,10 +65,10 @@ public class ShowMission implements RunnablePayload {
                 }
                 ans += "\n";
             }
-        }
-        catch (QueryRemoteException e) {
-            ans += "ERROR: " + e.getMessage() + "\n";
-        }
+//        }
+//        catch (QueryRemoteException e) {
+//            ans += "ERROR: " + e.getMessage() + "\n";
+//        }
         return ans;
     }
 }
