@@ -15,8 +15,8 @@
     </parent>
 
     <artifactId>ServerCore</artifactId>
-    <!--<packaging>jar</packaging>-->
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
+    <!--<packaging>war</packaging>-->
     <name>Server Core</name>
 
 
