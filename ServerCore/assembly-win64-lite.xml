@@ -7,7 +7,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <id>win-x64</id>
+    <id>win-x64-lite</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -15,9 +15,9 @@
     <dependencySets>
         <dependencySet>
             <outputFileNameMapping>DroneServer.${artifact.extension}</outputFileNameMapping>
-            <includes>
-                <include>com.dronedb</include>
-            </includes>
+            <!--<includes>-->
+                <!--<include>com.dronedb</include>-->
+            <!--</includes>-->
         </dependencySet>
     </dependencySets>
     <fileSets>
