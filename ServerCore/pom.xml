@@ -297,6 +297,19 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>win-lite</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly-win64-lite.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>../ServerInstallation/Windows64-lite/</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>linux</id>
                         <phase>package</phase>
                         <goals>
