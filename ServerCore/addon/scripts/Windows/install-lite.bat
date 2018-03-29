@@ -1,8 +1,10 @@
 @echo off
 
+echo "Installing Server finished started"
+
 set UINST_FILE="uninstall.bat"
 
-echo "Prepare Future launch"
+echo "Prepare Future launch of Server"
 copy scripts\runServer.bat run.bat
 
 echo "Creating Uninstall file"
@@ -16,4 +18,4 @@ echo echo "Done"  >> %UINST_FILE%
 
 start /b "" cmd /c del install.bat /q /s &exit /b
 
-echo "Done"
+echo "Installing Server finished successfully"
