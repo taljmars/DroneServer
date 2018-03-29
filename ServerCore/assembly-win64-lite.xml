@@ -39,7 +39,7 @@
                 <include>classmate-1.3.4.jar</include>
                 <include>commonj.sdo-2.1.1.jar</include>
                 <include>dom4j-1.6.1.jar</include>
-                <include>eclipselink-2.5.0.jar</include>
+                <!--<include>eclipselink-2.5.0.jar</include>-->
                 <include>el-ri-1.0.jar</include>
                 <include>evo-inflector-1.2.2.jar</include>
                 <include>guava-20.0.jar</include>
