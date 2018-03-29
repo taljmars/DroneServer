@@ -10,9 +10,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>AuditLogsPlugin</artifactId>
+    <artifactId>LogManagerPlugin</artifactId>
     <packaging>jar</packaging>
-    <name>Server Core - AuditLog Plugin</name>
+    <name>LogManagerPlugin</name>
 
     <properties>
         <jar.path>../${build.output}/jars/</jar.path>
@@ -32,7 +32,8 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.5.Final</version>
+            <!--<version>4.3.5.Final</version>-->
+            <version>5.2.16.Final</version>
         </dependency>
 
         <dependency>

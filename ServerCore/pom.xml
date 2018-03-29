@@ -26,7 +26,8 @@
     <properties>
         <java.version>1.8</java.version>
         <build.output>CMpub</build.output>
-        <spring-ver>4.3.3.RELEASE</spring-ver>
+        <!--<spring-ver>4.3.3.RELEASE</spring-ver>-->
+        <spring-ver>5.0.4.RELEASE</spring-ver>
         <encoding>UTF-8</encoding>
         <!--<org.springframework.security.version>4.2.0.RELEASE</org.springframework.security.version>-->
         <org.springframework.security.version>5.0.3.RELEASE</org.springframework.security.version>
@@ -122,7 +123,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <version>1.5.2.RELEASE</version>
+            <!--<version>1.5.2.RELEASE</version>-->
+            <version>2.0.0.RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
@@ -180,7 +182,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>1.5.9.RELEASE</version>
+            <!--<version>1.5.9.RELEASE</version>-->
+            <version>2.0.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
 

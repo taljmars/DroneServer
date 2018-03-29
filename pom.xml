@@ -31,7 +31,8 @@
         <version>1.0</version>
         <build.output>CMpub</build.output>
         <github.global.server>github</github.global.server>
-        <spring-ver>4.3.3.RELEASE</spring-ver>
+        <!--<spring-ver>4.3.3.RELEASE</spring-ver>-->
+        <spring-ver>5.0.4.RELEASE</spring-ver>
         <encoding>UTF-8</encoding>
         <maven.debug>false</maven.debug>
         <!--<slf4jVersion>1.7.25</slf4jVersion>-->
