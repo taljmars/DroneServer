@@ -67,7 +67,7 @@
                 <include>jstl-1.2.jar</include>
                 <include>junit-4.12.jar</include>
                 <include>log4j-1.2.17.jar</include>
-                <include>postgresql-42.2.2.jre7.jar</include>
+                <!--<include>postgresql-42.2.2.jre7.jar</include>-->
                 <include>reflections-0.9.11.jar</include>
                 <include>slf4j-api-1.7.25.jar</include>
                 <include>snakeyaml-1.19.jar</include>
