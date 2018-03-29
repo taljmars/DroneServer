@@ -1,6 +1,6 @@
 @echo off
 
-echo "Installing Server finished started"
+echo "Installing Server started"
 
 set UINST_FILE="uninstall.bat"
 
@@ -16,6 +16,6 @@ echo cd .. >> %UINST_FILE%
 echo start /b "" cmd /c rmdir %%INST_DIR%% /q /s ^&^exit /b >> %UINST_FILE%
 echo echo "Done"  >> %UINST_FILE%
 
-start /b "" cmd /c del install.bat /q /s &exit /b
+start /b "" cmd /c del install-lite.bat /q /s &exit /b
 
 echo "Installing Server finished successfully"
