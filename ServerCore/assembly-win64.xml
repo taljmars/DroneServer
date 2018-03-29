@@ -46,6 +46,7 @@
             <outputDirectory>scripts</outputDirectory>
             <excludes>
                 <exclude>install.bat</exclude>
+                <exclude>install-lite.bat</exclude>
             </excludes>
         </fileSet>
     </fileSets>

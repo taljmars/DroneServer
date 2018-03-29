@@ -10,7 +10,7 @@ if NOT EXIST pgsql (
 echo "Starting DB Deamon"
 call externalTools\pgsqlStart.bat
 
-echo "Prepare Future launch"
+echo "Prepare Future launch of Server"
 copy scripts\runServer.bat run.bat
 
 echo "Creating Uninstall file"

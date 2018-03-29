@@ -15,9 +15,9 @@
     <dependencySets>
         <dependencySet>
             <outputFileNameMapping>DroneServer.${artifact.extension}</outputFileNameMapping>
-            <!--<includes>-->
-                <!--<include>com.dronedb</include>-->
-            <!--</includes>-->
+            <includes>
+                <include>com.dronedb</include>
+            </includes>
         </dependencySet>
     </dependencySets>
     <fileSets>
@@ -47,6 +47,7 @@
             <outputDirectory>scripts</outputDirectory>
             <excludes>
                 <exclude>install.bat</exclude>
+                <exclude>install-lite.bat</exclude>
             </excludes>
         </fileSet>
     </fileSets>
