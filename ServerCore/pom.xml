@@ -28,7 +28,9 @@
         <build.output>CMpub</build.output>
         <spring-ver>4.3.3.RELEASE</spring-ver>
         <encoding>UTF-8</encoding>
-        <org.springframework.security.version>4.2.0.RELEASE</org.springframework.security.version>
+        <!--<org.springframework.security.version>4.2.0.RELEASE</org.springframework.security.version>-->
+        <org.springframework.security.version>5.0.3.RELEASE</org.springframework.security.version>
+
 
         <!--<aspectj.version>1.7.4</aspectj.version>-->
 
