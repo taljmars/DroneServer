@@ -46,7 +46,7 @@ public abstract class EntityManagerBaseImpl implements EntityManagerBase {
         if (objectDeref == null)
             return null;
         Class<? extends BaseObject> clz = objectDeref.getClzType();
-        return find(clz, uid);
+        return findInternal(clz, uid);
     }
 
     public void flush(){
@@ -64,7 +64,7 @@ public abstract class EntityManagerBaseImpl implements EntityManagerBase {
         if (obj.getKeyId().getEntityManagerCtx() != EntityManagerType.MAIN_ENTITY_MANAGER.id)
             return obj;
 
-        T updatedObject = find((Class<T>) obj.getClass(), obj.getKeyId().getObjId());
+        T updatedObject = findInternal((Class<T>) obj.getClass(), obj.getKeyId().getObjId());
         if (updatedObject.isDeleted())
             return null;
 
@@ -86,12 +86,14 @@ public abstract class EntityManagerBaseImpl implements EntityManagerBase {
 
     protected  <T extends BaseObject> void DeleteObjectDeref(T object) {
         LOGGER.debug("Deleting ObjectDeref for " + object);
-        ObjectDeref objectDeref = find(ObjectDeref.class, object.getKeyId().getObjId());
+        ObjectDeref objectDeref = findInternal(ObjectDeref.class, object.getKeyId().getObjId());
         if (objectDeref == null)
             throw new EntityNotFoundException("ObjectDeref wasn't found");
         getEntityManager().remove(objectDeref);
     }
 
     public abstract SimpleEntityManagerWrapper getEntityManager();
+
+    protected abstract <T extends BaseObject> T findInternal(Class<T> clz, String uuid);
 
 }

@@ -47,6 +47,11 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
 
     @Override
     public <T extends BaseObject> T find(Class<T> clz, String uuid) {
+        return findInternal(clz, uuid);
+    }
+
+    @Override
+    protected  <T extends BaseObject> T findInternal(Class<T> clz, String uuid) {
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
         KeyId keyId = new KeyId();
         keyId.setToRevision(Integer.MAX_VALUE);
@@ -60,7 +65,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
         LOGGER.debug("Removing: " + object);
 
         // We first start by getting the deletion candidate from the public
-        T existingObject = find((Class<T>) object.getClass(),object.getKeyId().getObjId());
+        T existingObject = findInternal((Class<T>) object.getClass(),object.getKeyId().getObjId());
 
         // Object doesn't exist at all
         if (existingObject == null) {
@@ -91,7 +96,7 @@ public class NonVirtualizedEntityManager extends EntityManagerBaseImpl {
     public <T extends BaseObject> T update(T object) {
         LOGGER.debug("VEM UPDATE called " + object);
 
-        T existingObject = find((Class<T>) object.getClass(), object.getKeyId().getObjId());
+        T existingObject = findInternal((Class<T>) object.getClass(), object.getKeyId().getObjId());
 
         // Handling a case were the object doesn't exist in the publish db.
         // This is the creation time of this object

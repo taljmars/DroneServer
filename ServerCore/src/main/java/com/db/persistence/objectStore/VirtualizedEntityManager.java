@@ -58,6 +58,12 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
 
     @Override
     public <T extends BaseObject> T find(Class<T> clz, String uuid) {
+        return findInternal(clz, uuid);
+    }
+
+    @Override
+    protected  <T extends BaseObject> T findInternal(Class<T> clz, String uuid) {
+        LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
         LOGGER.debug("Searching for " + clz.getSimpleName() + " ,uid=" + uuid);
 
         KeyId keyId = new KeyId();
@@ -83,7 +89,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
         LOGGER.debug("Removing: " + object);
 
         // We first start by getting the deletion candidate from the public/private
-        T existingObject = find((Class<T>) object.getClass(),object.getKeyId().getObjId());
+        T existingObject = findInternal((Class<T>) object.getClass(),object.getKeyId().getObjId());
 
         // Object doesn't exist at all
         if (existingObject == null) {
@@ -142,7 +148,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
         LOGGER.debug("VEM UPDATE called " + object);
 
         // Handling a case where it is the first update of a public object
-        T existingObject = find((Class<T>) object.getClass(), object.getKeyId().getObjId());
+        T existingObject = findInternal((Class<T>) object.getClass(), object.getKeyId().getObjId());
         if (existingObject != null && existingObject.getKeyId().getEntityManagerCtx().equals(EntityManagerType.MAIN_ENTITY_MANAGER.id)) {
             LOGGER.debug("Found in public DB, make a private copy");
             existingObject = movePublicToPrivate(existingObject);
@@ -255,29 +261,37 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
 
     private  <T extends BaseObject> void handleDiscardForType(Class<T> clz) {
         Query query = createNativeQuery(buildGetPrivateQuery(clz), clz);
-        List<T> objs = query.getResultList();
-        for (T item : objs) {
-            ObjectDeref objectDeref = find(ObjectDeref.class, item.getKeyId().getObjId());
-            if (objectDeref.getKeyId().getEntityManagerCtx() != EntityManagerType.MAIN_ENTITY_MANAGER.id)
-                entityManagerWrapper.remove(objectDeref);
+        List<T> objectsToDiscard = query.getResultList();
+
+        query = createNativeQuery(buildGetPrivateQuery(ObjectDeref.class), ObjectDeref.class);
+        List<ObjectDeref> privateObjderef = query.getResultList();
+
+        Query lockedQuery = entityManagerWrapper.createNativeQuery("SELECT * FROM LockedObject " +
+                "WHERE referredctx = " + entityManagerCtx, LockedObject.class);
+        List<LockedObject> locks = lockedQuery.getResultList();
+
+        // Clean objects
+        for (T item : objectsToDiscard)
             entityManagerWrapper.remove(item);
 
-            Query lockedQuery = entityManagerWrapper.createNativeQuery("SELECT * FROM LockedObject " +
-                    "WHERE referredctx = " + entityManagerCtx + " AND referredobjid = '" + item.getKeyId().getObjId() + "'", LockedObject.class);
-            List<LockedObject> res = lockedQuery.getResultList();
-            Assert.isTrue(res.size() < 2, "Unexpected amount of locked object");
-            if (res.size() == 1) {
-                LockedObject lockedObject = res.get(0);
-                entityManagerWrapper.remove(lockedObject);
-            }
-        }
+        // Clean Object Deref
+        for (ObjectDeref item : privateObjderef)
+            entityManagerWrapper.remove(item);
+
+        // Clean locks
+        for (LockedObject lockedObject : locks)
+            entityManagerWrapper.remove(lockedObject);
     }
 
     private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
-        LOGGER.debug("Handle publish for object of type '" + clz .getCanonicalName()+ "'");
+        //LOGGER.debug("Handle publish for object of type '" + clz .getCanonicalName()+ "'");
         Query query = createNativeQuery(buildGetPrivateQuery(clz), clz);
         List<T> objs = query.getResultList();
-        LOGGER.debug("Need to publish " + objs.size() + " objects");
+        //LOGGER.debug("Need to publish " + objs.size() + " objects");
+        if (LOGGER.isDebugEnabled()) {
+            if (!objs.isEmpty())
+                LOGGER.debug("Need to publish " + objs.size() + " objects for class: " + clz.getSimpleName());
+        }
         for (T item : objs) {
             T tip = getPublishedByPrivateObject(clz, item);
 
@@ -286,7 +300,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
                 movePrivateToPublic(item, tip, clz, nextRevision);
             }
             else {
-                LOGGER.debug("Tip object not found, object is written to the public DB for the first time");
+                LOGGER.debug("Tip object not found, object is written to the public DB for the first time , Item=" + item);
                 movePrivateToPublicForFirstTime(item, clz, nextRevision);
             }
         }
@@ -339,7 +353,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
     }
 
     private void MarkObjectDeref(BaseObject item, int nextRevision) {
-            ObjectDeref objectDeref = find(ObjectDeref.class, item.getKeyId().getObjId());
+            ObjectDeref objectDeref = findInternal(ObjectDeref.class, item.getKeyId().getObjId());
             if (objectDeref == null) {
                 String msg = "Critical Error: Failed to find object reference to '" + item.getKeyId().getObjId() + "' of type '" + item.getClass().getSimpleName() + "'";
                 LOGGER.error(msg);

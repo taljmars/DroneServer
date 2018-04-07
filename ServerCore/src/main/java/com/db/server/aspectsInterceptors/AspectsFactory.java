@@ -8,12 +8,14 @@ package com.db.server.aspectsInterceptors;
 import com.db.aspects.LoginLogoutAspect;
 import com.db.aspects.ObjectsModificationAspect;
 import com.db.aspects.RegistrationAspect;
+import com.db.persistence.cache.CacheLayerAspect;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.Aspects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import javax.annotation.PostConstruct;
 
@@ -45,6 +47,12 @@ public class AspectsFactory {
     @Bean
     public RegistrationAspect registrationAspect() {
         RegistrationAspect aspect = Aspects.aspectOf(RegistrationAspect.class);
+        return aspect;
+    }
+
+    @Bean
+    public CacheLayerAspect cacheLayerAspect() {
+        CacheLayerAspect aspect = Aspects.aspectOf(CacheLayerAspect.class);
         return aspect;
     }
 	

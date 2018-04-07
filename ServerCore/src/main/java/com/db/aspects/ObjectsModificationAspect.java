@@ -71,7 +71,7 @@ public class ObjectsModificationAspect {
             LOGGER.debug("Using Aspect -> " + pjp);
 
             Object[] args = pjp.getArgs();
-            BaseObject privateItem = (BaseObject) args[0];
+            BaseObject privateItem = ((BaseObject) args[0]).copy();
             Integer nextRevision = (Integer) args[2];
             LOGGER.info("Object will be added to public db: " + privateItem);
 
