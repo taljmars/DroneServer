@@ -33,7 +33,7 @@
         <org.springframework.security.version>5.0.3.RELEASE</org.springframework.security.version>
 
 
-        <!--<aspectj.version>1.7.4</aspectj.version>-->
+        <aspectj.version>1.8.2</aspectj.version>
 
         <!--MAven Build Plugin-->
         <maven.site.plugin>3.6</maven.site.plugin>
@@ -157,7 +157,7 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj.version}</version>
-            <scope>runtime</scope>
+            <!--<scope>runtime</scope>-->
         </dependency>
 
         <dependency>

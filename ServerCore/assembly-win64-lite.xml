@@ -30,7 +30,7 @@
                 <include>ServerScheme-*.jar</include>
                 <include>DronePlugin-*.jar</include>
                 <include>DroneServer-*.jar</include>
-                <include>LogManagerPlugin-*.jar</include>
+                <include>LogsManagerPlugin-*.jar</include>
 
                 <include>antlr-2.7.7.jar</include>
                 <include>aspectjrt-1.8.13.jar</include>

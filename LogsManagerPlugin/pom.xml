@@ -10,9 +10,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>LogManagerPlugin</artifactId>
+    <artifactId>LogsManagerPlugin</artifactId>
     <packaging>jar</packaging>
-    <name>LogManagerPlugin</name>
+    <name>LogsManagerPlugin</name>
 
     <properties>
         <jar.path>../${build.output}/jars/</jar.path>
