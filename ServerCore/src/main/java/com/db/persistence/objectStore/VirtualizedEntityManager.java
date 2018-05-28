@@ -115,6 +115,17 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
             DeleteObjectDeref(existingObject);
 
             entityManagerWrapper.remove(existingObject);
+
+            // Deleting the public object as well
+            KeyId keyId = new KeyId();
+            keyId.setToRevision(Integer.MAX_VALUE);
+            keyId.setObjId(existingObject.getKeyId().getObjId());
+            keyId.setEntityManagerCtx(EntityManagerType.MAIN_ENTITY_MANAGER.id);
+            T publicObject =  entityManagerWrapper.find((Class<T>) existingObject.getClass(), keyId);
+            if (publicObject != null) {
+                LOGGER.debug("Private object was mark as deleted and public object as well");
+                publicObject.setDeleted(true);
+            }
             return existingObject;
         }
 

@@ -7,6 +7,7 @@ package com.db.persistence.objectStore;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
+import com.db.persistence.scheme.TargetExcludeTypes;
 import com.db.persistence.scheme.TargetType;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Lazy;
@@ -151,11 +152,21 @@ public class ManagedClassTopologicalSorter {
             if (clz == null)
                 return;
 
+            Set excludedClassSet = null;
+            Annotation annotationExcludeTypes = field.getAnnotation(TargetExcludeTypes.class);
+            if (annotationExcludeTypes != null) {
+                Class[] exClasses = ((TargetExcludeTypes) annotationExcludeTypes).classes();
+                excludedClassSet = new HashSet(Arrays.asList(exClasses));
+            }
+
             assert field.getType() == UUID.class : "Annotation should be on UUID type";
 
             ClzTreeNode clzHolder = map.get(clz);
             if (clzHolder == null) {
                 for (Class clazz : map.keySet()) {
+                    if (excludedClassSet != null && excludedClassSet.contains(clazz))
+                        continue;
+
                     if (clz.isAssignableFrom(clazz) && clz != clazz) {
                         clzHolder = map.get(clazz);
                         this.clzHolder.addOut(clzHolder);

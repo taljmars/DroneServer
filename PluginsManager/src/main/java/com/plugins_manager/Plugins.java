@@ -14,6 +14,7 @@ import java.util.List;
 @ComponentScan(
         value = {
             "com.db.persistence",
+            "com.db.gui.persistence",
             "com.dronedb.persistence",
             "com.auditdb.persistence"
         },
@@ -29,6 +30,7 @@ public class Plugins {
         servicesList = new ArrayList<>();
 
         servicesList.add("com.db.persistence.ServerSchemeManifest");
+        servicesList.add("com.db.gui.persistence.GuiSchemeManifest");
         servicesList.add("com.auditdb.persistence.AuditLogsSchemeManifest");
         servicesList.add("com.dronedb.persistence.DroneSchemeManifest");
     }
