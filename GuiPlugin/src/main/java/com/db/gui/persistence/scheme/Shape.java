@@ -13,6 +13,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Objects;
 
 /**
  * Created by taljmars on 3/20/17.
@@ -22,14 +23,19 @@ import javax.persistence.Table;
 @Sessionable
 public class Shape extends BaseObject
 {
+    @Column(nullable = false)
+    private double lat;
 
-    @Column(nullable = true)
-    private Double lat;
-
-    @Column(nullable = true)
-    private Double lon;
+    @Column(nullable = false)
+    private double lon;
 
     public Shape() { super(); }
+
+    public Shape(double lat, double lon) {
+        super();
+        this.lat = lat;
+        this.lon = lon;
+    }
 
     public Shape(Shape point) {
         super(point);
@@ -57,28 +63,23 @@ public class Shape extends BaseObject
         this.lat = point.getLat();
     }
 
-    public Shape(Double lat, Double lon) {
-        this.lat = lat;
-        this.lon = lon;
-    }
-
     @Getter
-    public Double getLat() {
+    public double getLat() {
         return lat;
     }
 
     @Setter
-    public void setLat(Double lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
     @Getter
-    public Double getLon() {
+    public double getLon() {
         return lon;
     }
 
     @Setter
-    public void setLon(Double lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -87,19 +88,15 @@ public class Shape extends BaseObject
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
-        Shape point = (Shape) o;
-
-        if (lat != null ? !lat.equals(point.lat) : point.lat != null) return false;
-        return lon != null ? lon.equals(point.lon) : point.lon == null;
+        Shape shape = (Shape) o;
+        return Double.compare(shape.lat, lat) == 0 &&
+                Double.compare(shape.lon, lon) == 0;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (lat != null ? lat.hashCode() : 0);
-        result = 31 * result + (lon != null ? lon.hashCode() : 0);
-        return result;
+
+        return Objects.hash(super.hashCode(), lat, lon);
     }
 
     @Override

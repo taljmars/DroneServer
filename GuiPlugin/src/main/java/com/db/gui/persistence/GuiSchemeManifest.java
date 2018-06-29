@@ -37,7 +37,7 @@ public class GuiSchemeManifest implements PluginManifest {
     @Override
     public List<String> getWebServicePackage() {
         List<String> arr = new ArrayList<>();
-//        arr.add("com.db.gui.persistence.ws");
+        arr.add("com.db.gui.persistence.ws");
         return arr;
     }
 

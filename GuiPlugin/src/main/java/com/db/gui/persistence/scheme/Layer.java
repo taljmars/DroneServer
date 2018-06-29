@@ -53,7 +53,7 @@ public class Layer extends BaseLayer implements Serializable
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@TargetType(clz = BaseObject.class)
-	@TargetExcludeTypes(classes = {LayersGroupRoot.class, LayersGroup.class, Layer.class, BaseLayer.class})
+	@TargetExcludeTypes(classes = {LayersGroup.class, Layer.class, BaseLayer.class})
 	protected List<String> objectsUids;
 
 	public Layer() {
