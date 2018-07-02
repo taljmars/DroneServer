@@ -1,7 +1,9 @@
 package com.db.server;
 
+import com.db.server.security.AuthenticationFilter;
 import com.db.server.security.ServerAccessDeniedHandler;
-import com.db.server.security.ServerAuthProvider;
+import com.db.server.security.UserAuthenticationProvider;
+import com.db.server.security.TokenAuthenticationProvider;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,8 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
@@ -28,26 +29,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final static Logger LOGGER = Logger.getLogger(SecurityConfig.class);
 
+    public static final String AUTH_USERNAME_KEY = "X-Auth-Username";
+    public static final String AUTH_PASSWORD_KEY = "X-Auth-Password";
+    public static final String AUTH_TOKEN_KEY = "X-Auth-Token";
+
     @Autowired
     private ServerAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private ServerAuthProvider authProvider;
+    private UserAuthenticationProvider authProvider;
 
     @Autowired
-    private SessionRegistry sessionRegistry;
+    private TokenAuthenticationProvider tokenAuthenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
         LOGGER.debug("configuring basic users");
-        auth.inMemoryAuthentication()
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .withUser("admin").password("admin").roles("ADMIN")
-                .and().withUser("PUBLIC").password("PUBLIC").roles("ADMIN")
-                .and().withUser("admin1").password("admin1").roles("USER");
+//        auth.inMemoryAuthentication()
+//                .passwordEncoder(NoOpPasswordEncoder.getInstance())
+//                .withUser("admin").password("admin").roles("ADMIN")
+//                .and().withUser("PUBLIC").password("PUBLIC").roles("ADMIN")
+//                .and().withUser("admin1").password("admin1").roles("USER");
         auth.authenticationProvider(authProvider);
+        auth.authenticationProvider(tokenAuthenticationProvider);
     }
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -61,24 +69,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/read*").permitAll()
 //                .antMatchers("/update*").anonymous()
 //                .antMatchers("/delete*").permitAll()
-                .antMatchers("/login").authenticated()
+//                .antMatchers("/login").authenticated()
+                .antMatchers("/login").permitAll()
 //                .antMatchers("/*").hasRole("ADMIN")
                 .and()
                 .httpBasic()
                 .and()
+                .anonymous().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .maximumSessions(1)
-                .sessionRegistry(sessionRegistry)
+//                .sessionRegistry(sessionRegistry)
                 .expiredSessionStrategy(new SessionInformationExpiredStrategy() {
                     @Override
                     public void onExpiredSessionDetected(SessionInformationExpiredEvent sessionInformationExpiredEvent) throws IOException, ServletException {
-                        System.out.println("Session expired");
+                        System.out.println("Session expired " +
+                                sessionInformationExpiredEvent.getSessionInformation().getSessionId() +
+                                " " +
+                                sessionInformationExpiredEvent.getSessionInformation().getPrincipal()
+                        );
                     }
                 })
                 .and()
                 .and()
-                .logout().disable();
+                .logout().disable()
+                .addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class);
     }
+
+
 
 }

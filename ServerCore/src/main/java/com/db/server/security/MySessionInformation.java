@@ -1,25 +1,22 @@
 package com.db.server.security;
 
-import org.springframework.security.core.session.SessionInformation;
-
+import java.time.Instant;
 import java.util.Date;
 
-public class MySessionInformation {//extends SessionInformation {
+public class MySessionInformation {
 
     public static final Integer DEFAULT_TIMEOUT = 30;
 
-    private final SessionInformation sessionInformation;
-
     private Integer timeout;
     private String applicationName;
-    private final String sessionId;
-    private final String principal;
+    private String userName;
+    private String token;
+    private Date refreshTime;
+    private boolean expired;
 
-    public MySessionInformation(SessionInformation sessionInformation) {
-        this.sessionInformation = sessionInformation;
-        this.sessionId = sessionInformation.getSessionId();
-        this.principal = ServerSessionRegistry.getPrincipalName(this.sessionInformation.getPrincipal());
+    public MySessionInformation() {
         this.timeout = DEFAULT_TIMEOUT;
+        this.refreshTime = Date.from(Instant.now());
     }
 
     public String getApplicationName() {
@@ -38,27 +35,50 @@ public class MySessionInformation {//extends SessionInformation {
         this.timeout = timeout;
     }
 
-    public String getPrincipal() {
-        return principal;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
     public void expireNow() {
-        this.sessionInformation.expireNow();
+        if (Date.from(Instant.now()).getTime() - this.getLastRequest().getTime() >= this.timeout)
+            expired = true;
+
     }
 
     public void refreshLastRequest() {
-        this.sessionInformation.refreshLastRequest();
+        this.refreshTime = Date.from(Instant.now());
     }
 
     public Date getLastRequest() {
-        return this.sessionInformation.getLastRequest();
+        return Date.from(Instant.now());
     }
 
-    public SessionInformation getCoreObject() {
-        return sessionInformation;
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    @Override
+    public String toString() {
+        return "MySessionInformation{" +
+                "timeout=" + timeout +
+                ", applicationName='" + applicationName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", token='" + token + '\'' +
+                ", refreshTime=" + refreshTime +
+                ", expired=" + expired +
+                '}';
     }
 }

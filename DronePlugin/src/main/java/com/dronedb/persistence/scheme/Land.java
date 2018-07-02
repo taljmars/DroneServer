@@ -2,11 +2,9 @@ package com.dronedb.persistence.scheme;
 
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.Sessionable;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.awt.*;
 import java.io.Serializable;
 
 @Entity

@@ -14,9 +14,12 @@ import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +52,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         // Build the all the relevant object and strcuture for the user
         WorkSession workSession;
         String userName = loginRequest.getUserName();
-        String token = serverSessionRegistry.getSessionId(userName);
+        String token = (String) SecurityContextHolder.getContext().getAuthentication().getDetails();//serverSessionRegistry.getSessionId(userName);
         if (token == null || token.isEmpty()){
             LOGGER.error("Failed to create session for user");
             resp.setMessage("Failed to create session for user");
@@ -57,27 +60,32 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
             return resp;
         }
 
-        if ((workSession = workSessionManager.getSessionByToken(token)) != null) {
-            LOGGER.error("Already logged");
-            resp.setMessage("Already logged");
-            resp.setReturnCode(LoginLogoutStatus.FAIL);
-            return resp;
-        }
+//        if ((workSession = workSessionManager.getSessionByToken(token)) != null) {
+//            LOGGER.error("Already logged");
+//            resp.setMessage("Already logged");
+//            resp.setReturnCode(LoginLogoutStatus.FAIL);
+//            return resp;
+//        }
 
         if ((workSession = workSessionManager.getOrhpanSessionByUserName(userName)) != null) {
             LOGGER.debug("Found existing session, reviving it");
-            workSessionManager.reviveSession(workSession, token);
+            workSession = workSessionManager.reviveSession(workSession, token);
         }
         else {
             LOGGER.debug("Create a new worksession for this login");
-            workSessionManager.createSession(token, userName);
+            workSession = workSessionManager.createSession(token, userName);
         }
 
-        MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(token);
+        MySessionInformation sessionInformation = new MySessionInformation();
+        sessionInformation.setUserName(userName);
         sessionInformation.setApplicationName(loginRequest.getApplicationName());
         sessionInformation.setTimeout(loginRequest.getTimeout());
-        resp.setUserName(sessionInformation.getPrincipal());
-        resp.setToken(token); // TODO: Should be a real token
+        sessionInformation.setToken(token);
+
+        serverSessionRegistry.registerSession(token, sessionInformation);
+
+        resp.setUserName(sessionInformation.getUserName());
+        resp.setToken(token);
         resp.setMessage("Login successfully");
         resp.setReturnCode(OK);
         LOGGER.debug("Logged successfully !, user=" + loginRequest.getUserName() + " ,token=" + resp.getToken());
@@ -96,10 +104,10 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
             resp.setReturnCode(FAIL);
         }
         else {
-            LOGGER.debug("Try to logout the server, token=" + getToken() + ", userName=" + sessionInformation.getPrincipal());
+            LOGGER.debug("Try to logout the server, token=" + getToken() + ", userName=" + sessionInformation.getUserName());
             sessionInformation = serverSessionRegistry.unregisterSession(getToken());
             workSessionManager.orphanizeSession(getToken());
-            resp.setUserName(sessionInformation.getPrincipal());
+            resp.setUserName(sessionInformation.getUserName());
             resp.setMessage("Successfully Logout");
             resp.setReturnCode(OK);
         }
@@ -129,46 +137,27 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
     @Scheduled(fixedRate = 15 * 1000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
+        LOGGER.info("=============================================================================");
+        LOGGER.info("============================ SESSION EXPIRATION =============================");
         try {
-            Long currentTime = new Date().getTime();
-            List<String> sessionIdsToFree = new ArrayList();
-            Iterator<String> it = serverSessionRegistry.getAllPrincipals().iterator();
+            List<String> expiredTokens = serverSessionRegistry.expireNow();
+            Iterator<String> it = expiredTokens.iterator();
             while (it.hasNext()) {
-                String principal = it.next();
-                String sessionId = serverSessionRegistry.getSessionId(principal);
-                MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(sessionId);
-                if (sessionInformation.getTimeout() == null) {
-                    sessionInformation.setTimeout(DEFAULT_TIMEOUT);
-                    continue;
-                }
-                Long timeSinceLastKA = (currentTime - sessionInformation.getLastRequest().getTime()) / 1000;
-                LOGGER.debug(
-                                "Past time: " + timeSinceLastKA +
-                                ", timeout:" + sessionInformation.getTimeout() +
-                                ", pricipal " + sessionInformation.getPrincipal() +
-                                ", sessionId " + sessionInformation.getSessionId() +
-                                ", CoreSessionId " + sessionInformation.getCoreObject().getSessionId()
-                );
-                if (timeSinceLastKA > sessionInformation.getTimeout()) {
-                    //String token = sessionInformation.getSessionId();
-                    // TODO: Need to investigate why there are some session that being stored in Spring session manager
-                    // TODO: Even after I explicitly mark the session as expired
-                    if (LOGGER.isDebugEnabled()) {
-                        WorkSession workSession = workSessionManager.getSessionByToken(sessionId);
-                        if (workSession == null || (workSession = workSessionManager.orphanizeSession(sessionId)) == null) {
-                            LOGGER.warn("Failed to orphanized session, sessionId is a leftover");
-                        } else {
-                            LOGGER.debug("Session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
-                        }
+                String token = it.next();
+//                if (LOGGER.isDebugEnabled()) {
+                    WorkSession workSession = workSessionManager.getSessionByToken(token);
+                    if (workSession == null || (workSession = workSessionManager.orphanizeSession(token)) == null) {
+                        LOGGER.warn("Failed to orphanized session, sessionId is a leftover");
+                    } else {
+                        LOGGER.debug("Session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
                     }
-                    sessionIdsToFree.add(sessionId);
-                }
+//                }
+//                serverSessionRegistry.unregisterSession(token);
             }
-            for (String sessionId : sessionIdsToFree)
-                serverSessionRegistry.unregisterSession(sessionId);
         }
         catch (Exception e) {
             LOGGER.error("Failed to check connections", e);
         }
+        LOGGER.info("=============================================================================");
     }
 }

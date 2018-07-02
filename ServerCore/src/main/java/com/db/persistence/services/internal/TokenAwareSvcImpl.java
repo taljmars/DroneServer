@@ -17,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
+import static com.db.server.SecurityConfig.AUTH_TOKEN_KEY;
 
 public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements TokenAwareSvc {
 
@@ -43,7 +44,7 @@ public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements Toke
             if (uri.equals("/login") || uri.equals("/registerNewUser"))
                 return INTERNAL_SERVER_USER_TOKEN;
 
-            String token = request.getHeader("token");
+            String token = request.getHeader(AUTH_TOKEN_KEY);
             if (token != null)
                 return token;
         }
@@ -65,7 +66,7 @@ public abstract class TokenAwareSvcImpl<T extends TokenAwareSvc> implements Toke
             if (uri.equals("/login") || uri.equals("/registerNewUser"))
                 return workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
 
-            String token = request.getHeader("token");
+            String token = request.getHeader(AUTH_TOKEN_KEY);
             if (token != null)
                 this.token = token;
         }

@@ -18,11 +18,12 @@ public class ConnectionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         LOGGER.debug("CONNECTION STARTED");
-        Object bean = ((HandlerMethod) handler).getBean();
-        Field[] fields = bean.getClass().getFields();
-        for (Field field : fields) {
+//        Object bean = ((HandlerMethod) handler).getBean();
+//        Field[] fields = bean.getClass().getFields();
+//        for (Field field : fields) {
+//
+//        }
 
-        }
         return true;
     }
 
