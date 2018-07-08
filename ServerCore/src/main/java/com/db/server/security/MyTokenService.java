@@ -20,10 +20,14 @@ public class MyTokenService {
 
 	private final static Logger LOGGER = Logger.getLogger(UserAuthenticationProvider.class);
 
-	private static Map restApiAuthTokenCache = new HashMap();
+	private static Map<String, Authentication> restApiAuthTokenCache = new HashMap<String, Authentication>();
 
 	public synchronized String generateNewToken(String userName) {
-		Predicate<Authentication> predicate = t -> ((Optional)t.getPrincipal()).get().equals(userName);
+		Predicate<Authentication> predicate = t -> {
+			if (t.getPrincipal() instanceof Optional)
+				return ((Optional)t.getPrincipal()).get().equals(userName);
+			return t.getPrincipal().equals(userName);
+		};
 		if (restApiAuthTokenCache.values().stream().anyMatch(predicate)) {
 			LOGGER.debug("Token was already generated for this username: " + userName);
 			return null;
