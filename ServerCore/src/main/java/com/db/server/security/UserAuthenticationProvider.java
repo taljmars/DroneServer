@@ -36,7 +36,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if (name.equals("tester1") || name.equals("tester2")) {
             if (authentication instanceof UserAuthenticationToken) {
                 String address = ((UserAuthenticationToken) authentication).getRemoteAddress();
-                if (address.equals("127.0.0.1") && name.equals(password)) {
+                if ((address.equals("0:0:0:0:0:0:0:1") || address.equals("127.0.0.1")) && name.equals(password)) {
                     LOGGER.debug("Authenticated ->" + authentication);
                     LOGGER.debug("Tester user for localhost is in use");
                     return generateAuthenticationWithToken(name, password, authentication);
