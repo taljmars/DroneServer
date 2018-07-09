@@ -6,20 +6,30 @@ import com.db.server.security.UserAuthenticationProvider;
 import com.db.server.security.TokenAuthenticationProvider;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
@@ -55,7 +65,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(tokenAuthenticationProvider);
     }
 
-
+    @Bean("sessionLimitation")
+    public Integer sessionLimitation() {
+        return 1;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -78,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                .maximumSessions(1)
+                .maximumSessions(sessionLimitation())
 //                .sessionRegistry(sessionRegistry)
                 .expiredSessionStrategy(new SessionInformationExpiredStrategy() {
                     @Override

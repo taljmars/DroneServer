@@ -18,6 +18,8 @@ public class ConnectionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         LOGGER.debug("CONNECTION STARTED");
+        LOGGER.debug("CONNECTION STARTED request: " + request);
+        LOGGER.debug("CONNECTION STARTED response: " + response);
 //        Object bean = ((HandlerMethod) handler).getBean();
 //        Field[] fields = bean.getClass().getFields();
 //        for (Field field : fields) {
@@ -29,6 +31,8 @@ public class ConnectionInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        LOGGER.debug("CONNECTION ENDED request: " + request);
+        LOGGER.debug("CONNECTION ENDED response: " + response);
         LOGGER.debug("CONNECTION ENDED");
     }
 }

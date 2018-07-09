@@ -71,8 +71,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     private AuthenticationWithToken generateAuthenticationWithToken(String userName, String password, Authentication authentication) {
         AuthenticationWithToken authenticationWithToken = new AuthenticationWithToken(userName, password, null);
         String token = tokenService.generateNewToken(userName);
-        if (token == null)
-            throw new BadCredentialsException("User already logged in");
 
 //        authenticationWithToken.setAuthenticated(true);
         authenticationWithToken.setToken(token);
