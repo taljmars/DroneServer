@@ -2,7 +2,7 @@ package com.db.persistence.services;
 
 import com.db.persistence.scheme.*;
 
-public interface LoginSvc extends TokenAwareSvc {
+public interface LoginSvc {
 
     LoginResponse login(LoginRequest loginRequest);
 
@@ -12,5 +12,4 @@ public interface LoginSvc extends TokenAwareSvc {
     // Token Aware
     KeepAliveResponse keepAlive();
 
-//    User getUserByName(String userName);
 }

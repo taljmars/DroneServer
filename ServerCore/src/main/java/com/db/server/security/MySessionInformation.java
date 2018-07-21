@@ -1,6 +1,5 @@
 package com.db.server.security;
 
-import java.time.Instant;
 import java.util.Date;
 
 public class MySessionInformation {
@@ -10,13 +9,13 @@ public class MySessionInformation {
     private Integer timeout;
     private String applicationName;
     private String userName;
-    private String token;
+    private MyToken token;
     private Date refreshTime;
     private boolean expired;
 
     public MySessionInformation() {
         this.timeout = DEFAULT_TIMEOUT;
-        this.refreshTime = Date.from(Instant.now());
+        this.refreshTime = new Date();
     }
 
     public String getApplicationName() {
@@ -36,17 +35,20 @@ public class MySessionInformation {
     }
 
     public void expireNow() {
-        if (Date.from(Instant.now()).getTime() - this.getLastRequest().getTime() >= this.timeout)
+        long diff = ((new Date()).getTime() - this.getLastRequest().getTime()) / 1000;
+        if (diff >= this.timeout) {
+            token.revokeNow();
             expired = true;
+        }
 
     }
 
     public void refreshLastRequest() {
-        this.refreshTime = Date.from(Instant.now());
+        this.refreshTime = new Date();
     }
 
     public Date getLastRequest() {
-        return Date.from(Instant.now());
+        return refreshTime;
     }
 
 
@@ -58,11 +60,11 @@ public class MySessionInformation {
         return userName;
     }
 
-    public void setToken(String token) {
+    public void setToken(MyToken token) {
         this.token = token;
     }
 
-    public String getToken() {
+    public MyToken getToken() {
         return token;
     }
 

@@ -5,7 +5,7 @@ import com.db.persistence.exception.ObjectInstanceException;
 import com.db.persistence.scheme.BaseObject;
 import javassist.tools.rmi.ObjectNotFoundException;
 
-public interface ObjectCrudSvc extends TokenAwareSvc {
+public interface ObjectCrudSvc {
 
 	/**
 	 * The following create an object of clz type.
@@ -17,7 +17,6 @@ public interface ObjectCrudSvc extends TokenAwareSvc {
 	 * @param <T> object genric type
 	 * @return A clean object
 	 */
-//	<T extends BaseObject> T create(final Class<T> clz) throws ObjectInstanceException;
 	<T extends BaseObject> T create(String clz) throws ObjectInstanceException;
 
 	/**
@@ -83,5 +82,4 @@ public interface ObjectCrudSvc extends TokenAwareSvc {
 	 */
 	<T extends BaseObject> T readByClass(final String objId, final Class<T> clz) throws ObjectNotFoundException;
 
-	ObjectCrudSvc setToken(String userName);
 }

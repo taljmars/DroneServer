@@ -20,11 +20,12 @@ public class AuthenticationWithToken extends PreAuthenticatedAuthenticationToken
         super(aPrincipal, aCredentials, anAuthorities);
     }
 
-    public void setToken(String token) {
+    public void setToken(MyToken token) {
         setDetails(token);
     }
 
-    public String getToken() {
-        return (String)getDetails();
+    public MyToken getToken() {
+        return (MyToken)getDetails();
     }
+
 }

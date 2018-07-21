@@ -3,7 +3,9 @@ package ServerIntegrationTest;
 import com.db.persistence.services.LoginSvc;
 import com.db.persistence.services.ObjectCrudSvc;
 import com.db.persistence.services.QuerySvc;
+import com.db.persistence.services.TokenAwareSvc;
 import com.db.server.ServerMain;
+import com.db.server.security.MyToken;
 import com.generic_tools.validations.RuntimeValidator;
 import com.plugins_manager.Plugins;
 import org.junit.Before;
@@ -15,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Iterator;
 
-import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
+import static com.db.server.SecurityConfig.INTERNAL_SERVER_USER_TOKEN;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(SpringRunner.class)
@@ -37,7 +39,7 @@ public class IntegrationTest {
     @Autowired private QuerySvc querySvc;
     @Autowired private LoginSvc loginSvc;
 
-    private String token;
+    private MyToken token;
 
     @Before
     public void LoadTest() {
@@ -60,8 +62,8 @@ public class IntegrationTest {
 //        token = resp.getToken();
         token = INTERNAL_SERVER_USER_TOKEN;
 
-        objectCrudSvc.setToken(token);
-        querySvc.setToken(token);
+        ((TokenAwareSvc) objectCrudSvc).setToken(token);
+        ((TokenAwareSvc) querySvc).setToken(token);
     }
 
     @Test

@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -26,16 +25,14 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        LOGGER.debug("Try to authenicate using token -> " + authentication);
-        Optional<String> token = (Optional) authentication.getPrincipal();
-        if (!token.isPresent() || token.get().isEmpty()) {
-            throw new BadCredentialsException("Invalid token");
-        }
-        if (!tokenService.contains(token.get())) {
+        LOGGER.debug("Try to authenticate using token -> " + authentication);
+        MyToken token = (MyToken) authentication.getPrincipal();
+        if (!tokenService.contains(token)) {
+            LOGGER.error("Invalid token / token expired");
             throw new BadCredentialsException("Invalid token or token expired");
         }
 
-        Authentication auth = tokenService.retrieve(token.get());
+        Authentication auth = tokenService.retrieve(token);
         return auth;
     }
 
@@ -44,4 +41,5 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
         LOGGER.debug("Check class " + authentication);
         return authentication.equals(AuthenticationWithToken.class);
     }
+
 }

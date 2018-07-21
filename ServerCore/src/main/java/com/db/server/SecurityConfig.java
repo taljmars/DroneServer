@@ -1,9 +1,6 @@
 package com.db.server;
 
-import com.db.server.security.AuthenticationFilter;
-import com.db.server.security.ServerAccessDeniedHandler;
-import com.db.server.security.UserAuthenticationProvider;
-import com.db.server.security.TokenAuthenticationProvider;
+import com.db.server.security.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +19,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -29,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 @Configuration
@@ -110,5 +109,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    public static final String INTERNAL_SERVER_USER_NAME = "PUBLIC";
+    public static final MyToken INTERNAL_SERVER_USER_TOKEN = new MyToken();
 
+    @Bean("internalUserToken")
+    public MyToken internalUserToken() {
+        return INTERNAL_SERVER_USER_TOKEN;
+    }
+
+    @Bean("internalUserName")
+    public String internalUserName() {
+        return INTERNAL_SERVER_USER_NAME;
+    }
 }

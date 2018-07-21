@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 
 @Lazy
 @Component
-public class SessionsSvcImpl extends TokenAwareSvcImpl<SessionsSvc> implements SessionsSvc {
+public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
 
 	private final static Logger LOGGER = Logger.getLogger(SessionsSvcImpl.class);
 
@@ -34,11 +34,14 @@ public class SessionsSvcImpl extends TokenAwareSvcImpl<SessionsSvc> implements S
 	@Transactional
 	public void publish() {
 		// In case we've modified Revision
+
+		// This logic is similar to publish funtion - TODO: Remove this code duplication
+
 		LOGGER.debug("PUBLISH START !!!");
 		LOGGER.debug("Update revision value in revision manager");
 		WorkSession workSession = workSession().publish();
 		LOGGER.debug("PUBLISH END !!!");
-		workSessionManager.createSession(getToken(), workSession.getUserName1());
+		workSessionManager.createSession(getToken(), workSession.getUserName());
 	}
 
 	@Override
@@ -47,7 +50,7 @@ public class SessionsSvcImpl extends TokenAwareSvcImpl<SessionsSvc> implements S
 		LOGGER.debug("DISCARD START !!!");
 		WorkSession workSession = workSession().discard();
 		LOGGER.debug("DISCARD END !!!");
-		workSessionManager.createSession(getToken(), workSession.getUserName1());
+		workSessionManager.createSession(getToken(), workSession.getUserName());
 	}
 
 }

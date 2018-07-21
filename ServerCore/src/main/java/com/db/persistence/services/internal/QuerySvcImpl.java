@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class QuerySvcImpl extends TokenAwareSvcImpl<QuerySvc> implements QuerySvc {
+public class QuerySvcImpl extends TokenAwareSvcImpl implements QuerySvc {
 
 	private final static Logger LOGGER = Logger.getLogger(QuerySvcImpl.class);
 

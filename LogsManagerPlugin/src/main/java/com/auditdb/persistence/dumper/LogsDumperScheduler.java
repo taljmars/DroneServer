@@ -13,14 +13,13 @@ import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Table;
 import java.util.*;
-
-import static com.db.persistence.workSession.Constant.INTERNAL_SERVER_USER_TOKEN;
 
 @Component
 public class LogsDumperScheduler {
@@ -35,6 +34,9 @@ public class LogsDumperScheduler {
 
     @Autowired
     private EventQueue eventQueue;
+
+    @Qualifier("internalUserToken")
+    private Object internalUserToken;
 
     private Map<Class, String> storingTable;
 
@@ -66,11 +68,17 @@ public class LogsDumperScheduler {
             }
 
             if (!eventList.isEmpty()) {
-                WorkSession workSession = workSessionManager.getSessionByToken(INTERNAL_SERVER_USER_TOKEN);
+                WorkSession workSession = workSessionManager.getSessionByToken(internalUserToken);
                 for (BaseObject auditLog : eventList)
                     workSession.update(auditLog);
 
-                sessionsSvc.setToken(INTERNAL_SERVER_USER_TOKEN).publish();
+//                sessionsSvc.setToken(internalUserToken).publish();
+                // This logic is similar to publish funtion - TODO: Remove this code duplication
+                LOGGER.debug("PUBLISH START !!!");
+                LOGGER.debug("Update revision value in revision manager");
+                workSession = workSession.publish();
+                LOGGER.debug("PUBLISH END !!!");
+                workSessionManager.createSession(internalUserToken, workSession.getUserName());
             }
 
             LOGGER.info("============================== LOG DUMPER END ==============================");

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,6 +30,7 @@ public class LoginSvcRemoteImpl implements LoginSvcRemote {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRestRequest) {
+        loginRestRequest.setUserName((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         LoginResponse res = loginSvc.login(loginRestRequest);
         return new ResponseEntity(res, HttpStatus.OK);
     }

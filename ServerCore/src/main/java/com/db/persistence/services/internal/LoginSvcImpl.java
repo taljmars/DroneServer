@@ -10,9 +10,11 @@ import com.db.persistence.services.LoginSvc;
 import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
 import com.db.server.security.MySessionInformation;
+import com.db.server.security.MyToken;
 import com.db.server.security.ServerSessionRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,24 +50,24 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         LoginResponse resp = new LoginResponse();
         resp.setDate(new Date());
 
+        // Validating Request
+        if (loginRequest.getUserName() == null || loginRequest.getUserName().isEmpty()) {
+            LOGGER.error("Illegal request - missing parameters");
+            resp.setMessage("Illegal request");
+            resp.setReturnCode(LoginLogoutStatus.FAIL);
+            return resp;
+        }
 
-        // Build the all the relevant object and strcuture for the user
+        // Build the all the relevant object and structure for the user
         WorkSession workSession;
         String userName = loginRequest.getUserName();
-        String token = (String) SecurityContextHolder.getContext().getAuthentication().getDetails();//serverSessionRegistry.getSessionId(userName);
-        if (token == null || token.isEmpty()){
+        MyToken token = (MyToken) SecurityContextHolder.getContext().getAuthentication().getDetails();//serverSessionRegistry.getSessionId(userName);
+        if (token == null) {
             LOGGER.error("Failed to create session for user");
             resp.setMessage("Failed to create session for user");
             resp.setReturnCode(LoginLogoutStatus.FAIL);
             return resp;
         }
-
-//        if ((workSession = workSessionManager.getSessionByToken(token)) != null) {
-//            LOGGER.error("Already logged");
-//            resp.setMessage("Already logged");
-//            resp.setReturnCode(LoginLogoutStatus.FAIL);
-//            return resp;
-//        }
 
         if ((workSession = workSessionManager.getOrhpanSessionByUserName(userName)) != null) {
             LOGGER.debug("Found existing session, reviving it");
@@ -82,10 +84,18 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         sessionInformation.setTimeout(loginRequest.getTimeout());
         sessionInformation.setToken(token);
 
-        serverSessionRegistry.registerSession(token, sessionInformation);
+        try {
+            serverSessionRegistry.registerSession(token, sessionInformation);
+        }
+        catch (Exception e) {
+            resp.setMessage("Login failed, " + e.getMessage());
+            resp.setReturnCode(FAIL);
+            LOGGER.debug("Logged failed !, user=" + loginRequest.getUserName());
+            return resp;
+        }
 
         resp.setUserName(sessionInformation.getUserName());
-        resp.setToken(token);
+        resp.setToken(token.serialize());
         resp.setMessage("Login successfully");
         resp.setReturnCode(OK);
         LOGGER.debug("Logged successfully !, user=" + loginRequest.getUserName() + " ,token=" + resp.getToken());
@@ -138,21 +148,24 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
         LOGGER.info("=============================================================================");
-        LOGGER.info("============================ SESSION EXPIRATION =============================");
+        LOGGER.info("========================= LOGIN SESSION EXPIRATION ==========================");
         try {
-            List<String> expiredTokens = serverSessionRegistry.expireNow();
-            Iterator<String> it = expiredTokens.iterator();
+            LOGGER.debug("Searching for expired sessions");
+            List<MyToken> expiredTokens = serverSessionRegistry.expireNow();
+            LOGGER.debug("There are " + expiredTokens.size() + " session that needs to be expired");
+            Iterator<MyToken> it = expiredTokens.iterator();
             while (it.hasNext()) {
-                String token = it.next();
-//                if (LOGGER.isDebugEnabled()) {
-                    WorkSession workSession = workSessionManager.getSessionByToken(token);
-                    if (workSession == null || (workSession = workSessionManager.orphanizeSession(token)) == null) {
-                        LOGGER.warn("Failed to orphanized session, sessionId is a leftover");
-                    } else {
-                        LOGGER.debug("Session " + workSession.getSessionId() + " of user " + workSession.getUserName1() + " was timedout");
-                    }
-//                }
-//                serverSessionRegistry.unregisterSession(token);
+                MyToken token = it.next();
+                WorkSession workSession = workSessionManager.getSessionByToken(token);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("--> Expiring token: " + token + ", Session: " + workSession);
+                }
+                if (workSession == null || (workSession = workSessionManager.orphanizeSession(token)) == null) {
+                    LOGGER.warn("Failed to orphanized session, sessionId is a leftover");
+                } else {
+                    LOGGER.debug("Session " + workSession.getSessionId() + " of user " + workSession.getUserName() + " was timed out");
+                }
+                serverSessionRegistry.unregisterSession(token);
             }
         }
         catch (Exception e) {

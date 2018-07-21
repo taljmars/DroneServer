@@ -5,10 +5,7 @@
 
 package com.db.persistence.services;
 
-public interface SessionsSvc extends TokenAwareSvc {
-
-    @Override
-    SessionsSvc setToken(String token);
+public interface SessionsSvc {
 
     /**
      * The following publish all the private changes to the public database.
@@ -21,4 +18,5 @@ public interface SessionsSvc extends TokenAwareSvc {
      * After this action no object should exist under the private session.
      */
     void discard();
+
 }
