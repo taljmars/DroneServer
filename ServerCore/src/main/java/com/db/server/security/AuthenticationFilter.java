@@ -44,23 +44,21 @@ public class AuthenticationFilter extends GenericFilterBean {
 
         Optional<String> username = Optional.ofNullable(httpRequest.getHeader(AUTH_USERNAME_KEY));
         Optional<String> password = Optional.ofNullable(httpRequest.getHeader(AUTH_PASSWORD_KEY));
-        Optional<String> token = Optional.ofNullable(httpRequest.getHeader(AUTH_TOKEN_KEY));
-
+        Optional<String> tokenString = Optional.ofNullable(httpRequest.getHeader(AUTH_TOKEN_KEY));
         String resourcePath = new UrlPathHelper().getPathWithinApplication(httpRequest);
 
         try {
-            if (postToAuthenticate(httpRequest, resourcePath)) {
-                LOGGER.debug("Trying to authenticate user '" + username + "' by X-Auth-Username method");
-                processUsernamePasswordAuthentication(httpRequest, httpResponse, username, password);
-//                return;
-            }
-            else if (token.isPresent()) {
+            if (tokenString.isPresent()) {
+                MyToken token = MyToken.deserialize(tokenString.get());
                 LOGGER.debug("Trying to authenticate user by X-Auth-Token method. Token: " + token);
                 processTokenAuthentication(token);
             }
+            else if (postToAuthenticate(httpRequest, resourcePath)) {
+                LOGGER.debug("Trying to authenticate user '" + username + "' by X-Auth-Username method");
+                processUsernamePasswordAuthentication(httpRequest, httpResponse, username, password);
+            }
 
             LOGGER.debug("AuthenticationFilter is passing request down the filter chain");
-//            addSessionContextToLogging();
             chain.doFilter(request, response);
         }
         catch (InternalAuthenticationServiceException internalAuthenticationServiceException) {
@@ -78,37 +76,13 @@ public class AuthenticationFilter extends GenericFilterBean {
         }
     }
 
-//    private  void addSessionContextToLogging() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String tokenValue = "EMPTY";
-//        if (authentication != null && !Strings.isNullOrEmpty(authentication.getDetails().toString())) {
-//            MessageDigestPasswordEncoder encoder = new MessageDigestPasswordEncoder("SHA-1");
-//            tokenValue = encoder.encodePassword(authentication.getDetails().toString(), "not_so_random_salt");
-//        }
-//        MDC.put(TOKEN_SESSION_KEY, tokenValue);
-//
-//        String userValue = "EMPTY";
-//        if (authentication != null && !Strings.isNullOrEmpty(authentication.getPrincipal().toString())) {
-//            userValue = authentication.getPrincipal().toString();
-//        }
-//        MDC.put(USER_SESSION_KEY, userValue);
-//    }
-
-    private  boolean postToAuthenticate(HttpServletRequest httpRequest, String resourcePath) {
+    private boolean postToAuthenticate(HttpServletRequest httpRequest, String resourcePath) {
         return resourcePath.equals("/login") && httpRequest.getMethod().equals("POST");
     }
 
-    private  void processUsernamePasswordAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Optional<String> username, Optional<String> password) throws IOException {
+    private void processUsernamePasswordAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Optional<String> username, Optional<String> password) throws IOException {
         Authentication resultOfAuthentication = tryToAuthenticateWithUsernameAndPassword(username, password, httpRequest.getRemoteAddr());
         SecurityContextHolder.getContext().setAuthentication(resultOfAuthentication);
-//        httpResponse.setStatus(HttpServletResponse.SC_OK);
-//
-////        TokenResponse tokenResponse = new TokenResponse(resultOfAuthentication.getDetails().toString());
-////        String tokenJsonResponse = new ObjectMapper().writeValueAsString(tokenResponse);
-//        String tokenJsonResponse = new ObjectMapper().writeValueAsString(resultOfAuthentication.getDetails().toString());
-//
-//        httpResponse.addHeader("Content-Type", "application/json");
-//        httpResponse.getWriter().append(tokenJsonResponse);
     }
 
     private  Authentication tryToAuthenticateWithUsernameAndPassword(Optional<String> username, Optional<String> password, String remoteAddress) {
@@ -116,12 +90,12 @@ public class AuthenticationFilter extends GenericFilterBean {
         return tryToAuthenticate(requestAuthentication);
     }
 
-    private void processTokenAuthentication(Optional<String> token) {
+    private void processTokenAuthentication(MyToken token) {
         Authentication resultOfAuthentication = tryToAuthenticateWithToken(token);
         SecurityContextHolder.getContext().setAuthentication(resultOfAuthentication);
     }
 
-    private Authentication tryToAuthenticateWithToken(Optional<String> token) {
+    private Authentication tryToAuthenticateWithToken(MyToken token) {
         AuthenticationWithToken requestAuthentication = new AuthenticationWithToken(token, null);
         return tryToAuthenticate(requestAuthentication);
     }
@@ -129,6 +103,7 @@ public class AuthenticationFilter extends GenericFilterBean {
     private Authentication tryToAuthenticate(Authentication requestAuthentication) {
         Authentication responseAuthentication = authenticationManager.authenticate(requestAuthentication);
         if (responseAuthentication == null || !responseAuthentication.isAuthenticated()) {
+            LOGGER.debug("Failed to authenticate");
             throw new InternalAuthenticationServiceException("Unable to authenticate Domain User for provided credentials");
         }
         LOGGER.debug("User successfully authenticated");

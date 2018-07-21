@@ -2,21 +2,22 @@ package com.db.persistence.workSession;
 
 import com.db.persistence.scheme.BaseObject;
 
-public interface WorkSessionManager {
+public interface WorkSessionManager<TOKEN> {
 
-    WorkSession createSession(String token, String userName);
+    WorkSession createSession(TOKEN token, String userName);
 
     WorkSession destroySession(WorkSession workSession);
 
     <T extends BaseObject> Boolean markDirty(WorkSession workSession, T obj);
 
-    WorkSession getSessionByToken(String currentToken);
+    WorkSession getSessionByToken(TOKEN currentToken);
 
-    WorkSession getOrhpanSessionByUserName(String currentToken);
+    WorkSession getOrhpanSessionByUserName(String userName);
 
-    WorkSession reviveSession(WorkSession workSession, String token);
+    WorkSession reviveSession(WorkSession workSession, TOKEN token);
 
-    WorkSession orphanizeSession(String token);
+    WorkSession orphanizeSession(TOKEN token);
 
     String getUserNameByCtx(Integer ctx);
+
 }

@@ -1,20 +1,17 @@
 package com.db.persistence.services;
 
 import com.db.persistence.workSession.WorkSession;
-import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface TokenAwareSvc<T> {
 
     @Transactional
-    <T extends TokenAwareSvc> T setToken(String token);
+    <S extends TokenAwareSvc> S setToken(T token);
 
     @Transactional
-    String getToken();
-
-    @Transactional
-    void flushToken();
+    T getToken();
 
     @Transactional
     WorkSession workSession();
+
 }

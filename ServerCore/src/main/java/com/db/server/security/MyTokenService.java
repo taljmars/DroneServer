@@ -7,18 +7,16 @@ package com.db.server.security;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Component
 public class MyTokenService {
@@ -26,39 +24,82 @@ public class MyTokenService {
 	private final static Logger LOGGER = Logger.getLogger(UserAuthenticationProvider.class);
 
 	@Autowired
-	ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-	private static Map<String, Authentication> restApiAuthTokenCache = new HashMap<String, Authentication>();
+	public Map<MyToken, Authentication> restApiAuthTokenCache = new HashMap<MyToken, Authentication>();
 
-	public synchronized String generateNewToken(String userName) {
-		Predicate<Authentication> predicate = t -> {
-			if (t.getPrincipal() instanceof Optional)
-				return ((Optional)t.getPrincipal()).get().equals(userName);
-			return t.getPrincipal().equals(userName);
-		};
-		if (restApiAuthTokenCache.values().stream().anyMatch(predicate)) {
-			LOGGER.debug("Token was already generated for this username: " + userName);
-			throw new BadCredentialsException("User already logged in");
+	public synchronized MyToken generateNewToken(String userName) {
+		Iterator<Map.Entry<MyToken, Authentication>> it = restApiAuthTokenCache.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<MyToken, Authentication> entry = it.next();
+			if (entry.getValue().getPrincipal() instanceof Optional) {
+				if (! ((Optional)entry.getValue().getPrincipal()).get().equals(userName))
+					continue;
+			}
+			else if (! entry.getValue().getPrincipal().equals(userName)) {
+				continue;
+			}
+
+			// Same user name
+			if (!entry.getKey().isRevoked()) {
+				LOGGER.debug("Token was already generated for this username: " + userName);
+				throw new BadCredentialsException("User already logged in");
+			}
+
+			LOGGER.debug("Old Token was generated in the past for " + userName + ", removing token");
+			it.remove();
+			break;
 		}
-		Integer sessionLimitation = (Integer) applicationContext.getBean("sessionLimitation");
-		if (restApiAuthTokenCache.keySet().size() >= sessionLimitation)
-			throw new SessionAuthenticationException("Session Limitation Reached");
-		return UUID.randomUUID().toString();
+
+		return new MyToken();
 	}
 
-	public synchronized void store(String token, Authentication authentication) {
-		restApiAuthTokenCache.put(token, authentication);
+	public synchronized void store(MyToken token, Authentication authentication) {
+		if (token.isUninitialized() || token.isInitialized())
+			restApiAuthTokenCache.put(token, authentication);
+		else
+			throw new RuntimeException("Try to push invalid token state: " + token);
 	}
 
-	public synchronized boolean contains(String token) {
-		return restApiAuthTokenCache.get(token) != null;
+	public synchronized boolean contains(MyToken token) {
+		Optional<MyToken> existTokens = restApiAuthTokenCache.keySet().stream().filter(a -> a.equals(token)).findFirst();
+		return existTokens.isPresent() && !existTokens.get().isRevoked();
 	}
 
-	public synchronized Authentication retrieve(String token) {
+	public synchronized Authentication retrieve(MyToken token) {
 		return (Authentication) restApiAuthTokenCache.get(token);
 	}
 
-	public synchronized void expire(String token) {
+	public synchronized void revoke(MyToken token) {
+		token.revokeNow();
 		restApiAuthTokenCache.remove(token);
+	}
+
+	@Scheduled(fixedRate = 15 * 1000)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void tik() {
+		LOGGER.info("=============================================================================");
+		LOGGER.info("============================= TOKEN EXPIRATION ==============================");
+		try {
+			Set<MyToken> tokens = restApiAuthTokenCache.keySet();
+			LOGGER.debug("There are " + tokens.size() + " tokens available");
+			Iterator<MyToken> it = tokens.iterator();
+			while (it.hasNext()) {
+				MyToken token = it.next();
+				if (token.isRevoked()) {
+					LOGGER.debug("Revoked token was cleared");
+					it.remove();
+				}
+				else if (token.isUninitialized() && ((new Date()).getTime() - token.getCreationDate().getTime() > 30 * 1000)) {
+					LOGGER.debug("Open token was cleared");
+					token.revokeNow();
+					it.remove();
+				}
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error("Failed to check tokens", e);
+		}
+		LOGGER.info("=============================================================================");
 	}
 }

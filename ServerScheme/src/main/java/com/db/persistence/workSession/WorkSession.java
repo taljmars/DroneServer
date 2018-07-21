@@ -3,9 +3,9 @@ package com.db.persistence.workSession;
 import com.db.persistence.objectStore.EntityManagerBase;
 import com.db.persistence.scheme.BaseObject;
 
-public interface WorkSession {
+public interface WorkSession<TOKEN> {
 
-    <T extends BaseObject> EntityManagerBase getEntityManager();
+    EntityManagerBase getEntityManager();
 
     QueryExecutor getQueryExecutor();
 
@@ -17,7 +17,7 @@ public interface WorkSession {
 
     <T extends BaseObject> T update(T object);
 
-    BaseObject find(String uid);
+    <T extends BaseObject> T find(String uid);
 
     WorkSession publish();
 
@@ -25,11 +25,12 @@ public interface WorkSession {
 
     int getSessionId();
 
-    String getToken();
+    TOKEN getToken();
 
-    void setToken(String token);
+    void setToken(TOKEN token);
 
-    String getUserName1();
+    String getUserName();
 
     Boolean isDirty();
+
 }

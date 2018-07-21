@@ -2,7 +2,7 @@ package com.db.persistence.services;
 
 import com.db.persistence.scheme.*;
 
-public interface RegistrationSvc extends TokenAwareSvc {
+public interface RegistrationSvc {
 
     RegistrationResponse registerNewUser(RegistrationRequest signingRequest);
 

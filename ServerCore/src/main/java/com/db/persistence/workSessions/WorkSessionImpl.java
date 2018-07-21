@@ -11,6 +11,7 @@ import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.workSession.QueryExecutor;
 import com.db.persistence.workSession.WorkSession;
 import com.db.persistence.workSession.WorkSessionManager;
+import com.db.server.security.MyToken;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +23,7 @@ import javax.annotation.PostConstruct;
 
 @Scope("prototype")
 @Component
-public class WorkSessionImpl implements WorkSession {
+public class WorkSessionImpl implements WorkSession<MyToken> {
 
     private final static Logger LOGGER = Logger.getLogger(WorkSessionImpl.class);
 
@@ -31,18 +32,18 @@ public class WorkSessionImpl implements WorkSession {
 
     private WorkSessionManager workSessionManager;
 
-    private String token;
-    private String userName1;
+    private MyToken token;
+    private String userName;
     private int sessionId;
     private WorkSessionType type;
     private Boolean isDirty;
     private EntityManagerBaseImpl entityManager;
     private QueryExecutor queryExecutor;
 
-    public WorkSessionImpl(String token, String userName, WorkSessionType type, Integer sessionId, EntityManagerBaseImpl entityManager) {
+    public WorkSessionImpl(MyToken token, String userName, WorkSessionType type, Integer sessionId, EntityManagerBaseImpl entityManager) {
         LOGGER.debug("New WorkSession was allocation for token '" + token + "', user '" + userName + "'");
         this.token = token;
-        this.userName1 = userName;
+        this.userName = userName;
         this.type = type;
         this.sessionId = sessionId;
         this.entityManager = entityManager;
@@ -51,7 +52,7 @@ public class WorkSessionImpl implements WorkSession {
 
     public WorkSessionImpl(WorkSessionImpl workSession) {
         this.token = workSession.token;
-        this.userName1 = workSession.userName1;
+        this.userName = workSession.userName;
         this.type = workSession.type;
         this.sessionId = workSession.sessionId;
         this.entityManager = workSession.entityManager;
@@ -66,7 +67,7 @@ public class WorkSessionImpl implements WorkSession {
     }
 
     @Override
-    public <T extends BaseObject> EntityManagerBase getEntityManager() {
+    public EntityManagerBase getEntityManager() {
         return entityManager;
     }
 
@@ -125,7 +126,7 @@ public class WorkSessionImpl implements WorkSession {
     @Override
     @Transactional
     public WorkSession publish() {
-        LOGGER.debug("Publishing db session id '" + sessionId + "' of token '" + token + "' of user '" + userName1 + "'");
+        LOGGER.debug("Publishing db session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
         entityManager.publish();
         return workSessionManager.destroySession(this);
     }
@@ -133,7 +134,7 @@ public class WorkSessionImpl implements WorkSession {
     @Override
     @Transactional
     public WorkSession discard() {
-        LOGGER.debug("Discarding session id '" + sessionId + "' of token '" + token + "' of user '" + userName1 + "'");
+        LOGGER.debug("Discarding session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
         entityManager.discard();
         return workSessionManager.destroySession(this);
     }
@@ -144,18 +145,18 @@ public class WorkSessionImpl implements WorkSession {
     }
 
     @Override
-    public String getToken() {
+    public MyToken getToken() {
         return token;
     }
 
     @Override
-    public void setToken(String token) {
+    public void setToken(MyToken token) {
         this.token = token;
     }
 
     @Override
-    public String getUserName1() {
-        return userName1;
+    public String getUserName() {
+        return userName;
     }
 
     @Override

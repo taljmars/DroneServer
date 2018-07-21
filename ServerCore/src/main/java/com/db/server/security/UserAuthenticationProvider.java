@@ -37,7 +37,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             if (authentication instanceof UserAuthenticationToken) {
                 String address = ((UserAuthenticationToken) authentication).getRemoteAddress();
                 if ((address.equals("0:0:0:0:0:0:0:1") || address.equals("127.0.0.1")) && name.equals(password)) {
-                    LOGGER.debug("Authenticated ->" + authentication);
+                    LOGGER.debug("Authenticated -> " + authentication);
                     LOGGER.debug("Tester user for localhost is in use");
                     return generateAuthenticationWithToken(name, password, authentication);
                 }
@@ -45,7 +45,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         }
 
         if (name.equals("admin") || password.equals("admin")) {
-            LOGGER.debug("Authenticated Admin ->" + authentication);
+            LOGGER.debug("Authenticated Admin -> " + authentication);
             LOGGER.debug("Admin user for localhost is in use");
             return generateAuthenticationWithToken(name, password, authentication);
         }
@@ -70,13 +70,11 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     private AuthenticationWithToken generateAuthenticationWithToken(String userName, String password, Authentication authentication) {
         AuthenticationWithToken authenticationWithToken = new AuthenticationWithToken(userName, password, null);
-        String token = tokenService.generateNewToken(userName);
+        MyToken token = tokenService.generateNewToken(userName);
 
-//        authenticationWithToken.setAuthenticated(true);
         authenticationWithToken.setToken(token);
         tokenService.store(authenticationWithToken.getToken(), authenticationWithToken);
         return authenticationWithToken;
     }
-
 
 }
