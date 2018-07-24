@@ -144,7 +144,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         return res;
     }
 
-    @Scheduled(fixedRate = 15 * 1000)
+    @Scheduled(fixedRate = 60 * 1000) // 30 Seconds
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
         LOGGER.info("=============================================================================");
