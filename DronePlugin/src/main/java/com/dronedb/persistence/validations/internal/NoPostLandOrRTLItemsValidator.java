@@ -35,7 +35,7 @@ public class NoPostLandOrRTLItemsValidator implements ConstraintValidator<NoPost
 
             for (String missionItemUid : value.getMissionItemsUids()) {
                 if (foundLandOrRTL) {
-                    LOGGER.debug("Found illegal point"); // TODO: print normal
+                    LOGGER.debug("Land/RTL was already set");
                     return false;
                 }
                 MissionItem item = objectCrudSvc.readByClass(missionItemUid, MissionItem.class);

@@ -68,11 +68,10 @@ public class WorkSessionManagerImpl implements WorkSessionManager<MyToken> {
     @Transactional
     public WorkSession getSessionByToken(MyToken token) {
         if (workSessionMap.keySet().contains(token)) {
-            LOGGER.debug("User session found in cache");
+            LOGGER.debug("User session found in worksession list");
             return workSessionMap.get(token);
         }
 
-        //TODO: have a nicer message
 //        LOGGER.debug("Session doesn't exist");
         return null;
     }
@@ -81,12 +80,11 @@ public class WorkSessionManagerImpl implements WorkSessionManager<MyToken> {
     @Transactional
     public WorkSession getOrhpanSessionByUserName(String user) {
         if (orphansWorkSessionMap.keySet().contains(user)) {
-            LOGGER.debug("User session found in cache");
+            LOGGER.debug("User session found in orphan list");
             return orphansWorkSessionMap.get(user);
         }
 
-        //TODO: have a nicer message
-        LOGGER.debug("Session doesn't exist");
+//        LOGGER.debug("Session doesn't exist");
         return null;
     }
 

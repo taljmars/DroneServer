@@ -21,9 +21,8 @@ import java.util.Map;
 @Scope("prototype")
 public class SimpleEntityManagerWrapper {//} implements EntityManager {
 
-    public EntityManager entityManager; //TODO: need to be private
-//    private EntityManager entityManager;
-    public final Integer ctx;//TODO: need to be private
+    private EntityManager entityManager;
+    private final Integer ctx; // Just for debug - It nice to know the context of the entity manager
 
     public SimpleEntityManagerWrapper(EntityManager entityManager, Integer ctx) {
         this.entityManager = entityManager;
@@ -43,7 +42,7 @@ public class SimpleEntityManagerWrapper {//} implements EntityManager {
     //@Override
     public void remove(Object o) {
         entityManager.remove(o);
-        entityManager.flush(); // TODO: This is a must to when working with EclipseLink as JPA
+        entityManager.flush(); // TODO: This is a must when working with EclipseLink as JPA
     }
 
     //@Override

@@ -32,9 +32,8 @@ public class CacheContainerManager {
     public CacheContainer create(Integer ctx) {
         CacheContainer cacheContainer = context.getBean(CacheContainer.class);
         if (cacheContainerMap.containsKey(ctx)) {
-            LOGGER.debug("ctx " + ctx + " already exist !!!");
-            // TODO: do not exit so quickly - remove later on !!
-            System.exit(-1);
+            LOGGER.error("Cache out of sync!, ctx " + ctx + " already exist !!!");
+            System.exit(-3);
         }
         cacheContainerMap.put(ctx, cacheContainer);
         return cacheContainer;
