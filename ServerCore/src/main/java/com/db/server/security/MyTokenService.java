@@ -67,7 +67,7 @@ public class MyTokenService {
 	}
 
 	public synchronized Authentication retrieve(MyToken token) {
-		return (Authentication) restApiAuthTokenCache.get(token);
+		return restApiAuthTokenCache.get(token);
 	}
 
 	public synchronized void revoke(MyToken token) {

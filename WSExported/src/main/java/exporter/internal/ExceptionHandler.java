@@ -13,25 +13,20 @@ public class ExceptionHandler extends PluginHandler {
 
     @Override
     protected boolean shouldRemoveAnnotation(Annotation annotation) {
-        if (annotation.getTypeName().equals(Override.class.getName()))
-            return false;
-        return true;
+        return !annotation.getTypeName().equals(Override.class.getName());
     }
 
     @SuppressWarnings("unchecked")
     protected boolean shouldRemoveClass(Class clz) {
-        if (!clz.isAssignableFrom(Exception.class))
-            return false;
-
-        return true;
+        return clz.isAssignableFrom(Exception.class);
     }
 
-    protected boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws NotFoundException {
+    protected boolean shouldRemoveConstructor(CtConstructor ctConstructor) {
 //        System.err.println("Checking " + ctConstructor.getName());
         return false;
     }
 
-    protected boolean shouldRemoveMethod(CtMethod ctMethod) throws ClassNotFoundException, NotFoundException {
+    protected boolean shouldRemoveMethod(CtMethod ctMethod) {
 //        System.err.println("Checking " + ctMethod.getName());
         return false;
     }

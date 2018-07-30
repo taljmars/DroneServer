@@ -64,7 +64,7 @@ public class Analyzer implements KeyListener{
         component.append(runnable.run(cmd));
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         System.out.println("Start Drone Server Analyzer");
         Analyzer analyzer = AppConfig.context.getBean(Analyzer.class);
         analyzer.run(args);

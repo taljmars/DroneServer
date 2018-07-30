@@ -33,10 +33,7 @@ public class PerimeterQuery implements RunnablePayload {
             return false;
 
         String[] strs = payload.split(" ");
-        if (strs.length <= 2)
-            return false;
-
-        return true;
+        return strs.length > 2;
     }
 
     @Override

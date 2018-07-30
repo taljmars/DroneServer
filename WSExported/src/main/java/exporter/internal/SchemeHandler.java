@@ -17,26 +17,18 @@ public class SchemeHandler extends PluginHandler {
     @Override
     @SuppressWarnings("unchecked")
     protected boolean shouldRemoveClass(Class clz) {
-        if (clz.getAnnotation(Component.class) != null)
-            return true;
+        return clz.getAnnotation(Component.class) != null;
 
-        return false;
     }
 
     protected boolean shouldRemoveAnnotation(Annotation annotation) {
-        if (annotation.getTypeName().equals(Override.class.getName()))
-            return false;
-
-        return true;
+        return !annotation.getTypeName().equals(Override.class.getName());
     }
 
     public boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws Exception {
 //        System.err.println("Checking " + ctConstructor.getName());
 
-        if (ctConstructor.getParameterTypes().length == 0)
-            return false;
-
-        return true;
+        return ctConstructor.getParameterTypes().length != 0;
     }
 
     public boolean shouldRemoveMethod(CtMethod ctMethod) throws Exception {
@@ -49,12 +41,10 @@ public class SchemeHandler extends PluginHandler {
             return true;
 
         String mName = ctMethod.getName();
-        if (!(mName.startsWith("set") && mName.length() > "set".length()) &&
-            !(mName.startsWith("get") && mName.length() > "get".length()) &&
-            !(mName.startsWith("is") && mName.length() > "is".length()))
-            return true;
+        return !(mName.startsWith("set") && mName.length() > "set".length()) &&
+                !(mName.startsWith("get") && mName.length() > "get".length()) &&
+                !(mName.startsWith("is") && mName.length() > "is".length());
 
-        return false;
     }
 
 }

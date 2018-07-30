@@ -99,7 +99,7 @@ public class LogsDumperScheduler {
         while (!clz.getName().equals(Object.class.getName())) {
             if (clz.isAnnotationPresent(Table.class)) {
                 LOGGER.debug("Found table is " + clz.getSimpleName() + " for object of type " + clz.getSimpleName());
-                Table table = (Table) clz.getAnnotation(Table.class);
+                Table table = clz.getAnnotation(Table.class);
                 String tableName = table.name();
                 if (tableName.isEmpty())
                     tableName = clz.getSimpleName();

@@ -51,7 +51,7 @@ public class Exporter {
         run(target, pluginsManager.getPlugins());
     }
 
-    public static void run(String targetDir, List<? extends PluginManifest> servicesList) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public static void run(String targetDir, List<? extends PluginManifest> servicesList) throws IOException, ClassNotFoundException {
         for (PluginManifest pluginDef : servicesList) {
             List<String> webServices = pluginDef.getWebServicePackage();
             for (String ws : webServices)
@@ -93,7 +93,7 @@ public class Exporter {
         System.out.println("Built " + classes.size() + " classes");
     }
 
-    private static List<Class> handleClassesInPackage(File directory, String packageName, Filter filter) throws ClassNotFoundException, IOException {
+    private static List<Class> handleClassesInPackage(File directory, String packageName, Filter filter) throws ClassNotFoundException {
         List<Class> classes = new ArrayList<Class>();
         if (!directory.exists())
             return classes;
@@ -116,7 +116,7 @@ public class Exporter {
                     }
                 }
             }
-            catch (IOException e) {
+            catch (Throwable e) {
                 e.printStackTrace();
             }
         }

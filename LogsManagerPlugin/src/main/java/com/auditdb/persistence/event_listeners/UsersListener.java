@@ -33,7 +33,7 @@ public class UsersListener {
     public void handleEvent(AccessEvent accessEvent) {
         LOGGER.debug("Access event: " + accessEvent);
         AccessLog logEntry = new AccessLog();
-        logEntry.setLogin(accessEvent.getEventType().equals(AccessEvent.AccessEventType.LOGIN) ? true : false);
+        logEntry.setLogin(accessEvent.getEventType().equals(AccessEvent.AccessEventType.LOGIN));
         logEntry.setUserName(accessEvent.getUserName());
         eventQueue.queue(accessEvent, logEntry);
     }

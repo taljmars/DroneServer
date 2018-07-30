@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface DeleteTrigger {
 
-	public String trigger() default "";
+	String trigger() default "";
 	
 }

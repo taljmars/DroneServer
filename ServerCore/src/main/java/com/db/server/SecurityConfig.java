@@ -52,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenAuthenticationProvider tokenAuthenticationProvider;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         LOGGER.debug("configuring basic users");
 //        auth.inMemoryAuthentication()
 //                .passwordEncoder(NoOpPasswordEncoder.getInstance())
@@ -94,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .sessionRegistry(sessionRegistry)
                 .expiredSessionStrategy(new SessionInformationExpiredStrategy() {
                     @Override
-                    public void onExpiredSessionDetected(SessionInformationExpiredEvent sessionInformationExpiredEvent) throws IOException, ServletException {
+                    public void onExpiredSessionDetected(SessionInformationExpiredEvent sessionInformationExpiredEvent) {
                         System.out.println("Session expired " +
                                 sessionInformationExpiredEvent.getSessionInformation().getSessionId() +
                                 " " +

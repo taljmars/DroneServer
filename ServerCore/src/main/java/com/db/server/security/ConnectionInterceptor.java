@@ -16,7 +16,7 @@ public class ConnectionInterceptor implements HandlerInterceptor {
 
     @Scope
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         LOGGER.debug("CONNECTION STARTED");
         LOGGER.debug("CONNECTION STARTED request: " + request);
         LOGGER.debug("CONNECTION STARTED response: " + response);
@@ -30,7 +30,7 @@ public class ConnectionInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         LOGGER.debug("CONNECTION ENDED request: " + request);
         LOGGER.debug("CONNECTION ENDED response: " + response);
         LOGGER.debug("CONNECTION ENDED");

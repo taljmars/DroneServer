@@ -21,8 +21,6 @@ public class NameNotEmptyValidator implements ConstraintValidator<NameNotEmptyVa
 
     @Override
     public boolean isValid(Mission value, ConstraintValidatorContext context) {
-        if (value.getName() == null || value.getName().isEmpty())
-            return false;
-        return true;
+        return value.getName() != null && !value.getName().isEmpty();
     }
 }

@@ -6,8 +6,8 @@ import com.db.persistence.scheme.BaseObject;
 
 public interface DeleteObjectTrigger {
 	
-	public <T extends BaseObject> void handleDeleteObject(T object) throws Exception;
+	<T extends BaseObject> void handleDeleteObject(T object) throws Exception;
 	
-	public void setApplicationContext(ApplicationContext applicationContext);
+	void setApplicationContext(ApplicationContext applicationContext);
 
 }

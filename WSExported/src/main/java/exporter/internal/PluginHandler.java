@@ -67,7 +67,7 @@ public abstract class PluginHandler implements Filter {
 
     protected abstract boolean shouldRemoveClass(Class clz);
 
-    protected abstract boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws NotFoundException, Exception;
+    protected abstract boolean shouldRemoveConstructor(CtConstructor ctConstructor) throws Exception;
 
     protected abstract boolean shouldRemoveMethod(CtMethod ctMethod) throws Exception;
 

@@ -12,7 +12,7 @@ import javax.servlet.ServletRegistration;
 @Configuration
 public class ApplicationInitializer implements WebApplicationInitializer {
 
-    public void onStartup(ServletContext container) throws ServletException {
+    public void onStartup(ServletContext container) {
         System.out.println("Servlet Register");
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.setServletContext(container);

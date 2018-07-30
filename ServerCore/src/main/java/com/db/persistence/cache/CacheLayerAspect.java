@@ -35,7 +35,7 @@ public class CacheLayerAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.find(..))")
     @Transactional
-    public <T extends BaseObject> T find(ProceedingJoinPoint pjp) throws Throwable {
+    public <T extends BaseObject> T find(ProceedingJoinPoint pjp) {
         try {
 //            System.out.println("find (cacheContainerManager=" + cacheContainerManager + ")");
             Object[] args = pjp.getArgs();
@@ -75,7 +75,7 @@ public class CacheLayerAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.persist(..))")
     @Transactional
-    public <T extends BaseObject> void persist(ProceedingJoinPoint pjp) throws Throwable {
+    public <T extends BaseObject> void persist(ProceedingJoinPoint pjp) {
 //        System.out.println("persist (cacheContainerManager=" + cacheContainerManager + ")");
         try {
             T retVal = (T) pjp.getArgs()[0];
@@ -95,7 +95,7 @@ public class CacheLayerAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.update(..))")
     @Transactional
-    public <T extends BaseObject> T update(ProceedingJoinPoint pjp) throws Throwable {
+    public <T extends BaseObject> T update(ProceedingJoinPoint pjp) {
         T retVal = null;
         try {
 //            System.out.println("update (cacheContainerManager=" + cacheContainerManager + ")");

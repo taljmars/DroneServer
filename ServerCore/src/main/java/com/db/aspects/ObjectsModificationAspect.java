@@ -40,7 +40,7 @@ public class ObjectsModificationAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.movePrivateToPublic(..))")
     @Transactional
-    public void aroundMovePrivateToPublic(ProceedingJoinPoint pjp) throws Throwable {
+    public void aroundMovePrivateToPublic(ProceedingJoinPoint pjp) {
         try {
             LOGGER.debug("Using Aspect -> " + pjp);
 
@@ -66,7 +66,7 @@ public class ObjectsModificationAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.movePrivateToPublicForFirstTime(..))")
     @Transactional
-    public void aroundMovePrivateToPublicForFirstTime(ProceedingJoinPoint pjp) throws Throwable {
+    public void aroundMovePrivateToPublicForFirstTime(ProceedingJoinPoint pjp) {
         try {
             LOGGER.debug("Using Aspect -> " + pjp);
 

@@ -95,7 +95,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T delete(T object) throws DatabaseValidationException, ObjectInstanceException, ObjectNotFoundException {
+	public <T extends BaseObject> T delete(T object) throws ObjectInstanceException {
 		LOGGER.debug("Crud DELETE called " + object);
 
 		T existingPrivateObject = (T) workSession().delete(object);
@@ -120,7 +120,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T readByClass(String objId, Class<T> clz) throws ObjectNotFoundException {
+	public <T extends BaseObject> T readByClass(String objId, Class<T> clz) {
 		LOGGER.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
 		// First search in the private db

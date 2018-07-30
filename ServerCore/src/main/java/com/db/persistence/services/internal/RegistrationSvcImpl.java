@@ -121,10 +121,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
         if (userName.contains(" "))
             return false;
 
-        if (userName.length() < 4)
-            return false;
-
-        return true;
+        return userName.length() >= 4;
     }
 
     private boolean isPasswordValid(String userName, String password) {
@@ -134,9 +131,6 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
         if (password.contains(" "))
             return false;
 
-        if (password.length() < 4)
-            return false;
-
-        return true;
+        return password.length() >= 4;
     }
 }

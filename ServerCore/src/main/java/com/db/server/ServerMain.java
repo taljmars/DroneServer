@@ -60,7 +60,7 @@ public class ServerMain extends SpringBootServletInitializer
 		};
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
         System.out.println("Start Server with profiles");
         loadProfile();
 		SpringApplication.run(ServerMain.class, args);

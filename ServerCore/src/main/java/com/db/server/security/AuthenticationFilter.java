@@ -80,7 +80,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         return resourcePath.equals("/login") && httpRequest.getMethod().equals("POST");
     }
 
-    private void processUsernamePasswordAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Optional<String> username, Optional<String> password) throws IOException {
+    private void processUsernamePasswordAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Optional<String> username, Optional<String> password) {
         Authentication resultOfAuthentication = tryToAuthenticateWithUsernameAndPassword(username, password, httpRequest.getRemoteAddr());
         SecurityContextHolder.getContext().setAuthentication(resultOfAuthentication);
     }

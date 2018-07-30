@@ -142,7 +142,7 @@ public class ManagedClassTopologicalSorter {
         }
 
         @Override
-        public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+        public void doWith(Field field) throws IllegalArgumentException {
             LOGGER.debug("Check field " + field + " of class " + this.clzHolder);
             Annotation annotation = field.getAnnotation(TargetType.class);
             if (annotation == null)
