@@ -49,17 +49,6 @@ public class IntegrationTest {
         System.out.println(objectCrudSvc);
         System.out.println(loginSvc);
         System.out.println("---------------------------------------------------------");
-//        LoginRestRequest loginRestRequest = new LoginRestRequest();
-//        loginRestRequest.setUserName("talma5");
-//        loginRestRequest.setApplicationName("Tester");
-//        loginRestRequest.setTimeout(5000);
-//        LoginRestResponse resp = loginSvc.login(loginRestRequest);
-//        if (!resp.getReturnCode().equals(OK)) {
-//            System.out.println("Failed to login: " + resp.getMessage());
-//            // TODO: have better exception
-//            throw new RuntimeException("Failed to run test");
-//        }
-//        token = resp.getToken();
         token = INTERNAL_SERVER_USER_TOKEN;
 
         ((TokenAwareSvc) objectCrudSvc).setToken(token);

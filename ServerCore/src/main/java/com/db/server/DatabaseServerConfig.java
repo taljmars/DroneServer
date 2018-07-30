@@ -27,47 +27,6 @@ public class DatabaseServerConfig {
 
 	private final static Logger LOGGER = Logger.getLogger(DatabaseServerConfig.class);
 
-	private static final String portFile = "PORT";
-	private static final String ipFile = "IP";
-
-	@Bean
-	public String serverIp() {
-		try {
-			String path = System.getProperty("CONF.DIR") + Environment.DIR_SEPERATOR + ipFile;
-			FileReader fr = new FileReader(path);
-			System.err.println(fr.toString());
-			BufferedReader br = new BufferedReader(fr);
-			return br.readLine();
-		}
-		catch (FileNotFoundException e) {
-			LOGGER.error("IP file doesn't exist");
-		}
-		catch (IOException e) {
-			LOGGER.error("Failed to read IP file");
-		}
-		//TODO: TALMA WA
-		return "127.0.0.1";
-		//return null;
-	}
-
-	@Bean
-	public String serverPort() {
-		try {
-			String path = System.getProperty("CONF.DIR") + Environment.DIR_SEPERATOR + portFile;
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			return br.readLine();
-		}
-		catch (FileNotFoundException e) {
-			LOGGER.error("Port file doesn't exist");
-		}
-		catch (IOException e) {
-			LOGGER.error("Failed to read port file");
-		}
-		//TODO: TALMA WA
-		return "1234";
-//		return null;
-	}
-
 	@Bean
 	public Validator validator(final AutowireCapableBeanFactory autowireCapableBeanFactory) {
 //		return new LocalValidatorFactoryBean();

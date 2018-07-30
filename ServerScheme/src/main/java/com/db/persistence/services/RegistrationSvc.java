@@ -6,6 +6,6 @@ public interface RegistrationSvc {
 
     RegistrationResponse registerNewUser(RegistrationRequest signingRequest);
 
-    User getUserByName(String userName);
+    MyUser getUserByName(String userName);
 
 }

@@ -9,7 +9,7 @@ import com.db.persistence.exception.QueryException;
 import com.db.persistence.scheme.BaseObject;
 import com.db.persistence.scheme.RegistrationRequest;
 import com.db.persistence.scheme.RegistrationResponse;
-import com.db.persistence.scheme.User;
+import com.db.persistence.scheme.MyUser;
 import com.db.persistence.services.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
 
         try {
             LOGGER.debug("Checking user " + userName + " doesn't exist");
-            User user = getUserByName(userName);
+            MyUser user = getUserByName(userName);
             if (user != null) {
                 LOGGER.debug("User already exist");
                 resp.setMessage("User already exist");
@@ -70,7 +70,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
             }
 
             LOGGER.debug("Creating user in database");
-            user = objectCrudSvc.create(User.class.getCanonicalName());
+            user = objectCrudSvc.create(MyUser.class.getCanonicalName());
             user.setUserName(userName);
             user.setPassword(password);
             objectCrudSvc.update(user);
@@ -92,14 +92,14 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
     }
 
     @Override
-    public User getUserByName(String userName) {
+    public MyUser getUserByName(String userName) {
         try {
             if (!isUserNameValid(userName))
                 return null;
 
             QueryRequest queryRequest = new QueryRequest();
             queryRequest.setQuery("GetUserByName");
-            queryRequest.setClz(User.class);
+            queryRequest.setClz(MyUser.class);
             Map<String, String> params = new HashMap<>();
             params.put("USERNAME", userName);
             queryRequest.setParameters(params);
@@ -107,7 +107,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
             if (res == null || res.isEmpty())
                 return null;
 
-            return (User) res.get(0);
+            return (MyUser) res.get(0);
         }
         catch (QueryException e) {
             throw new RuntimeException("Failed to get user", e);

@@ -20,6 +20,7 @@ import javax.servlet.ServletContextListener;
 
 import static com.db.server.SpringProfiles.H2;
 import static com.db.server.SpringProfiles.Hibernate;
+import static com.db.server.SpringProfiles.Postgres;
 
 @Import({
 		DatabaseServerConfig.class,
