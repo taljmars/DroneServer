@@ -70,8 +70,8 @@ public class ServerMain extends SpringBootServletInitializer
 	public static void loadProfile() {
         addSpringProfile(Hibernate);
 //		addSpringProfile(EclipseLink);
-//		addSpringProfile(Postgres);
-        addSpringProfile(H2);
+		addSpringProfile(Postgres);
+//        addSpringProfile(H2);
     }
 
 	public static void addSpringProfile(String profile) {
