@@ -3,13 +3,9 @@ package com.db.persistence.scheme;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import static com.db.persistence.scheme.Constants.GEN_CTX;
@@ -17,21 +13,21 @@ import static com.db.persistence.scheme.Constants.GEN_CTX;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "GetUserByName",
-                query = "SELECT * FROM User WHERE " + GEN_CTX + " AND (userName ilike :USERNAME)",
-                resultClass = User.class
+                query = "SELECT * FROM MyUser WHERE " + GEN_CTX + " AND (userName ilike :USERNAME)",
+                resultClass = MyUser.class
         )
 })
 @Table
-@XmlAccessorType(XmlAccessType.PROPERTY)
+//@XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity
 @Sessionable
-public class User extends BaseObject {
+public class MyUser extends BaseObject  implements Serializable {
 
-    public User() {
+    public MyUser() {
         super();
     }
 
-    public User(User objectDeref) {
+    public MyUser(MyUser objectDeref) {
         super(objectDeref);
         this.userName = objectDeref.getUserName();
     }
@@ -60,20 +56,21 @@ public class User extends BaseObject {
     }
 
     @Override
-    public User clone() {
-        return new User(this);
+    @Transient
+    public MyUser clone() {
+        return new MyUser(this);
     }
 
     @Override
     public void set(BaseObject baseObject) {
-        User dummyBaseObject = (User) baseObject;
+        MyUser dummyBaseObject = (MyUser) baseObject;
         this.setUserName(dummyBaseObject.getUserName());
     }
 
 
     @Override
-    public User copy() {
-        User objectDeref = (User) super.copy();
+    public MyUser copy() {
+        MyUser objectDeref = (MyUser) super.copy();
         return objectDeref;
     }
 
@@ -82,14 +79,13 @@ public class User extends BaseObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        User user = (User) o;
+        MyUser user = (MyUser) o;
         return Objects.equals(userName, user.userName) &&
                 Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), userName, password);
     }
 

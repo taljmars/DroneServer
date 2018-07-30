@@ -1,11 +1,10 @@
 package com.db.server.security;
 
-import com.db.persistence.scheme.User;
+import com.db.persistence.scheme.MyUser;
 import com.db.persistence.services.RegistrationSvc;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -50,7 +49,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             return generateAuthenticationWithToken(name, password, authentication);
         }
 
-        User user = registrationSvc.getUserByName(name);
+        MyUser user = registrationSvc.getUserByName(name);
         LOGGER.debug("Try to login with, user=" + name + ", pass=" + password + ", gor user:" + user);
         if (user != null && user.getPassword().equals(password)) {
             LOGGER.debug("Authenticated ->" + authentication);

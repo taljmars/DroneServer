@@ -20,6 +20,7 @@ import javax.servlet.ServletContextListener;
 
 import static com.db.server.SpringProfiles.H2;
 import static com.db.server.SpringProfiles.Hibernate;
+import static com.db.server.SpringProfiles.Postgres;
 
 @Import({
 		DatabaseServerConfig.class,
@@ -69,8 +70,8 @@ public class ServerMain extends SpringBootServletInitializer
 	public static void loadProfile() {
         addSpringProfile(Hibernate);
 //		addSpringProfile(EclipseLink);
-//		addSpringProfile(Postgres);
-        addSpringProfile(H2);
+		addSpringProfile(Postgres);
+//        addSpringProfile(H2);
     }
 
 	public static void addSpringProfile(String profile) {

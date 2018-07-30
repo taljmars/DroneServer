@@ -5,7 +5,9 @@
 
 package com.db.persistence.objectStore;
 
+import com.db.server.SpringProfiles;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -23,10 +25,14 @@ public class SimpleEntityManagerWrapper {//} implements EntityManager {
 
     private EntityManager entityManager;
     private final Integer ctx; // Just for debug - It nice to know the context of the entity manager
+    private boolean autoFlash;
 
     public SimpleEntityManagerWrapper(EntityManager entityManager, Integer ctx) {
         this.entityManager = entityManager;
         this.ctx = ctx;
+        final String activeProfile = System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
+        if (!activeProfile.isEmpty() && activeProfile.contains(SpringProfiles.EclipseLink))
+            autoFlash = true;
     }
 
     //@Override
@@ -42,7 +48,8 @@ public class SimpleEntityManagerWrapper {//} implements EntityManager {
     //@Override
     public void remove(Object o) {
         entityManager.remove(o);
-        entityManager.flush(); // TODO: This is a must when working with EclipseLink as JPA
+        if (autoFlash)
+            entityManager.flush(); // This is a must when working with EclipseLink as JPA
     }
 
     //@Override
