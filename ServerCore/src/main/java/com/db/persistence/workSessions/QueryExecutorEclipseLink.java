@@ -52,7 +52,7 @@ public class QueryExecutorEclipseLink implements QueryExecutor {
     }
 
     @Override
-    public <T extends BaseObject> List<T> createNamedQuery(String queryString, Class<T> clz) {
+    public <T extends BaseObject> List<T> createNamedQuery(String queryString, Class<T> clz, int offset, int limit) {
         LOGGER.debug("Query Executor request: " + queryString + ", for class: " + clz.getSimpleName());
         TypedQuery<T> query = workSession.getEntityManager().createNamedQuery(queryString, clz);
 //        query.setHint("eclipselink.jdbc.parameter-delimiter", ":");
@@ -60,7 +60,13 @@ public class QueryExecutorEclipseLink implements QueryExecutor {
         query.setHint("eclipselink.jdbc.bind-parameters", "false");
 //        query.setHint("jdbc.parameter-delimiter", ":");
         if (query.getParameters().stream().filter(e -> e.getName().equals("CTX")).count() != 0)
-            return createNamedQuery(queryString, new HashMap<>(), clz);
+            return createNamedQuery(queryString, new HashMap<>(), clz, offset, limit);
+
+        if (offset != 0 || limit != 0) {
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
+        }
+
         query.setParameter(1, "1");
         query.setParameter(2, "1");
         List<T> res = query.getResultList();
@@ -68,7 +74,7 @@ public class QueryExecutorEclipseLink implements QueryExecutor {
     }
 
     @Override
-    public <T extends BaseObject> List<T> createNamedQuery(String queryString, Map<String, Object> parameterSet, Class<T> clz) {
+    public <T extends BaseObject> List<T> createNamedQuery(String queryString, Map<String, Object> parameterSet, Class<T> clz, int offset, int limit) {
         LOGGER.debug("Query Executor request: " + queryString + ", for class: " + clz.getSimpleName());
         TypedQuery<T> query = workSession.getEntityManager().createNamedQuery(queryString, clz);
         if (parameterSet != null) {
@@ -78,6 +84,12 @@ public class QueryExecutorEclipseLink implements QueryExecutor {
 
         if (query.getParameters().stream().anyMatch((p) -> p.getName().equals("CTX")))
             query.setParameter("CTX", workSession.getSessionId());
+
+        if (offset != 0 || limit != 0) {
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
+        }
+
         List<T> res = query.getResultList();
         return translateResults(res);
     }

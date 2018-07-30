@@ -14,6 +14,10 @@ public class QueryRequestRemote {
 	protected String query;
 	
 	private String clz;
+
+	private int offset;
+
+	private int limit;
 		
 	private Map<String, String> params;
 
@@ -59,6 +63,26 @@ public class QueryRequestRemote {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [ Query=" + query + ", Clz=" + clz + ", Parameters=" + params.toString() + " ]";
+		return getClass().getSimpleName() + " [ Query=" + query + ", Clz=" + clz + ", Offset=" + offset + ", Limit=" + limit +", Parameters=" + params.toString() + " ]";
+	}
+
+	@Getter
+	public int getOffset() {
+		return offset;
+	}
+
+	@Setter
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	@Getter
+	public int getLimit() {
+		return limit;
+	}
+
+	@Setter
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 }

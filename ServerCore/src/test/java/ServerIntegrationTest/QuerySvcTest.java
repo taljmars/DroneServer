@@ -49,7 +49,7 @@ public class QuerySvcTest {
         assertTrue(res.get(0).equals(dummyBaseObject1) || res.get(0).equals(dummyBaseObject2));
         assertTrue(res.get(1).equals(dummyBaseObject1) || res.get(1).equals(dummyBaseObject2));
 
-        res = querySvc.runNamedQuery("GetAllDummyBaseObject", DummyBaseObject.class);
+        res = querySvc.runNamedQuery("GetAllDummyBaseObject", DummyBaseObject.class, 0, 0);
         assertTrue(res.size() == 2);
         assertTrue(res.get(0).equals(dummyBaseObject1) || res.get(0).equals(dummyBaseObject2));
         assertTrue(res.get(1).equals(dummyBaseObject1) || res.get(1).equals(dummyBaseObject2));
@@ -57,7 +57,7 @@ public class QuerySvcTest {
         objectCrudSvc.delete(dummyBaseObject1);
         objectCrudSvc.delete(dummyBaseObject2);
 
-        res = querySvc.runNamedQuery("GetAllDummyBaseObject", DummyBaseObject.class);
+        res = querySvc.runNamedQuery("GetAllDummyBaseObject", DummyBaseObject.class, 0, 0);
         assertTrue(res.isEmpty());
 
     }

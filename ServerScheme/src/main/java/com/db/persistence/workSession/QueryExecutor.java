@@ -12,9 +12,9 @@ public interface QueryExecutor {
 
     <T extends BaseObject> List<T> createNativeQuery(String queryString);
 
-    <T extends BaseObject> List<T> createNamedQuery(String queryString, Class<T> clz);
+    <T extends BaseObject> List<T> createNamedQuery(String queryString, Class<T> clz, int offset, int limit);
 
-    <T extends BaseObject> List<T> createNamedQuery(String queryString, Map<String, Object> parameterSet, Class<T> clz);
+    <T extends BaseObject> List<T> createNamedQuery(String queryString, Map<String, Object> parameterSet, Class<T> clz, int offset, int limit);
 
     WorkSession getWorkSession();
 

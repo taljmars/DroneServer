@@ -17,6 +17,10 @@ public class QueryRequest {
 		
 	private Map<String, Object> params;
 
+	private int limit;
+
+	private int offset;
+
 	// Ctor
 	public QueryRequest() {
 		params = new HashMap<>();
@@ -75,5 +79,21 @@ public class QueryRequest {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [ Query=" + query + ", Clz=" + clz.getCanonicalName() + ", Parameters=" + params.toString() + " ]";
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 }

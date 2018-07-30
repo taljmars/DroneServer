@@ -15,7 +15,7 @@ public interface QuerySvc {
 	 * @param <T> Generic type of the object
 	 * @return List of query results
 	 */
-	<T extends BaseObject> List<? extends BaseObject> runNamedQuery(String query, Class<T> clz);
+	<T extends BaseObject> List<? extends BaseObject> runNamedQuery(String query, Class<T> clz, int offset, int limit);
 
 	/**
 	 * The following enable the user to send query request in order to get the list of objects

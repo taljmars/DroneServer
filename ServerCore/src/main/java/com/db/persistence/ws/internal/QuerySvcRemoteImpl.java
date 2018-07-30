@@ -35,11 +35,13 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 	@ResponseBody
 	public <T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(
 			@RequestParam String queryString,
-			@RequestParam String clz) throws QueryRemoteException {
+			@RequestParam String clz,
+			@RequestParam int offset,
+			@RequestParam int limit) throws QueryRemoteException {
 
 		QueryResponseRemote response = new QueryResponseRemote();
 		try {
-			List<T> res = (List<T>) querySvc.runNamedQuery(queryString, (Class<T>) Class.forName(clz));
+			List<T> res = (List<T>) querySvc.runNamedQuery(queryString, (Class<T>) Class.forName(clz), offset, limit);
 
 			List<T> clonedRes = new ArrayList<>();
 			for (T obj : res) {
@@ -69,6 +71,9 @@ public class QuerySvcRemoteImpl implements QuerySvcRemote {
 
 			queryRequest.setQuery(queryRequestRemote.getQuery());
 			queryRequest.setParameters(queryRequestRemote.getParameters());
+			queryRequest.setOffset(queryRequestRemote.getOffset());
+			queryRequest.setLimit(queryRequestRemote.getLimit());
+
 			List<T> res = (List<T>) querySvc.query(queryRequest);
 
 			List<T> clonedRes = new ArrayList<>();

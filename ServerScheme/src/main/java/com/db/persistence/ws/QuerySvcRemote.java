@@ -11,7 +11,10 @@ public interface QuerySvcRemote {
 
 	@RequestMapping(value = "/runNamedQuery", method = RequestMethod.GET)
 	@ResponseBody
-	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(@RequestParam String queryString, @RequestParam String clz) throws QueryRemoteException;
+	<T extends BaseObject> ResponseEntity<QueryResponseRemote> runNamedQuery(@RequestParam String queryString,
+																			 @RequestParam String clz,
+																			 @RequestParam int offset,
+																			 @RequestParam int limit) throws QueryRemoteException;
 
 	@RequestMapping(value = "/query", method = RequestMethod.POST)
 	@ResponseBody
