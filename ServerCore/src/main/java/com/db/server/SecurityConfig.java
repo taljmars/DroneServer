@@ -54,18 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         LOGGER.debug("configuring basic users");
-//        auth.inMemoryAuthentication()
-//                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-//                .withUser("admin").password("admin").roles("ADMIN")
-//                .and().withUser("PUBLIC").password("PUBLIC").roles("ADMIN")
-//                .and().withUser("admin1").password("admin1").roles("USER");
         auth.authenticationProvider(authProvider);
         auth.authenticationProvider(tokenAuthenticationProvider);
     }
 
     @Bean("sessionLimitation")
     public Integer sessionLimitation() {
-        return 1;
+        return 3;
     }
 
     @Override
@@ -75,13 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
                 .and()
+                .headers().frameOptions().disable()
+                .and()
                 .authorizeRequests()
 //                .antMatchers("/createForToken").anonymous()
 //                .antMatchers("/read*").permitAll()
 //                .antMatchers("/update*").anonymous()
 //                .antMatchers("/delete*").permitAll()
 //                .antMatchers("/login").authenticated()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/**").permitAll()
 //                .antMatchers("/*").hasRole("ADMIN")
                 .and()
                 .httpBasic()

@@ -6,8 +6,7 @@
 package com.db.server.security;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,6 +56,10 @@ public class AuthenticationFilter extends GenericFilterBean {
                 LOGGER.debug("Trying to authenticate user '" + username + "' by X-Auth-Username method");
                 processUsernamePasswordAuthentication(httpRequest, httpResponse, username, password);
             }
+            else if (postToDatabaseAccess(httpRequest, resourcePath)) {
+                LOGGER.debug("Trying to access db");
+                processDatabaseAccessAuthentication(httpRequest, httpResponse);
+            }
 
             LOGGER.debug("AuthenticationFilter is passing request down the filter chain");
             chain.doFilter(request, response);
@@ -74,6 +77,16 @@ public class AuthenticationFilter extends GenericFilterBean {
 //            MDC.remove(TOKEN_SESSION_KEY);
 //            MDC.remove(USER_SESSION_KEY);
         }
+    }
+
+    private void processDatabaseAccessAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("sa","", null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private boolean postToDatabaseAccess(HttpServletRequest httpRequest, String resourcePath) {
+        return (resourcePath.startsWith("/console") || resourcePath.startsWith("/favi")) && httpRequest.getMethod().equals("GET") &&
+                (httpRequest.getRemoteAddr().equals("0:0:0:0:0:0:0:1") || httpRequest.getRemoteAddr().equals("127.0.0.1"));
     }
 
     private boolean postToAuthenticate(HttpServletRequest httpRequest, String resourcePath) {

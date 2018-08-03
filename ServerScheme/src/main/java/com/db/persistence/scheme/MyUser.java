@@ -4,6 +4,8 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,10 +20,10 @@ import static com.db.persistence.scheme.Constants.GEN_CTX;
         )
 })
 @Table
-//@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity
 @Sessionable
-public class MyUser extends BaseObject  implements Serializable {
+public class MyUser extends BaseObject {
 
     public MyUser() {
         super();

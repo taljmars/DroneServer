@@ -70,8 +70,10 @@ public class LogsDumperScheduler {
 
             if (!eventList.isEmpty()) {
                 WorkSession workSession = workSessionManager.getSessionByToken(internalUserToken);
-                for (BaseObject auditLog : eventList)
+                for (BaseObject auditLog : eventList) {
+                    auditLog.setCreationDate(new Date());
                     workSession.update(auditLog);
+                }
 
 //                sessionsSvc.setToken(internalUserToken).publish();
                 // This logic is similar to publish funtion - TODO: Remove this code duplication

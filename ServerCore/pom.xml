@@ -205,7 +205,7 @@
             <artifactId>spring-security-core</artifactId>
             <version>${org.springframework.security.version}</version>
         </dependency>
-            </dependencies>
+    </dependencies>
 
     <build>
         <outputDirectory>${class.path}</outputDirectory>
