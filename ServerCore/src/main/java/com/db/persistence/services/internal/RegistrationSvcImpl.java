@@ -37,7 +37,7 @@ public class RegistrationSvcImpl extends TokenAwareSvcImpl implements Registrati
 
     @Override
     @Transactional
-    public RegistrationResponse registerNewUser(RegistrationRequest registrationRequest) {
+    public synchronized RegistrationResponse registerNewUser(RegistrationRequest registrationRequest) {
         LOGGER.debug("Try to register new user " + registrationRequest.toString());
         RegistrationResponse resp = new RegistrationResponse();
         resp.setDate(new Date());

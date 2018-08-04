@@ -30,7 +30,7 @@ public class QuerySvcImpl extends TokenAwareSvcImpl implements QuerySvc {
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> List<T> runNamedQuery(String queryString, Class<T> clz, int offset, int limit)
+	public synchronized <T extends BaseObject> List<T> runNamedQuery(String queryString, Class<T> clz, int offset, int limit)
 	{
 		LOGGER.debug("Running named query");
 		List<T> lst = workSession().getQueryExecutor().createNamedQuery(queryString, clz, offset, limit);
@@ -49,7 +49,7 @@ public class QuerySvcImpl extends TokenAwareSvcImpl implements QuerySvc {
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> List<? extends BaseObject> query(QueryRequest queryRequest)
+	public synchronized <T extends BaseObject> List<? extends BaseObject> query(QueryRequest queryRequest)
 	{
 		LOGGER.debug(queryRequest.toString());
 		Class<? extends BaseObject> clz = queryRequest.getClz();

@@ -31,14 +31,14 @@ public abstract class TokenAwareSvcImpl implements TokenAwareSvc<MyToken> {
 
     @Override
     @Transactional
-    public <T extends TokenAwareSvc> T setToken(MyToken token) {
+    public synchronized <T extends TokenAwareSvc> T setToken(MyToken token) {
         this.token = token;
         return (T) this;
     }
 
     @Override
     @Transactional
-    public MyToken getToken() {
+    public synchronized MyToken getToken() {
         if (RequestContextHolder.getRequestAttributes() != null) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             String uri = request.getRequestURI();
@@ -54,7 +54,7 @@ public abstract class TokenAwareSvcImpl implements TokenAwareSvc<MyToken> {
 
     @Override
     @Transactional
-    public WorkSession workSession() {
+    public synchronized WorkSession workSession() {
         if (RequestContextHolder.getRequestAttributes() != null) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             String uri = request.getRequestURI();

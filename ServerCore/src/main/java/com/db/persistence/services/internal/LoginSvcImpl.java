@@ -45,7 +45,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
 
     @Override
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
+    public synchronized LoginResponse login(LoginRequest loginRequest) {
         LOGGER.debug("Try to login the server " + loginRequest.toString());
         LoginResponse resp = new LoginResponse();
         resp.setDate(new Date());
@@ -104,7 +104,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
 
     @Override
     @Transactional
-    public LogoutResponse logout() {
+    public synchronized LogoutResponse logout() {
         LogoutResponse resp = new LogoutResponse();
         resp.setDate(new Date());
         MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(getToken());
@@ -127,7 +127,7 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
 
     @Override
     @Transactional
-    public KeepAliveResponse keepAlive() {
+    public synchronized KeepAliveResponse keepAlive() {
         KeepAliveResponse res = new KeepAliveResponse();
         MySessionInformation sessionInformation = serverSessionRegistry.getSessionInformation(getToken());
         if (sessionInformation == null) {

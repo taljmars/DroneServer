@@ -32,7 +32,7 @@ public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
 
 	@Override
 	@Transactional
-	public void publish() {
+	public synchronized void publish() {
 		// In case we've modified Revision
 
 		// This logic is similar to publish funtion - TODO: Remove this code duplication
@@ -46,7 +46,7 @@ public class SessionsSvcImpl extends TokenAwareSvcImpl implements SessionsSvc {
 
 	@Override
 	@Transactional
-	public void discard() {
+	public synchronized void discard() {
 		LOGGER.debug("DISCARD START !!!");
 		WorkSession workSession = workSession().discard();
 		LOGGER.debug("DISCARD END !!!");

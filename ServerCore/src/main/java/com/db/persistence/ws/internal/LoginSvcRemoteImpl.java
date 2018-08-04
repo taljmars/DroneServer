@@ -29,7 +29,7 @@ public class LoginSvcRemoteImpl implements LoginSvcRemote {
     @Override
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRestRequest) {
+    public synchronized ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRestRequest) {
         loginRestRequest.setUserName((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         LoginResponse res = loginSvc.login(loginRestRequest);
         return new ResponseEntity(res, HttpStatus.OK);
@@ -38,7 +38,7 @@ public class LoginSvcRemoteImpl implements LoginSvcRemote {
     @Override
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<LogoutResponse> logout() {
+    public synchronized ResponseEntity<LogoutResponse> logout() {
         LogoutResponse res = loginSvc.logout();
         return new ResponseEntity(res, HttpStatus.OK);
     }
@@ -46,7 +46,7 @@ public class LoginSvcRemoteImpl implements LoginSvcRemote {
     @Override
     @RequestMapping(value = "/keepAlive", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<KeepAliveResponse> keepAlive() {
+    public synchronized ResponseEntity<KeepAliveResponse> keepAlive() {
         KeepAliveResponse res = loginSvc.keepAlive();
         return new ResponseEntity(res, HttpStatus.OK);
     }

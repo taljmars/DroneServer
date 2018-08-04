@@ -40,7 +40,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T create(String clz) throws ObjectInstanceException {
+	public synchronized <T extends BaseObject> T create(String clz) throws ObjectInstanceException {
 		LOGGER.debug("Crud CREATE called " + clz);
 		try {
 			Class<T> c = (Class<T>) Class.forName(clz);
@@ -56,7 +56,7 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T update(T object) throws DatabaseValidationException, ObjectInstanceException {
+	public synchronized <T extends BaseObject> T update(T object) throws DatabaseValidationException, ObjectInstanceException {
 		LOGGER.debug("Crud UPDATE called " + object);
 		PHASE phase;
 
@@ -88,14 +88,14 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public void updateArray(BaseObject[] objects) throws DatabaseValidationException, ObjectInstanceException {
+	public synchronized void updateArray(BaseObject[] objects) throws DatabaseValidationException, ObjectInstanceException {
 		for (BaseObject object : objects)
 			update(object);
 	}
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T delete(T object) throws ObjectInstanceException {
+	public synchronized <T extends BaseObject> T delete(T object) throws ObjectInstanceException {
 		LOGGER.debug("Crud DELETE called " + object);
 
 		T existingPrivateObject = (T) workSession().delete(object);
@@ -114,13 +114,13 @@ public class ObjectCrudSvcImpl extends TokenAwareSvcImpl implements ObjectCrudSv
 
 	@Override
 	@Transactional
-	public BaseObject read(final String uid) {
+	public synchronized BaseObject read(final String uid) {
 		return workSession().find(uid);
 	}
 
 	@Override
 	@Transactional
-	public <T extends BaseObject> T readByClass(String objId, Class<T> clz) {
+	public synchronized <T extends BaseObject> T readByClass(String objId, Class<T> clz) {
 		LOGGER.debug("Crud READ called '" + objId + "', class '" + clz.getSimpleName() + "'");
 
 		// First search in the private db
