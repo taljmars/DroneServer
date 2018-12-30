@@ -3,7 +3,7 @@
 echo "Deploy Server"
 
 mkdir ServerCore
-tar -xf ServerCore*.tar -C ServerCorer
+tar -xf ServerCore*.tar -C ServerCore
 cd ServerCore
 chmod +x install.bash
 ./install.bash

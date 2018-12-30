@@ -129,18 +129,20 @@ public class CacheLayerAspect {
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.handlePublishForType(..))")
     @Transactional
-    public void handlePublishForType(ProceedingJoinPoint pjp) throws Throwable {
+    public int handlePublishForType(ProceedingJoinPoint pjp) throws Throwable {
 //        System.out.println("handlePublishForType (cacheContainerManager=" + cacheContainerManager + ")");
+        Integer retVal = 0;
         VirtualizedEntityManager that = (VirtualizedEntityManager) pjp.getThis();
         Integer ctx = that.getId();
         Class clz = (Class) pjp.getArgs()[0];
         if (cacheContainerManager.get(ctx).isClassCached(clz)) {
 //            System.out.println("CacheLayer: Found dirty class - " + clz.getCanonicalName());
-            pjp.proceed();
+            retVal = (Integer) pjp.proceed();
         }
 //        else {
 //            System.out.println("CacheLayer: Skip class - " + clz.getCanonicalName());
 //        }
+        return retVal;
     }
 
     @Around("execution(* com.db.persistence.objectStore.VirtualizedEntityManager.discard(..))")

@@ -26,7 +26,7 @@ import static com.db.server.SecurityConfig.INTERNAL_SERVER_USER_TOKEN;
 public class IntegrationTest {
 
     static {
-        Iterator it = Plugins.servicesList.iterator();
+        Iterator it = Plugins.get().servicesList.iterator();
         while (it.hasNext()) {
             if (!it.next().equals("com.db.persistence.ServerSchemeManifest"))
                 it.remove();

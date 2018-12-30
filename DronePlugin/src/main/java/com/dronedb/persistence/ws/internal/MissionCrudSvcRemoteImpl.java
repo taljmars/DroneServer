@@ -68,10 +68,10 @@ public class MissionCrudSvcRemoteImpl implements MissionCrudSvcRemote
 //    public <T extends MissionItem> T createMissionItem(@RequestParam String clz) throws ObjectInstanceRemoteException {
     public <T extends MissionItem> ResponseEntity<T> createMissionItem(@RequestParam String clz) {
 //        try {
-            LOGGER.debug("Crud REMOTE CREATE called '" + clz + "'");
+            LOGGER.debug("Crud mission item REMOTE CREATE called '" + clz + "'");
             try {
                 T t = (T) missionCrudSvc.createMissionItem(clz).copy();
-                LOGGER.debug("TALMA Crud REMOTE CREATE called " + t);
+                LOGGER.debug("TALMA Mission Item Crud REMOTE CREATE called " + t);
                 return new ResponseEntity<T>(t, HttpStatus.OK);
 //            return (T) missionCrudSvc.createMissionItem(clz).copy();
             }

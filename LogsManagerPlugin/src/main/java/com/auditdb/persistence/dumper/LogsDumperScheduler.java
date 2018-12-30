@@ -47,7 +47,8 @@ public class LogsDumperScheduler {
         storingTable = new HashMap<>();
     }
 
-    @Scheduled(fixedRate = 45 * 1000)
+    static final int SEC = 1000;
+    @Scheduled(fixedRate = 45 * SEC)
     public void tik() {
         try {
             LOGGER.info("============================================================================");
@@ -77,10 +78,10 @@ public class LogsDumperScheduler {
 
 //                sessionsSvc.setToken(internalUserToken).publish();
                 // This logic is similar to publish funtion - TODO: Remove this code duplication
-                LOGGER.debug("PUBLISH START !!!");
+                LOGGER.debug("PUBLISH START !!! (Log Dumper)");
                 LOGGER.debug("Update revision value in revision manager");
                 workSession = workSession.publish();
-                LOGGER.debug("PUBLISH END !!!");
+                LOGGER.debug("PUBLISH END !!!  (Log Dumper)");
                 workSessionManager.createSession(internalUserToken, workSession.getUserName());
             }
 

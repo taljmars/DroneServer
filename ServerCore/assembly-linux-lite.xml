@@ -1,10 +1,15 @@
 <?xml version="1.0"?>
+<!--
+  ~ Tal Martsiano
+  ~ Copyright (c) 2018.
+  -->
+
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <id>win-x64</id>
+    <id>linux</id>
     <formats>
-        <format>zip</format>
+        <format>tar</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
@@ -36,7 +41,7 @@
                 <include>classmate-1.4.0.jar</include>
                 <include>commonj.sdo-2.1.1.jar</include>
                 <include>dom4j-2.1.1.jar</include>
-                <include>eclipselink-2.5.0.jar</include>
+                <!--<include>eclipselink-2.5.0.jar</include>-->
                 <include>el-ri-1.0.jar</include>
                 <include>evo-inflector-1.2.2.jar</include>
                 <include>guava-20.0.jar</include>
@@ -72,7 +77,7 @@
                 <include>log4j-to-slf4j-2.11.1.jar</include>
                 <include>logback-classic-1.2.3.jar</include>
                 <include>logback-core-1.2.3.jar</include>
-                <include>postgresql-42.2.2.jre7.jar</include>
+                <!--<include>postgresql-42.2.2.jre7.jar</include>-->
                 <include>reflections-0.9.11.jar</include>
                 <include>slf4j-api-1.7.25.jar</include>
                 <include>snakeyaml-1.23.jar</include>
@@ -117,7 +122,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/../ExtTools/Windows</directory>
+            <directory>${basedir}/../ExtTools/Linux</directory>
             <outputDirectory>externalTools</outputDirectory>
         </fileSet>
         <fileSet>
@@ -135,19 +140,18 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/src/../addon/scripts/Windows</directory>
+            <directory>${basedir}/src/../addon/scripts/Linux</directory>
             <outputDirectory>scripts</outputDirectory>
             <excludes>
-                <exclude>install.bat</exclude>
-                <exclude>install-lite.bat</exclude>
+                <exclude>install.bash</exclude>
             </excludes>
         </fileSet>
     </fileSets>
     <files>
         <file>
-            <source>./src/../addon/scripts/Windows/install.bat</source>
+            <source>./src/../addon/scripts/Linux/install-lite.bash</source>
             <outputDirectory>.</outputDirectory>
-            <destName>install.bat</destName>
+            <destName>install.bash</destName>
         </file>
     </files>
 </assembly>
