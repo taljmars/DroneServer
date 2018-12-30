@@ -8,6 +8,7 @@ package com.auditdb.persistence.dumper;
 import com.db.persistence.events.ServerEvent;
 import com.auditdb.persistence.base_scheme.EventLogObject;
 import com.db.persistence.events.ServerEventMapper;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,8 @@ import java.util.stream.Stream;
 
 @Component
 public class EventQueue {
+
+    private final static Logger LOGGER = Logger.getLogger(EventQueue.class);
 
     @Autowired
     private ServerEventMapper serverEventMapper;
@@ -34,7 +37,7 @@ public class EventQueue {
 
         eventForStoring.setEventTime(new Date());
         eventForStoring.setEventCode(serverEventMapper.getEventCode(event.getClass()));
-        System.out.println("Will store: " + eventForStoring.toString());
+        LOGGER.debug("Will store: " + eventForStoring.toString());
         eventQueue.add(eventForStoring);
     }
 

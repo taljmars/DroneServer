@@ -207,12 +207,12 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
         Metamodel mm = getMetamodel();
         for (final ManagedType<?> managedType : mm.getManagedTypes()) {
             Class clz = managedType.getJavaType();
-            LOGGER.error("Found class " + clz);
+            LOGGER.debug("Found class " + clz);
 
             if (!clz.isAnnotationPresent(Sessionable.class))
                 continue;
 
-            LOGGER.error("going to handle " + clz);
+            LOGGER.debug("going to handle " + clz);
             handleDiscardForType(clz);
         }
     }
@@ -220,12 +220,13 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
     @Override
     public void publish() {
         int nextRevision = revisionManager.getNextRevision();
-
+        int publishedObject;
         LOGGER.debug("Start publish class types");
         List<Class> lst = applicationContext.getBean(ManagedClassTopologicalSorter.class).getManagedClasses(entityManagerWrapper);
         for (Class clz : lst) {
             LOGGER.debug("Going to handle '" + clz.getCanonicalName() + "' publishing");
-            handlePublishForType(clz, nextRevision);
+            publishedObject = handlePublishForType(clz, nextRevision);
+            LOGGER.debug(publishedObject + " objects were published for type '" + clz.getCanonicalName() + "'");
         }
 
         LOGGER.debug("Flush Entity Manager");
@@ -294,7 +295,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
             entityManagerWrapper.remove(lockedObject);
     }
 
-    private <T extends BaseObject> void handlePublishForType(Class<T> clz, int nextRevision) {
+    private <T extends BaseObject> int handlePublishForType(Class<T> clz, int nextRevision) {
         //LOGGER.debug("Handle publish for object of type '" + clz .getCanonicalName()+ "'");
         Query query = createNativeQuery(buildGetPrivateQuery(clz), clz);
         List<T> objs = query.getResultList();
@@ -315,6 +316,7 @@ public class VirtualizedEntityManager extends EntityManagerBaseImpl {
                 movePrivateToPublicForFirstTime(item, clz, nextRevision);
             }
         }
+        return objs == null ? 0 : objs.size();
     }
 
     private <T extends BaseObject> void movePrivateToPublic(T privateItem, BaseObject publicItem, Class<T> clz, int nextRevision) {

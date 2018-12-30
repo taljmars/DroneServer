@@ -11,7 +11,6 @@
 
     <modules>
         <module>LogsManagerPlugin</module>
-        <module>DroneServerAnalyzer</module>
         <!--<module>DroneServerTester</module>-->
         <module>DronePlugin</module>
         <module>GuiPlugin</module>
@@ -33,7 +32,8 @@
         <build.output>CMpub</build.output>
         <github.global.server>github</github.global.server>
         <!--<spring-ver>4.3.3.RELEASE</spring-ver>-->
-        <spring-ver>5.0.4.RELEASE</spring-ver>
+        <!--<spring-ver>5.0.4.RELEASE</spring-ver>-->
+        <spring-ver>5.1.3.RELEASE</spring-ver>
         <encoding>UTF-8</encoding>
         <maven.debug>false</maven.debug>
         <!--<slf4jVersion>1.7.25</slf4jVersion>-->

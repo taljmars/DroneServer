@@ -31,7 +31,7 @@ public class PluginsManager {
         schemes = new ArrayList<>();
         webServices = new ArrayList<>();
         try {
-            for (String plugin : Plugins.servicesList) {
+            for (String plugin : Plugins.get().servicesList) {
                 Class pluginClz = getClass().getClassLoader().loadClass(plugin);
                 LOGGER.debug("New Plugin was found: " + pluginClz.getCanonicalName());
                 Object pluginObject = pluginClz.newInstance();

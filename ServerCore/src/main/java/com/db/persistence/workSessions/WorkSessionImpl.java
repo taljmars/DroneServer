@@ -128,6 +128,8 @@ public class WorkSessionImpl implements WorkSession<MyToken> {
     public WorkSession publish() {
         LOGGER.debug("Publishing db session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
         entityManager.publish();
+        LOGGER.debug("Finish publishing db session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
+        LOGGER.debug("About to destroy session '" + sessionId + "'");
         return workSessionManager.destroySession(this);
     }
 
@@ -136,6 +138,8 @@ public class WorkSessionImpl implements WorkSession<MyToken> {
     public WorkSession discard() {
         LOGGER.debug("Discarding session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
         entityManager.discard();
+        LOGGER.debug("Finish discarding db session id '" + sessionId + "' of token '" + token + "' of user '" + userName + "'");
+        LOGGER.debug("About to destroy session '" + sessionId + "'");
         return workSessionManager.destroySession(this);
     }
 
