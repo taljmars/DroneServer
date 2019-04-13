@@ -3,4 +3,4 @@ The following directory holds the DroneServer project files for the greater dron
 
 If you are a user who wishes to fly you drone and enjoy this fully featured Ground Control Station, simple download the relevant files from ServerInstallation directory: https://github.com/taljmars/DroneServer/tree/master/ServerInstallation, Run Deploy.bat, after deploy finished, run install.bat command to raise up a server. Done forget to have a GCS GUI (Available here: https://github.com/taljmars/DroneGCS/tree/master/ClientInstallation)
 
-in case you wish to install a standalone version which include both client and server in a single installer please refere to this repository: https://github.com/taljmars/StandaloneDroneGCS
+in case you wish to install a STANDALONE version which include both client and server in a single installer please refere to this repository: https://github.com/taljmars/StandaloneDroneGCS
