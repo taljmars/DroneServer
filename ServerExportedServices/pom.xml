@@ -83,7 +83,8 @@
                         </goals>
                         <configuration>
                             <!--<classesDirectory>com</classesDirectory>-->
-                            <includes>com</includes>
+                            <!--<includes>com</includes>-->
+                            <includes><include>com</include></includes>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,4 @@
+com.db.persistence.ServerSchemeManifest
+com.db.gui.persistence.GuiSchemeManifest
+com.auditdb.persistence.AuditLogsSchemeManifest
+com.dronedb.persistence.DroneSchemeManifest
