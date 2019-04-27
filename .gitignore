@@ -18,7 +18,7 @@ Logs/
 .idea/
 CMpub/
 target/
-ServerInstallation/
+#ServerInstallation/
 
 
 # Irrelevant logs - talma
