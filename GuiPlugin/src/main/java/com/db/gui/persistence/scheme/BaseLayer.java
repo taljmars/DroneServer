@@ -80,6 +80,7 @@ public abstract class BaseLayer extends BaseObject implements Serializable
 	@Override
 	public String toString() {
 		return "BaseLayer{" +
+				super.toString() +
 				"name='" + name + '\'' +
 				'}';
 	}
