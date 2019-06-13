@@ -147,11 +147,13 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
     @Scheduled(fixedRate = 60 * 1000) // 30 Seconds
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void tik() {
-        LOGGER.info("=============================================================================");
-        LOGGER.info("========================= LOGIN SESSION EXPIRATION ==========================");
         try {
-            LOGGER.debug("Searching for expired sessions");
             List<MyToken> expiredTokens = serverSessionRegistry.expireNow();
+            if (expiredTokens.size() == 0)
+                return;
+
+            LOGGER.info("=============================================================================");
+            LOGGER.info("========================= LOGIN SESSION EXPIRATION ==========================");
             LOGGER.debug("There are " + expiredTokens.size() + " session that needs to be expired");
             Iterator<MyToken> it = expiredTokens.iterator();
             while (it.hasNext()) {
@@ -167,10 +169,11 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
                 }
                 serverSessionRegistry.unregisterSession(token);
             }
+            LOGGER.info("=============================================================================");
         }
         catch (Exception e) {
             LOGGER.error("Failed to check connections", e);
+            LOGGER.info("=============================================================================");
         }
-        LOGGER.info("=============================================================================");
     }
 }

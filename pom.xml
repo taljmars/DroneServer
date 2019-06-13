@@ -81,6 +81,27 @@
             <version>4.12</version>
         </dependency>
 
+        <!--web-sockets-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <!--<version>4.2.4.RELEASE</version>-->
+            <version>${spring-ver}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <!--<version>4.2.4.RELEASE</version>-->
+            <version>${spring-ver}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
+        </dependency>
+
     </dependencies>
 
     <distributionManagement>

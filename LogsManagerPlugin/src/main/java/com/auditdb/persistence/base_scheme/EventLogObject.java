@@ -17,7 +17,9 @@ public abstract class EventLogObject extends BaseObject {
     private String eventCode;
     private Date eventTime;
 
-    public EventLogObject() {}
+    public EventLogObject() {
+        super();
+    }
 
     public EventLogObject(EventLogObject auditLog) {
         super(auditLog);

@@ -28,13 +28,13 @@ public class MyJpaTransactionManager extends JpaTransactionManager {
 
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
-        LOGGER.info("DoBegin " + transaction + " " + definition);
+//        LOGGER.info("DoBegin " + transaction + " " + definition);
         super.doBegin(transaction, definition);
     }
 
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
-        LOGGER.info("DoCommit " + status);
+//        LOGGER.info("DoCommit " + status);
 //        getJpaPropertyMap();
         super.doCommit(status);
     }

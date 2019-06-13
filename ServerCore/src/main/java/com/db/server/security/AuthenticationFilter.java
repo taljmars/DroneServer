@@ -53,7 +53,7 @@ public class AuthenticationFilter extends GenericFilterBean {
                 processTokenAuthentication(token);
             }
             else if (postToAuthenticate(httpRequest, resourcePath)) {
-                LOGGER.debug("Trying to authenticate user '" + username + "' by X-Auth-Username method");
+                LOGGER.debug(String.format("Trying to authenticate user '%s' by X-Auth-Username method", username));
                 processUsernamePasswordAuthentication(httpRequest, httpResponse, username, password);
             }
             else if (postToDatabaseAccess(httpRequest, resourcePath)) {

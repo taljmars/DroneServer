@@ -5,8 +5,8 @@
 
 package com.auditdb.persistence.dumper;
 
-import com.db.persistence.events.ServerEvent;
 import com.auditdb.persistence.base_scheme.EventLogObject;
+import com.db.persistence.events.ServerEvent;
 import com.db.persistence.events.ServerEventMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

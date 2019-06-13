@@ -78,11 +78,16 @@ public class MyTokenService {
 	@Scheduled(fixedRate = 15 * 1000)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void tik() {
-		LOGGER.info("=============================================================================");
-		LOGGER.info("============================= TOKEN EXPIRATION ==============================");
+
 		try {
 			Set<MyToken> tokens = restApiAuthTokenCache.keySet();
+			if (tokens.size() == 0)
+				return;
+
+			LOGGER.info("=============================================================================");
+			LOGGER.info("============================= TOKEN EXPIRATION ==============================");
 			LOGGER.debug("There are " + tokens.size() + " tokens available");
+
 			Iterator<MyToken> it = tokens.iterator();
 			while (it.hasNext()) {
 				MyToken token = it.next();
@@ -96,10 +101,12 @@ public class MyTokenService {
 					it.remove();
 				}
 			}
+
+			LOGGER.info("=============================================================================");
 		}
 		catch (Exception e) {
 			LOGGER.error("Failed to check tokens", e);
+			LOGGER.info("=============================================================================");
 		}
-		LOGGER.info("=============================================================================");
 	}
 }
