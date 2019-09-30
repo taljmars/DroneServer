@@ -120,6 +120,10 @@
                 <include>tomcat-embed-el-*.jar</include>
                 <include>validation-api-*.jar</include>
                 <include>Validations-*.jar</include>
+
+
+                <include>spring-websocket-*</include>
+                <include>spring-messaging-*</include>
             </includes>
         </fileSet>
         <fileSet>
