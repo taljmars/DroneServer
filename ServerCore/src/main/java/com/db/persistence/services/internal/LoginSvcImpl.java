@@ -81,7 +81,8 @@ public class LoginSvcImpl extends TokenAwareSvcImpl implements LoginSvc {
         MySessionInformation sessionInformation = new MySessionInformation();
         sessionInformation.setUserName(userName);
         sessionInformation.setApplicationName(loginRequest.getApplicationName());
-        sessionInformation.setTimeout(loginRequest.getTimeout());
+        if (loginRequest.getTimeout() != null)
+            sessionInformation.setTimeout(loginRequest.getTimeout());
         sessionInformation.setToken(token);
 
         try {

@@ -168,14 +168,15 @@
             <excludes>
                 <exclude>install.bat</exclude>
                 <exclude>install-lite.bat</exclude>
+                <exclude>runServer.bat</exclude>
             </excludes>
         </fileSet>
     </fileSets>
     <files>
         <file>
-            <source>./src/../addon/scripts/Windows/install-lite.bat</source>
+            <source>./src/../addon/scripts/Windows/runServer.bat</source>
             <outputDirectory>.</outputDirectory>
-            <destName>install.bat</destName>
+            <destName>run.bat</destName>
         </file>
     </files>
 </assembly>

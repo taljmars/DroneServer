@@ -26,7 +26,8 @@ public class MyHibernateJpaVendorAdapter extends HibernateJpaVendorAdapter imple
 
         final Properties properties = new Properties();
         // Flush the DB at the end
-        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create-drop");
+//        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create-drop");
+        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "update");
         properties.setProperty(AvailableSettings.DIALECT, dialect);
         properties.setProperty(AvailableSettings.SHOW_SQL, "false");
 
