@@ -16,12 +16,12 @@ import java.util.Objects;
 
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = "ExternalObjectLog",
+                name = "GetAllExternalObjectLog",
                 query = "SELECT * FROM ExternalObjectLog",
                 resultClass = ExternalObjectLog.class
         ),
         @NamedNativeQuery(
-                name = "ExternalObjectLog_BetweenDates",
+                name = "GetAllExternalObjectLog_BetweenDates",
                 query = "SELECT * FROM ExternalObjectLog WHERE eventTime BETWEEN :START_DATE AND :END_DATE",
                 resultClass = ExternalObjectLog.class
         )
