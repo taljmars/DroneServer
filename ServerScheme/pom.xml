@@ -22,7 +22,7 @@
         <jar.path>../${build.output}/jars/</jar.path>
         <class.path>../${build.output}/classes/</class.path>
         <pkg_server.path>../${build.output}/pkg_server</pkg_server.path>
-        <spring-ver>5.1.3.RELEASE</spring-ver>
+        <spring-ver>5.3.19</spring-ver>
         <spring-boot-ver>2.1.4.RELEASE</spring-boot-ver>
 
     </properties>
